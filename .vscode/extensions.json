@@ -1,0 +1,16 @@
+//Se recomienda instalar estas extensiones en VS code,
+// facilitarán el desarrollo
+{
+  "recommendations": [
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "christian-kohler.path-intellisense",
+    "xabikos.ReactSnippets",
+    "bradlc.vscode-tailwindcss",
+    "heybourn.headwind",
+    "humao.rest-client",
+    "christian-kohler.npm-intellisense",
+    "mongodb.mongodb-vscode",
+    "eamodio.gitlens"
+  ]
+}
