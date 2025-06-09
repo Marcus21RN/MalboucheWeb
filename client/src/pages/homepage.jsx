@@ -1,20 +1,11 @@
 import React from "react";
+import NavBar from '../components/navBar'
 
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-gray-50 text-gray-800">
-      {/* Navbar */}
-      <nav className="bg-white shadow-md px-8 py-4 flex justify-between items-center">
-        <div className="text-lg font-semibold"></div>
-        <ul className="flex gap-4">
-          <li><button className="hover:underline">HOME</button></li>
-          <li><button className="hover:underline">MENU</button></li>
-          <li><button className="hover:underline">EVENTS</button></li>
-          <li><button className="hover:underline">RESERVATIONS</button></li>
-          <li><button className="hover:underline">CONTACT</button></li>
-          <li><button className="hover:underline">LOG IN</button></li>
-        </ul>
-      </nav>
+      {/* Navbar importada */}
+    <NavBar/>
 
       {/* Hero Banner */}
       <div className="w-full h-64 bg-gray-300 flex items-center justify-center">
