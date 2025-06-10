@@ -1,19 +1,17 @@
 import React from "react";
 
+import { Link } from "react-router-dom";
+
 export default function Navbar() {
   return (
     <nav className="bg-white shadow-md px-8 py-4 flex justify-between items-center">
-      {/* Logo o nombre de la app */}
-      <div className="text-lg font-semibold">MyApp</div>
-
-      {/* Enlaces del menú */}
+      <div className="text-lg font-semibold">MyBar</div>
       <ul className="flex gap-4">
-        <li><button className="hover:underline">HOME</button></li>
-        <li><button className="hover:underline">MENU</button></li>
-        <li><button className="hover:underline">EVENTS</button></li>
-        <li><button className="hover:underline">RESERVATIONS</button></li>
-        <li><button className="hover:underline">CONTACT</button></li>
-        <li><button className="hover:underline">LOG IN</button></li>
+        <li><Link to="/" className="hover:underline">HOME</Link></li>
+        <li><Link to="/menu" className="hover:underline">MENU</Link></li>
+        <li><Link to="/events" className="hover:underline">EVENTS</Link></li>
+        <li><Link to="/reservations" className="hover:underline">RESERVATIONS</Link></li>
+        <li><Link to="/login" className="hover:underline">LOG IN</Link></li>
       </ul>
     </nav>
   );

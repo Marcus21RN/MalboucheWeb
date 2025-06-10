@@ -1,12 +1,8 @@
 import React from "react";
-import NavBar from '../components/navBar'
 
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-gray-50 text-gray-800">
-      {/* Navbar importada */}
-    <NavBar/>
-
       {/* Hero Banner */}
       <div className="w-full h-64 bg-gray-300 flex items-center justify-center">
         <span className="text-3xl font-bold">[Hero Banner Image]</span>

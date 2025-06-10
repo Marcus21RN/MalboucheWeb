@@ -1,12 +1,9 @@
 import React from "react";
-import NavBar from '../components/navBar'
 
 export default function LoginPage() {
   return (
 
     <div className="min-h-screen bg-white">
-      {/* Barra de navegación arriba */}
-      <NavBar />
           {/* Contenedor del contenido principal dividido en dos columnas */}
       <div className="grid grid-cols-1 md:grid-cols-2 min-h-[calc(100vh-80px)]">
         {/* Imagen a la izquierda */}
