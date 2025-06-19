@@ -52,20 +52,7 @@ export default function EventsPage() {
     },
   ];
 
-  const promociones = [
-    {
-      id: 1,
-      imagen: "https://heraldodemexico.com.mx/u/fotografias/m/2020/11/26/f1280x720-287408_419083_5050.jpg",
-    },
-    {
-      id: 2,
-      imagen: "https://heraldodemexico.com.mx/u/fotografias/m/2020/11/26/f1280x720-287408_419083_5050.jpg",
-    },
-    {
-      id: 3,
-      imagen: "https://heraldodemexico.com.mx/u/fotografias/m/2020/11/26/f1280x720-287408_419083_5050.jpg",
-    },
-  ];
+
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900">
@@ -116,25 +103,7 @@ export default function EventsPage() {
         </div>
       </div>
 
-      {/* Promociones con efecto hover */}
-      <div className="px-6 pb-12">
-        <h2 className="text-2xl font-semibold mb-6 text-center">Current Promotions</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-          {promociones.map((promo) => (
-            <div
-              key={promo.id}
-              className="w-full h-40 bg-gray-200 rounded-lg overflow-hidden shadow-md hover:shadow-xl transition duration-300"
-            >
-              {/* Imagen con zoom al pasar el mouse */}
-              <img
-                src={promo.imagen}
-                alt={`Promoción ${promo.id}`}
-                className="w-full h-full object-cover transform hover:scale-110 transition duration-300"
-              />
-            </div>
-          ))}
-        </div>
-      </div>
+      
     </div>
   );
 }

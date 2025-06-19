@@ -1,11 +1,11 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route  } from 'react-router-dom';
-
 import Navbar from "./components/navBar";
-import HomePage from "./pages/homePage";
+import HomePage from './pages/homePage';
 import MenuPage from './pages/menuPage'
 import EventsPage from './pages/eventsPage';
 import ReservationsPage from './pages/reservationPage';
+import ContactPage from './pages/contactPage'
 import LoginPage from './pages/loginPage';
 
 function App() {
@@ -21,6 +21,7 @@ function App() {
           <Route path="/menu" element={<MenuPage />} />
           <Route path="/events" element={<EventsPage />} />
           <Route path="/reservations" element={<ReservationsPage />} />
+          <Route path="/contact" element={<ContactPage />} />
           <Route path="/login" element={<LoginPage />} />
         </Routes>
       </div>

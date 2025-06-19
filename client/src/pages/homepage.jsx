@@ -1,6 +1,22 @@
 import React from "react";
 
 export default function HomePage() {
+
+  const promociones = [
+    {
+      id: 1,
+      imagen: "https://heraldodemexico.com.mx/u/fotografias/m/2020/11/26/f1280x720-287408_419083_5050.jpg",
+    },
+    {
+      id: 2,
+      imagen: "https://heraldodemexico.com.mx/u/fotografias/m/2020/11/26/f1280x720-287408_419083_5050.jpg",
+    },
+    {
+      id: 3,
+      imagen: "https://heraldodemexico.com.mx/u/fotografias/m/2020/11/26/f1280x720-287408_419083_5050.jpg",
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900">
       {/* === HERO PRINCIPAL - Imagen con texto de bienvenida === */}
@@ -79,36 +95,26 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* === SECCIÓN "SOBRE NOSOTROS" === */}
-      <section className="py-12 px-6">
-        <h2 className="text-2xl font-bold text-center mb-6">Sobre nosotros</h2>
-
-        {/* Contenido sobre la historia y filosofía del bar */}
-        <div className="max-w-3xl mx-auto text-center text-gray-700">
-          <p className="mb-4">
-            En Malbouche nos especializamos en crear experiencias inolvidables. Con música en vivo, promociones cada semana y un ambiente acogedor, somos el lugar ideal para relajarte o celebrar.
-          </p>
-          <p>
-            Nuestro personal capacitado y nuestra variedad de bebidas y alimentos hacen que cada visita sea única.
-          </p>
+      <section className= "py-12 px-6 bg-gay-100">
+        {/* Promociones con efecto hover */}
+      <div className="px-6 pb-12">
+        <h2 className="text-2xl font-semibold mb-6 text-center">Current Promotions</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          {promociones.map((promo) => (
+            <div
+              key={promo.id}
+              className="w-full h-40 bg-gray-200 rounded-lg overflow-hidden shadow-md hover:shadow-xl transition duration-300"
+            >
+              {/* Imagen con zoom al pasar el mouse */}
+              <img
+                src={promo.imagen}
+                alt={`Promoción ${promo.id}`}
+                className="w-full h-full object-cover transform hover:scale-110 transition duration-300"
+              />
+            </div>
+          ))}
         </div>
-      </section>
-
-      {/* === SECCIÓN DE UBICACIÓN / MAPA === */}
-      <section className="py-12 px-6 bg-gray-100">
-        <h2 className="text-2xl font-bold text-center mb-6">Encuéntranos</h2>
-
-        {/* Mapa incrustado desde Google Maps */}
-        <div className="flex justify-center">
-          <div className="w-full max-w-3xl h-64 border-4 border-white rounded-lg overflow-hidden shadow-lg">
-            <iframe
-              title="Ubicación del bar"
-              src="https://maps.google.com/maps?q=bar%20mexico&t=&z=13&ie=UTF8&iwloc=&output=embed"
-              className="w-full h-full"
-              loading="lazy"
-            />
-          </div>
-        </div>
+      </div>
       </section>
     </div>
   );
