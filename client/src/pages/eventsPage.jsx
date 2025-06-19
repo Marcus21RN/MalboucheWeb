@@ -20,6 +20,36 @@ export default function EventsPage() {
       descripcion: "Ven disfrazado y revive los mejores éxitos de los 80s.",
       imagen: "https://heraldodemexico.com.mx/u/fotografias/m/2020/11/26/f1280x720-287408_419083_5050.jpg",
     },
+    {
+      id: 4,
+      titulo: "Fiesta Pagana",
+      descripcion: "Ven y disfruta con nosotros la maravilla de fiesta pagana con Mago de Öz",
+      imagen: "https://heraldodemexico.com.mx/u/fotografias/m/2020/11/26/f1280x720-287408_419083_5050.jpg",
+    },
+    {
+      id: 5,
+      titulo: "Fiesta Pagana",
+      descripcion: "Ven y disfruta con nosotros la maravilla de fiesta pagana con Mago de Öz",
+      imagen: "https://heraldodemexico.com.mx/u/fotografias/m/2020/11/26/f1280x720-287408_419083_5050.jpg",
+    },
+    {
+      id: 6,
+      titulo: "Fiesta Pagana",
+      descripcion: "Ven y disfruta con nosotros la maravilla de fiesta pagana con Mago de Öz",
+      imagen: "https://heraldodemexico.com.mx/u/fotografias/m/2020/11/26/f1280x720-287408_419083_5050.jpg",
+    },
+    {
+      id: 7,
+      titulo: "Fiesta Pagana",
+      descripcion: "Ven y disfruta con nosotros la maravilla de fiesta pagana con Mago de Öz",
+      imagen: "https://heraldodemexico.com.mx/u/fotografias/m/2020/11/26/f1280x720-287408_419083_5050.jpg",
+    },
+    {
+      id: 8,
+      titulo: "Fiesta Pagana",
+      descripcion: "Ven y disfruta con nosotros la maravilla de fiesta pagana con Mago de Öz",
+      imagen: "https://heraldodemexico.com.mx/u/fotografias/m/2020/11/26/f1280x720-287408_419083_5050.jpg",
+    },
   ];
 
   const promociones = [

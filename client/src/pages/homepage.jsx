@@ -2,50 +2,112 @@ import React from "react";
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-800">
-      {/* Hero Banner */}
-      <div className="w-full h-64 bg-gray-300 flex items-center justify-center">
-        <span className="text-3xl font-bold">[Hero Banner Image]</span>
+    <div className="min-h-screen bg-gray-50 text-gray-900">
+      {/* === HERO PRINCIPAL - Imagen con texto de bienvenida === */}
+      <div
+        className="w-full h-[400px] bg-cover bg-center flex items-center justify-center text-center"
+        style={{
+          backgroundImage:
+            "url('https://heraldodemexico.com.mx/u/fotografias/m/2020/11/26/f1280x720-287408_419083_5050.jpg')",
+        }}
+      >
+        <div className="bg-black bg-opacity-50 p-6 rounded">
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            Bienvenido a Malbouche Bar
+          </h1>
+          <p className="text-white text-lg">
+            El mejor ambiente, las mejores bebidas.
+          </p>
+        </div>
       </div>
 
-      {/* Menu Section */}
-      <section className="py-12 px-6 text-center">
-        <h2 className="text-2xl font-semibold mb-10">MENU</h2>
+      {/* === SECCIÓN DE BEBIDAS DESTACADAS === */}
+      <section className="py-12 px-6">
+        <h2 className="text-2xl font-bold text-center mb-8">Bebidas destacadas</h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
-          {/* Left Image */}
-          <div className="hidden md:block w-full h-64 bg-gray-300"></div>
-
-          {/* Drinks */}
-          <div className="bg-white rounded-lg shadow p-4">
-            <h3 className="text-lg font-bold mb-2 border-b pb-1">DRINKS</h3>
-            <p className="text-sm mb-4">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-              incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.
-            </p>
-            <button className="text-sm text-blue-600 hover:underline">View menu</button>
-          </div>
-
-          {/* Right Image */}
-          <div className="hidden md:block w-full h-64 bg-gray-300"></div>
+        {/* Contenedor de tarjetas de bebidas */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+          {["Mojito", "Piña Colada", "Whiskey Sour"].map((bebida, i) => (
+            <div
+              key={i}
+              className="bg-white shadow-md hover:shadow-xl rounded-lg overflow-hidden transition duration-300 transform hover:scale-105"
+            >
+              {/* Imagen de bebida */}
+              <img
+                src={`https://source.unsplash.com/400x300/?${bebida.replace(" ", "")},drink`}
+                alt={bebida}
+                className="w-full h-48 object-cover"
+              />
+              {/* Información de bebida */}
+              <div className="p-4">
+                <h3 className="text-lg font-semibold mb-2">{bebida}</h3>
+                <p className="text-sm text-gray-600">
+                  Una deliciosa mezcla que te hará volver por más.
+                </p>
+              </div>
+            </div>
+          ))}
         </div>
+      </section>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center mt-10">
-          {/* Left Image */}
-          <div className="hidden md:block w-full h-64 bg-gray-300"></div>
+      {/* === SECCIÓN DE ALIMENTOS DESTACADOS === */}
+      <section className="py-12 px-6 bg-gray-100">
+        <h2 className="text-2xl font-bold text-center mb-8">Alimentos recomendados</h2>
 
-          {/* For the Table */}
-          <div className="bg-white rounded-lg shadow p-4">
-            <h3 className="text-lg font-bold mb-2 border-b pb-1">FOR THE TABLE</h3>
-            <p className="text-sm mb-4">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-              incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.
-            </p>
-            <button className="text-sm text-blue-600 hover:underline">View menu</button>
+        {/* Contenedor de tarjetas de alimentos */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+          {["Hamburguesa BBQ", "Tacos al Pastor", "Papas Gajo"].map((comida, i) => (
+            <div
+              key={i}
+              className="bg-white shadow-md hover:shadow-xl rounded-lg overflow-hidden transition duration-300 transform hover:scale-105"
+            >
+              {/* Imagen de comida */}
+              <img
+                src={`https://source.unsplash.com/400x300/?${comida.replace(" ", "")},food`}
+                alt={comida}
+                className="w-full h-48 object-cover"
+              />
+              {/* Información de comida */}
+              <div className="p-4">
+                <h3 className="text-lg font-semibold mb-2">{comida}</h3>
+                <p className="text-sm text-gray-600">
+                  Perfecto para acompañar tu bebida favorita.
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* === SECCIÓN "SOBRE NOSOTROS" === */}
+      <section className="py-12 px-6">
+        <h2 className="text-2xl font-bold text-center mb-6">Sobre nosotros</h2>
+
+        {/* Contenido sobre la historia y filosofía del bar */}
+        <div className="max-w-3xl mx-auto text-center text-gray-700">
+          <p className="mb-4">
+            En Malbouche nos especializamos en crear experiencias inolvidables. Con música en vivo, promociones cada semana y un ambiente acogedor, somos el lugar ideal para relajarte o celebrar.
+          </p>
+          <p>
+            Nuestro personal capacitado y nuestra variedad de bebidas y alimentos hacen que cada visita sea única.
+          </p>
+        </div>
+      </section>
+
+      {/* === SECCIÓN DE UBICACIÓN / MAPA === */}
+      <section className="py-12 px-6 bg-gray-100">
+        <h2 className="text-2xl font-bold text-center mb-6">Encuéntranos</h2>
+
+        {/* Mapa incrustado desde Google Maps */}
+        <div className="flex justify-center">
+          <div className="w-full max-w-3xl h-64 border-4 border-white rounded-lg overflow-hidden shadow-lg">
+            <iframe
+              title="Ubicación del bar"
+              src="https://maps.google.com/maps?q=bar%20mexico&t=&z=13&ie=UTF8&iwloc=&output=embed"
+              className="w-full h-full"
+              loading="lazy"
+            />
           </div>
-
-          {/* Right Image */}
-          <div className="hidden md:block w-full h-64 bg-gray-300"></div>
         </div>
       </section>
     </div>
