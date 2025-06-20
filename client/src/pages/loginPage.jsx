@@ -2,12 +2,11 @@ import React from "react";
 
 export default function LoginPage() {
   return (
-
-    <div className="min-h-screen bg-white">
-          {/* Contenedor del contenido principal dividido en dos columnas */}
-      <div className="grid grid-cols-1 md:grid-cols-2 min-h-[calc(100vh-80px)]">
-        {/* Imagen a la izquierda */}
-        <div className="hidden md:block bg-gray-200">
+    <div className="min-h-screen bg-gradient-to-br from-pink-100 via-purple-100 to-white font-sans">
+      {/* === CONTENEDOR GENERAL === */}
+      <div className="grid grid-cols-1 md:grid-cols-2 min-h-screen">
+        {/* === LADO IZQUIERDO CON IMAGEN === */}
+        <div className="hidden md:block">
           <div
             className="h-full w-full bg-cover bg-center"
             style={{
@@ -17,32 +16,29 @@ export default function LoginPage() {
           ></div>
         </div>
 
-        {/* Formulario de login a la derecha */}
-        <div className="flex items-center justify-center p-8 bg-white">
-          <div className="w-full max-w-md">
-            <h2 className="text-2xl font-bold mb-6">Log in to your account</h2>
+        {/* === FORMULARIO DE LOGIN === */}
+        <div className="flex items-center justify-center px-8 py-12 bg-white bg-opacity-90 backdrop-blur-sm">
+          <div className="w-full max-w-md bg-white shadow-xl rounded-2xl p-8">
+            <h2 className="text-3xl font-bold text-purple-700 mb-6 text-center">
+              Welcome Back!
+            </h2>
 
-            <form className="space-y-4">
+            {/* === FORMULARIO === */}
+            <form className="space-y-5">
               <div>
-                <label htmlFor="email" className="block text-sm font-medium mb-1">
-                  Email address
-                </label>
                 <input
                   type="email"
                   id="email"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-3 border border-purple-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 placeholder-gray-400"
                   placeholder="you@example.com"
                 />
               </div>
 
               <div>
-                <label htmlFor="password" className="block text-sm font-medium mb-1">
-                  Password
-                </label>
                 <input
                   type="password"
                   id="password"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-3 border border-purple-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 placeholder-gray-400"
                   placeholder="••••••••"
                 />
               </div>
@@ -50,23 +46,24 @@ export default function LoginPage() {
               <div>
                 <button
                   type="button"
-                  className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700"
+                  className="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition duration-300"
                 >
                   Log In
                 </button>
               </div>
 
               <div className="text-sm text-right">
-                <button type="button" className="text-blue-600 hover:underline">
+                <button type="button" className="text-purple-600 hover:underline">
                   Forgot your password?
                 </button>
               </div>
             </form>
 
-            <div className="mt-6 text-center">
+            {/* === ENLACE DE REGISTRO === */}
+            <div className="mt-8 text-center">
               <p className="text-sm">
                 Don't have an account?
-                <button type="button" className="text-blue-600 ml-1 hover:underline">
+                <button type="button" className="text-purple-600 ml-1 hover:underline">
                   Sign up
                 </button>
               </p>
