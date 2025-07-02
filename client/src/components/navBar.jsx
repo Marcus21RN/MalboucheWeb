@@ -1,38 +1,43 @@
 import React from "react";
 import { Link } from "react-router-dom";
+/* import loguimage from "../assets/imagenes/logui.png"; */
 
 export default function Navbar() {
   return (
-    <nav className="bg-yellow-100 shadow-lg py-4 px-6">
-      <div className="container mx-auto flex justify-between items-center">
-        
-        {/* Logo */}
-        <div className="text-2xl font-bold text-yellow-600 tracking-wide">
-          Wonderland Bar
+    <nav className="fixed top-0 left-0 right-0 z-50 px-6 py-4 shadow-lg bg-[#080f24]">
+      <div className="container flex items-center mx-auto">
+        {/* Contenedor centrado para los links */}
+        <div className="absolute transform -translate-x-1/2 left-1/2">
+          <ul className="flex gap-20 font-serif text-accent">
+            {[
+              { to: "/", label: "HOME" }, 
+              { to: "/menu", label: "MENU" },
+              { to: "/events", label: "EVENTS" },
+              { to: "/reservations", label: "RESERVATIONS" },
+              { to: "/contact", label: "CONTACT" },
+            ].map((link) => (
+              <li key={link.to} className="relative group">
+                <Link
+                  to={link.to}
+                  className="transition duration-200 hover:text-[#FFE3A9] text-[#725CAD] font-semibold "
+                >
+                  {link.label}
+                </Link> 
+                <span className="absolute left-0 bottom-[-2px] w-0 h-[2px] bg-blue-300 group-hover:w-full transition-all duration-300"></span>
+              </li>
+            ))}
+          </ul>
         </div>
 
-        {/* Links */}
-        <ul className="flex gap-6 text-blue-900 font-semibold">
-          {[
-            { to: "/", label: "HOME" },
-            { to: "/menu", label: "MENU" },
-            { to: "/events", label: "EVENTS" },
-            { to: "/reservations", label: "RESERVATIONS" },
-            { to: "/contact", label: "CONTACT" },
-            { to: "/login", label: "LOG IN" },
-          ].map((link) => (
-            <li key={link.to} className="relative group">
-              <Link
-                to={link.to}
-                className="hover:text-blue-400 transition duration-200"
-              >
-                {link.label}
-              </Link>
-              {/* Underline on hover */}
-              <span className="absolute left-0 bottom-[-2px] w-0 h-[2px] bg-blue-300 group-hover:w-full transition-all duration-300"></span>
-            </li>
-          ))}
-        </ul>
+        {/* Login (se mantiene a la derecha) */}
+        <div className="ml-auto">
+          <Link 
+            to="/login" 
+            className="font-semibold text-[#FFE3A9] hover:text-[#725CAD] transition"
+          >
+            LOG IN
+          </Link>
+        </div>
       </div>
     </nav>
   );
