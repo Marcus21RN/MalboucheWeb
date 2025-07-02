@@ -18,7 +18,7 @@ export default function HomePage() {
   const [showCards, setShowCards] = useState(false);
   const bebidas = [
     {
-      nombre: "Mojito",
+      nombre: "Mojitos",
       imagen: "https://heraldodemexico.com.mx/u/fotografias/m/2020/11/26/f1280x720-287408_419083_5050.jpg",
       descripcion: "Ron, crema de coco y jugo de piña"
     },
