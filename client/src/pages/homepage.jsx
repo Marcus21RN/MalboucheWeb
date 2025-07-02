@@ -15,7 +15,7 @@ export default function HomePage() {
   ];
 
   // === Lista de bebidas destacadas ===
-   const [showCards, setShowCards] = useState(false);
+  const [showCards, setShowCards] = useState(false);
   const bebidas = [
     {
       nombre: "Mojito",
@@ -36,6 +36,7 @@ export default function HomePage() {
   ];
 
   // === Lista de alimentos destacados ===
+  const [showCardsAli, setShowCardsAli] = useState(false);
   const alimentos = [
     {
       nombre: "Hamburguesa BBQ",
@@ -98,8 +99,8 @@ export default function HomePage() {
 
       {/* === SECCIÓN SOBRE NOSOTROS === */}
       <section className="px-6 py-12 bg.theme.colors.background">
-        <h2 className="mb-6 text-2xl font-bold text-center">Sobre nosotros</h2>
-        <div className="max-w-4xl mx-auto text-center text-gray-700">
+        <h2 className="mb-6 text-2xl font-bold text-center text-amber-50">Sobre nosotros</h2>
+        <div className="max-w-4xl mx-auto text-center text-[#FFE3A9]">
           <p className="mb-4 text-center-justify">
             En Malbouche Bar, te sumergimos en un mundo inspirado en Alicia en el País de las Maravillas. Música en vivo, bebidas únicas y un ambiente mágico te esperan.
           </p>
@@ -129,58 +130,61 @@ export default function HomePage() {
       </section>
 
      {/* === SECCIÓN DE BEBIDAS DESTACADAS === */}
-<section className="px-6 py-12 pt-4 pb-12">
-  {/* <h2 className="font-serif text-2xl font-bold text-center text-cyan-50 ">Bebidas destacadas</h2> */}
-  
-  <div className="flex flex-col items-stretch gap-8 md:flex-row">
-    {/* Contenedor de imagen optimizado */}
-    <div 
-      className={`relative w-full md:w-1/2 aspect-[4/5] cursor-pointer transition-all ml-50 duration-500 ${showCards ? 'md:mr-[-20%]' : ''}`}
-      onClick={() => setShowCards(!showCards)}
-    >
-      {/* Imagen con object-contain para ver completa */}
-      <img
-        src={drinkmeImage}
-        alt="Nuestras bebidas especiales"
-        className="absolute inset-0 object-contain w-full h-full"
-      />
-      {/* Overlay interactivo */}
-    </div>
-
-    {/* Mensaje o Cards */}
-    <div className={`w-full ml-50 md:w-1/2 transition-all duration-300 ${showCards ? 'opacity-0 h-0' : 'opacity-100 h-auto flex items-center'}`}>
-      <div>
-        <h3 className="text-3xl font-serif text-[#FFE3A9] mb-4">¿Quieres ver el mundo desde una nueva perspectiva? Entonces bébeme...</h3>
+      <section className="px-6 py-12 pt-4 pb-12">
+        {/* <h2 className="font-serif text-2xl font-bold text-center text-cyan-50 ">Bebidas destacadas</h2> */}
         
-      </div>
-    </div>
+        <div className="flex flex-col items-stretch gap-8 md:flex-row">
+          {/* Contenedor de imagen optimizado */}
+          <div 
+            className={`relative w-full md:w-1/2 aspect-[4/5] cursor-pointer transition-all ml-50 duration-500 ${showCards ? 'md:mr-[-20%]' : ''}`}
+            onClick={() => setShowCards(!showCards)}
+          >
+            {/* Imagen con object-contain para ver completa */}
+            <img
+              src={drinkmeImage}
+              alt="Nuestras bebidas especiales"
+              className="absolute inset-0 object-contain w-full h-full"
+            />
+            {/* Overlay interactivo */}
+          </div>
 
-    {/* Cards que aparecen */}
-    <div className={`grid grid-cols-1  mr-20 gap-6 w-full transition-all duration-500 overflow-hidden ${showCards ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'}`}>
-      {bebidas.map((bebida, i) => (
-        <div 
-          key={i}
-          className="bg-[#080f24] border border-[#FFE3A9]/20 rounded-lg overflow-hidden shadow-lg transform transition hover:scale-[1.02] "
-        >
-          <div className="flex flex-col md:flex-row">
-            <div className="md:w-1/3">
-              <img
-                src={bebida.imagen}
-                alt={bebida.nombre}
-                className="object-cover w-full h-full min-h-48"
-              />
-            </div>
-            <div className="p-4 md:w-2/3">
-              <h3 className="text-xl font-serif text-[#FFE3A9]">{bebida.nombre}</h3>
-              <p className="mt-2 text-[#f5f0e1]">{bebida.descripcion}</p>
-
+          {/* Mensaje o Cards */}
+          <div className={`w-full ml-50 md:w-1/2 transition-all duration-300 ${showCards ? 'opacity-0 h-0' : 'opacity-100 h-auto flex items-center'}`}>
+            <div>
+              <h3 className="text-3xl font-serif text-[#FFE3A9] mb-4">¿Quieres ver el mundo desde una nueva perspectiva? Entonces bébeme...</h3>
+              
             </div>
           </div>
+
+          {/* Cards que aparecen */}
+          <div className={`grid grid-cols-1  mr-20 gap-6 w-full transition-all duration-500 overflow-hidden ${showCards ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'}`}>
+            {bebidas.map((bebida, i) => (
+              <div 
+                key={i}
+                className="bg-[#080f24] border border-[#FFE3A9]/20 rounded-lg overflow-hidden shadow-lg transform transition hover:scale-[1.02] "
+              >
+                <div className="flex flex-col md:flex-row">
+                  <div className="md:w-1/3">
+                    <img
+                      src={bebida.imagen}
+                      alt={bebida.nombre}
+                      className="object-cover w-full h-full min-h-48"
+                    />
+                  </div>
+                  <div className="p-4 md:w-2/3">
+                    <h3 className="text-xl font-serif text-[#FFE3A9]">{bebida.nombre}</h3>
+                    <p className="mt-2 text-[#f5f0e1]">{bebida.descripcion}</p>
+
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-      ))}
-    </div>
-  </div>
-</section>
+      </section>
+        
+     {/* === SECCIÓN DE ALIMENTOS DESTACADOS === */}       
+
 
       {/* === SECCIÓN DE PROMOCIONES === */}
       <section className="px-6 py-12">
