@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 export default function Navbar() {
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 px-6 py-4 shadow-lg bg-[#080f24]">
+    <nav className="fixed top-0 left-0 right-0 z-50 px-10 py-8 shadow-lg bg-[#080f24]">
       <div className="container flex items-center mx-auto">
         {/* Contenedor centrado para los links */}
         <div className="absolute transform -translate-x-1/2 left-1/2">
@@ -29,15 +29,6 @@ export default function Navbar() {
           </ul>
         </div>
 
-        {/* Login (se mantiene a la derecha) */}
-        <div className="ml-auto">
-          <Link 
-            to="/login" 
-            className="font-semibold text-[#FFE3A9] hover:text-[#725CAD] transition"
-          >
-            LOG IN
-          </Link>
-        </div>
       </div>
     </nav>
   );

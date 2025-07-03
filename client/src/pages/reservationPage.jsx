@@ -48,12 +48,15 @@ export default function ReservationPage() {
 
   return (
     <div className="bg-[#fff7e8] text-[#1f1f1f] min-h-screen">
-      <div className="h-64 bg-cover bg-center" style={{ backgroundImage: "url('https://heraldodemexico.com.mx/u/fotografias/m/2020/11/26/f1280x720-287408_419083_5050.jpg')" }}>
-        <div className="bg-opacity-10 h-full flex items-center justify-center">
-          <h1 className="text-white text-4xl font-bold">Reservations</h1>
-        </div>
-      </div>
-
+        <section
+          className="relative w-full h-[380px] bg-cover bg-center flex items-center justify-center"
+            style={{ backgroundImage:
+              "url('https://heraldodemexico.com.mx/u/fotografias/m/2020/11/26/f1280x720-287408_419083_5050.jpg')" }}>
+          <div className="bg-opacity-10 h-full flex items-center justify-center">
+            <h1 className="relative text-4xl md:text-5xl font-bold text-white z-10 text-center px-4">Reservations</h1>
+          </div>
+        </section>
+    
       <div className="max-w-5xl mx-auto py-12 px-4 md:px-8 grid gap-10">
         <form onSubmit={handleSubmit} className="bg-white shadow-lg rounded-lg p-8 space-y-10">
           <div>

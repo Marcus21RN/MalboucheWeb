@@ -20,7 +20,7 @@ export default function EventsPage() {
   return (
     <div className="min-h-screen bg-[#fdf7f0] text-gray-900 font-sans">
       <section
-        className="relative w-full h-[300px] bg-cover bg-center flex items-center justify-center"
+        className="relative w-full h-[380px] bg-cover bg-center flex items-center justify-center"
         style={{
           backgroundImage:
             "url('https://heraldodemexico.com.mx/u/fotografias/m/2020/11/26/f1280x720-287408_419083_5050.jpg')",

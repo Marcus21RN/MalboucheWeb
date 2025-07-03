@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function contactPage() {
   return (
-    <div className="bg-yellow-100 min-h-screen py-12 px-6">
+    <div className="bg-yellow-100 min-h-screen py-20 px-6">
 
       {/* === TÍTULO DE CONTACTO === */}
       <h2 className="text-3xl font-bold text-center text-gray-800 mb-12">
