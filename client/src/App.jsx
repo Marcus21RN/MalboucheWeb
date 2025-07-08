@@ -1,12 +1,13 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route  } from 'react-router-dom';
 import Navbar from "./components/navBar";
+import Footer from "./components/footer"
 import HomePage from './pages/homePage';
 import MenuPage from './pages/menuPage'
 import EventsPage from './pages/eventsPage';
 import ReservationsPage from './pages/reservationPage';
 import ContactPage from './pages/contactPage'
-import LoginPage from './pages/loginPage';
+import LoginPage from './pages/userPages/loginPage';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/login" element={<LoginPage />} />
         </Routes>
+<Footer />
       </div>
     </Router>
 
