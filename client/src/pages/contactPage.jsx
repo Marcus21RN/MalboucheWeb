@@ -105,8 +105,8 @@ export default function contactPage() {
           </div>
 
           {/* Formulario de contacto */}
-          <div className="bg-[#0f122e] border-t-4 border-[#FFE3A9] shadow-lg rounded-lg p-6 hover:shadow-[0_0_20px_#725CAD80] transition duration-500">
-            <h3 className="text-lg font-bold bg-gradient-to-r from-[#725CAD] to-[#FFE3A9] text-white px-4 py-2 rounded-t-md mb-4 font-['Alice']">
+          <div className="bg-[#0f122e] border-t-4 border-[#FFE3A9] shadow-lg rounded-lg p-6 hover:shadow-[0_0_20px_#725CAD80] transform hover:scale-105 transition duration-500">
+            <h3 className="text-lg font-bold bg-gradient-to-r from-[#725CAD] to-[#FFE3A9] text-[#FFE3A9] px-4 py-2 rounded-t-md mb-4 font-['Alice']">
               Send us a message
             </h3>
             <form className="space-y-4">
@@ -144,7 +144,7 @@ export default function contactPage() {
               </div>
               <button 
                 type="submit" 
-                className="w-full bg-[#FFE3A9] hover:bg-[#D2B48C] text-[#080f24] font-bold font-['Alice'] py-2 rounded transition duration-300 shadow-md hover:shadow-lg"
+                className="w-full bg-[#FFE3A9] hover:bg-[#c1f8a6] text-[#080f24] font-bold font-['Alice'] py-2 rounded transition duration-300 shadow-md hover:shadow-lg"
               >
                 Send Message
               </button>
