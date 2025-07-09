@@ -8,7 +8,7 @@ export default function Navbar() {
       <div className="container flex items-center mx-auto my-auto">
         {/* Contenedor centrado para los links */}
         <div className="absolute transform -translate-x-1/2 left-1/2">
-          <ul className="flex gap-20 font-serif text-accent">
+          <ul className="flex gap-20 font-['Alice'] text-accent">
             {[
               { to: "/", label: "HOME" }, 
               { to: "/menu", label: "MENU" },
@@ -23,7 +23,7 @@ export default function Navbar() {
                 >
                   {link.label}
                 </Link> 
-                <span className="absolute left-0 bottom-[-2px] w-0 h-[2px] bg-blue-300 group-hover:w-full transition-all duration-300"></span>
+                <span className="absolute left-0 bottom-[-2px] w-0 h-[2px] bg-[#8CCDEB] group-hover:w-full transition-all duration-300"></span>
               </li>
             ))}
           </ul>
