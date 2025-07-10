@@ -5,37 +5,43 @@ const reservationSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  cantidadPersonas: {
-    type: Number,
+  nombreCliente: {
+    type: String,
+    required: true
+  },
+  primerApell: {
+    type: String,
+    required: true
+  },
+  segundoApell: {
+    type: String,
+    required: false // Este campo es opcional
+  },
+  correoCliente:{
+    type: String,
+    required:true
+  },
+  fecha:{
+    type: Date,
     required: true
   },
   horaInicio: {
     type: String,
     required: true
   },
-  horaFinal: {
-    type: String,
+  cantidadPersonas: {
+    type: Number,
     required: true
   },
-  correoCliente: {
-    type: String,
-    required: true
-  },
-  cliente: {
-    type: String,
+  fechaReservacion: {
+    type: Date,
+    default: Date.now, // Por defecto, la fecha de reservación es la fecha actual
     required: true
   },
   estado: {
     type: String,
-    enum: ['pendiente', 'cancelada', 'finalizada'],
-    default: 'pendiente'
-  },
-  fecha: {
-    type: Date,
-    required: true
-  },
-  numeroMesa: {
-    type: Number,
+    enum: ['pendiente', 'confirmada', 'cancelada'],
+    default: 'pendiente',
     required: true
   }
 }, {

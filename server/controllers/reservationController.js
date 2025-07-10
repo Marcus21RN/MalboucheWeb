@@ -6,31 +6,32 @@ export const createReservation = async (req, res) => {
     // Extraer y convertir campos necesarios
     const {
       _id = uuidv4(), // Generar un ID único si no se proporciona
-      cantidadPersonas,
+      nombreCliente,
+      primerApell,
+      segundoApell= ' ', // Asignar un valor por defecto si no se proporciona
+      correoCliente,
       fecha,
       horaInicio,
-      horaFinal,
-      cliente,
-      correoCliente,
-      estado,
-      numeroMesa
+      cantidadPersonas,
+      fechaReservacion,
+      estado
     } = req.body;
 
     // Crear objeto con conversión de tipos
     const newReservation = new Reservation({
       _id,
-      cantidadPersonas: Number(cantidadPersonas),
-      fecha: new Date(fecha),
-      horaInicio,
-      horaFinal,
-      cliente,
+      nombreCliente,
+      primerApell,
+      segundoApell,
       correoCliente,
-      estado,
-      numeroMesa: Number(numeroMesa)
+      fecha,
+      horaInicio,
+      cantidadPersonas,
+      fechaReservacion,
+      estado
     });
 
     await newReservation.save();
-      console.log('Reserva guardada:', newReservation);
     res.status(201).json(newReservation);
   } catch (error) {
     console.error('Error al crear la reservación:', error);

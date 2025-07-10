@@ -11,7 +11,6 @@ export default function ReservationPage() {
     primerApell: '',
     segundoApell: '',
     correoCliente: '',
-    fechaReservacion: '',
     estado: 'pendiente',
   }); 
 
@@ -39,7 +38,6 @@ export default function ReservationPage() {
         primerApell: '',
         segundoApell: '',
         correoCliente: '',
-        fechaReservacion: '',
         estado: 'pendiente',
       });
     } catch (error) {
