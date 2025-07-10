@@ -7,12 +7,13 @@ export default function ReservationPage() {
     cantidadPersonas: '',
     fecha: '',
     horaInicio: '',
-    horaFinal: '',
-    cliente: '',
+    nombreCliente: '',
+    primerApell: '',
+    segundoApell: '',
     correoCliente: '',
+    fechaReservacion: '',
     estado: 'pendiente',
-    numeroMesa: ''
-  });
+  }); 
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -28,70 +29,186 @@ export default function ReservationPage() {
       };
 
       const response = await axios.post('http://localhost:3000/api/reservations', reservation);
-      alert('Reservación enviada con éxito');
+      alert('Reservation submitted successfully');
       console.log(response.data);
       setFormData({
         cantidadPersonas: '',
         fecha: '',
         horaInicio: '',
-        horaFinal: '',
-        cliente: '',
+        nombreCliente: '',
+        primerApell: '',
+        segundoApell: '',
         correoCliente: '',
+        fechaReservacion: '',
         estado: 'pendiente',
-        numeroMesa: ''
       });
     } catch (error) {
-      console.error('Error al enviar la reservación:', error);
-      alert('Ocurrió un error al enviar la reservación');
+      console.error('Error submitting reservation:', error);
+      alert('Error submitting reservation');
     }
   };
 
   return (
-    <div className="bg-[#080f24] text-[#1f1f1f] min-h-screen pt-16 ">
-        <section
-          className="relative w-full h-[320px] bg-cover bg-center flex items-center justify-center"
-            style={{ backgroundImage:
-              "url('https://heraldodemexico.com.mx/u/fotografias/m/2020/11/26/f1280x720-287408_419083_5050.jpg')" }}>
-          <div className="bg-opacity-10 h-full flex items-center justify-center">
-            <h1 className="relative text-4xl md:text-5xl font-bold text-white z-10 text-center px-4">Reservations</h1>
-          </div>
-          {/* Capa de degradado oscuro (personalizable) */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#080f24] via-[#080f24]/40 to-transparent" />
-        </section>
-    
-      <div className="bg-[#080f24] max-w-5xl mx-auto py-12 px-4 md:px-8 grid gap-10">
-        <form onSubmit={handleSubmit} className="bg-white shadow-lg rounded-lg p-8 space-y-10">
+    <div className="bg-[#080f24] text-[#FFE3A9] min-h-screen pt-16">
+      {/* Hero Section */}
+      <section className="relative w-full h-[300px] overflow-hidden">
+        <div 
+          className="absolute inset-0 bg-cover bg-center blur-xs"
+          style={{ 
+            backgroundImage: "url('https://www.juliacharleseventmanagement.co.uk/wp-content/uploads/2019/10/Alice-In-Wonderland-Tea-Cups-600x300.jpg')" 
+          }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#080f24] via-[#080f24]/70 to-transparent" />
+        <div className="relative z-10 flex items-center justify-center h-full text-center px-4">
           <div>
-            <h2 className="text-xl text-center font-semibold mb-4">Fill the reservation form</h2>
-            <div className="grid md:grid-cols-3 gap-4">
-              <input type="number" name="cantidadPersonas" value={formData.cantidadPersonas} onChange={handleChange} placeholder="Guests" min="1" className="border border-gray-300 rounded-lg p-3" />
-              <input type="date" name="fecha" value={formData.fecha} onChange={handleChange} className="border border-gray-300 rounded-lg p-3" />
-              <input type="number" name="numeroMesa" value={formData.numeroMesa} onChange={handleChange} placeholder="Quantity of tables" className="border border-gray-300 rounded-lg p-3" />
+            <h1 className="mb-2 font-['Alice'] font-semibold text-7xl text-amber-50 drop-shadow-md">
+              Book Your Experience
+            </h1>
+            <p className="text-2xl text-[#FFE3A9] font-['Cormorant'] font-bold drop-shadow-sm">
+              & follow the White Rabbit
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Form */}
+      <div className="max-w-4xl mx-auto py-16 px-4 md:px-8">
+        <form onSubmit={handleSubmit} className="bg-[#0f122e] border border-[#725CAD]/50 rounded-xl shadow-2xl p-8 md:p-10 space-y-8">
+          {/* Basic Information Section */}
+          <div className="space-y-6">
+            <h2 className="text-2xl font-['Alice'] font-semibold text-[#FFE3A9] border-b border-[#725CAD]/50 pb-2">
+              Reservation Details
+            </h2>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div>
+                <label className="block font-['Cormorant'] text-[#8CCDEB] mb-2 font-bold text-xl">Number of Guests</label>
+                <input 
+                  type="number" 
+                  name="cantidadPersonas" 
+                  value={formData.cantidadPersonas} 
+                  onChange={handleChange} 
+                  placeholder="e.g. 2" 
+                  min="1" 
+                  className="w-full bg-[#080f24] border border-[#725CAD]/50 rounded-lg p-3 text-[#FFE3A9] focus:border-[#FFE3A9] focus:ring-1 focus:ring-[#FFE3A9]"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block font-['Cormorant'] text-[#8CCDEB] mb-2 font-bold text-xl">Date</label>
+                <input 
+                  type="date" 
+                  name="fecha" 
+                  value={formData.fecha} 
+                  onChange={handleChange} 
+                  className="w-full bg-[#080f24] border border-[#725CAD]/50 rounded-lg p-3 text-[#FFE3A9] focus:border-[#FFE3A9] focus:ring-1 focus:ring-[#FFE3A9]"
+                  required
+                />
+              </div>
             </div>
           </div>
 
-          <div>
-            <h2 className="text-xl text-center font-semibold mb-4">Time Selection</h2>
-            <div className="grid grid-cols-2 gap-4">
-              <input type="time" name="horaInicio" value={formData.horaInicio} onChange={handleChange} className="border border-gray-300 rounded-lg p-3" />
-              <input type="time" name="horaFinal" value={formData.horaFinal} onChange={handleChange} className="border border-gray-300 rounded-lg p-3" />
+          {/* Schedule Section */}
+          <div className="space-y-6">
+            <h2 className="text-2xl font-['Alice'] font-semibold text-[#FFE3A9] border-b border-[#725CAD]/50 pb-2">
+              Time Selection
+            </h2>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div>
+                <label className="block font-['Cormorant'] text-[#8CCDEB] mb-2 font-bold text-xl">Arrival Time</label>
+                <input 
+                  type="time"  
+                  name="horaInicio" 
+                  value={formData.horaInicio} 
+                  onChange={handleChange} 
+                  className="w-full bg-[#080f24] border border-[#725CAD]/50 rounded-lg p-3 text-[#FFE3A9] focus:border-[#FFE3A9] focus:ring-1 focus:ring-[#FFE3A9]"
+                  required
+                />
+              </div>
+              <div className="rounded-lg p-4 text-center border-b-2 border-[#8CCDEB]/40 bg-[#080f24]">
+                <h3 className="font-bold text-lg mb-4 text-amber-50 font-['Alice']">Opening Hours</h3>
+                <p className="mb-2 text-[#FFE3A9] font-['Cormorant']">
+                  <span className="font-semibold text-[#8CCDEB]">Mon - Thu:</span> 18:00 - 01:00
+                </p>
+                <p className="text-[#FFE3A9] font-['Cormorant']">
+                  <span className="font-semibold text-[#8CCDEB]">Fri - Sat:</span> 18:00 - 03:00
+                </p>
+              </div>
             </div>
           </div>
 
-          <div>
-            <h2 className="text-xl text-center font-semibold mb-4">Customer Information</h2>
-            <div className="grid md:grid-cols-2 gap-4">
-              <input type="text" name="cliente" value={formData.cliente} onChange={handleChange} placeholder="Full name" className="border border-gray-300 rounded-lg p-3" />
-              <input type="email" name="correoCliente" value={formData.correoCliente} onChange={handleChange} placeholder="example@example.com" className="border border-gray-300 rounded-lg p-3" />
+          {/* Personal Information Section */}
+          <div className="space-y-6">
+            <h2 className="text-2xl font-['Alice'] font-semibold text-[#FFE3A9] border-b border-[#725CAD]/50 pb-2">
+              Personal Information
+            </h2>
+            <div className="grid md:grid-cols-3 gap-6">
+              <div>
+                <label className="block font-['Cormorant'] text-[#8CCDEB] mb-2 font-bold text-xl">First Name</label>
+                <input 
+                  type="text" 
+                  name="nombreCliente" 
+                  value={formData.nombreCliente} 
+                  onChange={handleChange} 
+                  placeholder="e.g. John" 
+                  className="w-full bg-[#080f24] border border-[#725CAD]/50 rounded-lg p-3 text-[#FFE3A9] focus:border-[#FFE3A9] focus:ring-1 focus:ring-[#FFE3A9]"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block font-['Cormorant'] text-[#8CCDEB] mb-2 font-bold text-xl">First Last Name</label>
+                <input 
+                  type="text" 
+                  name="primerApell" 
+                  value={formData.primerApell} 
+                  onChange={handleChange} 
+                  placeholder="e.g. Smith" 
+                  className="w-full bg-[#080f24] border border-[#725CAD]/50 rounded-lg p-3 text-[#FFE3A9] focus:border-[#FFE3A9] focus:ring-1 focus:ring-[#FFE3A9]"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block font-['Cormorant'] text-[#8CCDEB] mb-2 font-bold text-xl">Second Last Name</label>
+                <input 
+                  type="text" 
+                  name="segundoApell" 
+                  value={formData.segundoApell} 
+                  onChange={handleChange} 
+                  placeholder="e.g. Johnson" 
+                  className="w-full bg-[#080f24] border border-[#725CAD]/50 rounded-lg p-3 text-[#FFE3A9] focus:border-[#FFE3A9] focus:ring-1 focus:ring-[#FFE3A9]"
+                  required
+                />
+              </div>
+
+            </div>
+            <div>
+              <label className="block font-['Cormorant'] text-[#8CCDEB] mb-2 font-bold text-xl">Email Address</label>
+              <input 
+                type="email" 
+                name="correoCliente" 
+                value={formData.correoCliente} 
+                onChange={handleChange} 
+                placeholder="example@email.com" 
+                className="w-full bg-[#080f24] border border-[#725CAD]/50 rounded-lg p-3 text-[#FFE3A9] focus:border-[#FFE3A9] focus:ring-1 focus:ring-[#FFE3A9]"
+                required
+              />
             </div>
           </div>
 
-          <div className="text-center">
-            <button type="submit" className="bg-yellow-400 hover:bg-yellow-500 text-white font-semibold py-3 px-8 rounded-lg shadow">
-              Reservation
+          {/* Submit Button */}
+          <div className="pt-6 text-center">
+            <button 
+              type="submit" 
+              className="bg-[#725CAD] hover:bg-[#8A6FDF] text-[#FFE3A9] font-['Alice'] font-bold py-3 px-10 rounded-full text-lg "
+            >
+              Confirm Reservation
             </button>
           </div>
         </form>
+
+        {/* Decorative Elements */}
+        <div className="flex justify-center mt-16">
+          <span className="text-2xl text-[#725CAD] animate-pulse">✦ ✦ ✦</span>
+        </div>
       </div>
     </div>
   );

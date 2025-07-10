@@ -1,8 +1,16 @@
 import React, { useEffect, useState } from "react";
 
+import { IoIosArrowForward } from "react-icons/io";
+import { IoCloseSharp } from "react-icons/io5";
+
+
+
+
+
 export default function EventsPage() {
   const [eventos, setEventos] = useState([]);
   const [eventoSeleccionado, setEventoSeleccionado] = useState(null);
+  const [eventoExpandido, setEventoExpandido] = useState(null);
 
   useEffect(() => {
     const obtenerEventos = async () => {
@@ -18,96 +26,116 @@ export default function EventsPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#F9F4EF] text-[#3d2767] font-sans transition-all duration-500 ease-in-out pt-16">
-      {/* Encabezado con imagen */}
-      <section
-        className="relative w-full h-[400px] bg-cover bg-center flex items-center justify-center shadow-md"
-        style={{
-          backgroundImage:
-            "url('https://heraldodemexico.com.mx/u/fotografias/m/2020/11/26/f1280x720-287408_419083_5050.jpg')",
-        }}
-      >
-          {/* Capa de degradado oscuro (personalizable) */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#080f24] via-[#080f24]/40 to-transparent" />
-        
-        <div className="bg-[#4B2E83]/70 backdrop-blur-sm p-6 rounded-xl shadow-xl text-center">
-          <h1 className="text-5xl font-serif font-bold text-[#F2C1E0] drop-shadow-md transition-all">
-            Upcoming Events & Promos
-          </h1>
-        </div>
-      </section>
+    <div className="min-h-screen bg-[#080f24] text-[#8CCDEB] font-['Alice'] pt-16 ">
+      {/* BANNER PRINCIPAL */}
+      <div className="relative w-full h-[300px] overflow-hidden ">
+        <div
+          className="absolute inset-0 bg-center bg-cover scale-105 blur-xs"
+          style={{
+            backgroundImage:
+              "url('https://cloudfront-us-east-1.images.arcpublishing.com/gray/WVYW3J7GLFCXXGOI343BI7XOUE.jpg')",
+          }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#080f24] via-[#080f24]/20 to-transparent " />
 
-      {/* Contenido principal de eventos */}
-
-        <div>
-          <div className="text-center px-6 py-12 bg-[#080f24]">
-            <h2 className="text-4xl font-serif font-bold text-[#FFE3A9]">
-              ✨ Explore our magical nights
-            </h2>
-            <p className="text-2xl font-serif text-[#FFE3A9]/100 mt-2">
-              Donde la fantasía se encuentra con la diversión
+        <div className="relative z-10 flex items-center justify-center h-full text-center px-4">
+          <div>
+            <h1 className="mb-2 font-semibold text-7xl text-amber-50 drop-shadow-md">
+              Twilight Tea Parties
+            </h1>
+            <p className="text-2xl text-[#FFE3A9] font-['Cormorant'] font-bold drop-shadow-sm">
+              A place where time forgets to tick
             </p>
           </div>
+        </div>
+      </div>
 
-          {/* Lista de eventos en filas */}
-          <div className="p-6 flex flex-col gap-4">
-            {eventos.map((evento) => (
-              <div
-                key={evento._id}
-                className="flex flex-col md:flex-row items-start md:items-center justify-between bg-[#F9F4EF] hover:bg-[#F2C1E0]/40 rounded-xl p-4 shadow-md transition duration-300 border border-[#4B2E83]/10"
-              >
-                <div className="flex items-start md:items-center gap-4">
-                  <div className="w-20 h-20 rounded-xl bg-[#F2C1E0] flex items-center justify-center text-3xl">
-                    🕰️
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-serif font-semibold text-[#4B2E83] mb-1">
-                      {evento.nombre}
-                    </h3>
-                    <p className="text-sm text-[#4B2E83]/80 max-w-md">
+    
+
+      {/* LISTA DE EVENTOS */}
+      <div className="px-4 py-10 max-w-5xl mx-auto space-y-6 ">
+        {eventos.map((evento) => (
+          <div
+            key={evento._id}
+            className=" border-b overflow-hidden cursor-pointer group hover:shadow-[0_0_20px_#725CAD80] transform hover:scale-105 transition duration-500"
+            onClick={() =>
+              setEventoExpandido(
+                eventoExpandido && eventoExpandido._id === evento._id
+                  ? null
+                  : evento
+              )
+            }
+          >
+            <div className="flex items-center justify-between p-4">
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 min-w-[100px] min-h-[100px] flex items-center justify-center text-3xl">
+                  <img
+                    src={evento.imagen || 'https://lkb-blog-images.linkaband.com/animation-bar/bar-concert-paris/13491-thumbnail-resized-BLOG_PAGE_THUMBNAIL.jpg'}
+                    alt={evento.nombre}
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <p className="text-xl font-bold text-[#FFE3A9] flex items-center gap-2">
+                    {evento.nombre}
+                      <IoIosArrowForward
+                        className="text-[#8CCDEB] text-2xl transform transition-transform duration-300"
+                        style={{ transform: eventoExpandido && eventoExpandido._id === evento._id ? 'rotate(90deg)' : 'rotate(0deg)' }}
+
+                      />
+                  </p>
+                  <div
+                    className={`overflow-hidden transition-all duration-500 ease-in-out ${
+                      eventoExpandido && eventoExpandido._id === evento._id ? 'max-h-[120px] opacity-100' : 'max-h-0 opacity-0'
+                    }`}
+                  >
+                    <p className="text-md font-['Cormorant'] text-amber-50/80 mt-1 overflow-y-auto w-xl">
                       {evento.descripcion}
                     </p>
                   </div>
                 </div>
-
-                <button
-                  onClick={() => setEventoSeleccionado(evento)}
-                  className="mt-4 md:mt-0 md:inline-flex items-center gap-1 px-4 py-2 bg-[#4B2E83] text-white rounded-lg hover:bg-[#351f66] transition"
-                >
-                  Ver más <span className="text-xs">→</span>
-                </button>
               </div>
-            ))}
+
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setEventoSeleccionado(evento);
+                }}
+                className="px-8 py-2 bg-[#725CAD] font-['Cormorant'] font-bold text-md text-amber-50 rounded-md hover:bg-[#5e47a3] transition"
+              >
+                Details
+              </button>
+            </div>
           </div>
-        </div>
+        ))}
+      </div>
 
-
-      {/* Modal de detalles */}
       {eventoSeleccionado && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center backdrop-blur-sm">
-          <div className="bg-white p-6 rounded-2xl w-full max-w-md shadow-xl relative transition duration-300">
+        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center backdrop-blur-sm ">
+          <div className="bg-[#725CAD] p-6 rounded-md w-full max-w-xl text-[#080f24] font-['Cormorant'] relative">
             <button
               onClick={() => setEventoSeleccionado(null)}
-              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-xl font-bold"
+              className="absolute top-4 right-3 text-2xl text-[#080f24] hover:text-[#080f24]/50"
             >
-              ×
+              <IoCloseSharp />
+              
             </button>
-            <h2 className="text-2xl font-serif font-bold text-[#4B2E83] mb-2">
+            <h2 className="text-3xl font-['Alice'] font-bold mb-3 text-[#080f24] text-center">
               {eventoSeleccionado.nombre}
             </h2>
-            <p className="text-[#4B2E83]/80 mb-1">
-              <strong>Descripción:</strong> {eventoSeleccionado.descripcion}
+            <img
+              src={eventoSeleccionado.imagen || 'https://static.vecteezy.com/system/resources/previews/022/059/000/non_2x/no-image-available-icon-vector.jpg'}
+              alt={eventoSeleccionado.nombre}
+              className="w-full max-h-100 object-cover rounded-md mb-4"
+            />
+            <p className="mb-2 text-lg text-[#080f24] font-bold font-['Cormorant']">
+              <strong className="text-xl text-amber-50 font-['Alice']">Descripción:</strong> {eventoSeleccionado.descripcion}
             </p>
-            <p className="text-[#4B2E83]/80 mb-1">
-              <strong>Fecha:</strong>{" "}
+            <p className="mb-2 text-lg font-bold text-[#080f24] font-['Cormorant']">
+              <strong className="text-xl text-amber-50 font-['Alice']">Fecha:</strong>{" "}
               {new Date(eventoSeleccionado.fecha).toLocaleDateString()}
             </p>
-            <p className="text-[#4B2E83]/80 mb-1">
-              <strong>Hora:</strong> {eventoSeleccionado.horaInicio} -{" "}
-              {eventoSeleccionado.horaFinal}
-            </p>
-            <p className="text-[#4B2E83]/80">
-              <strong>Estado:</strong> {eventoSeleccionado.estado}
+            <p className="mb-2 text-lg font-bold text-[#080f24] font-['Cormorant']">
+              <strong className="text-xl text-amber-50 font-['Alice']">Hora:</strong> {eventoSeleccionado.horaInicio} – {eventoSeleccionado.horaFinal}
             </p>
           </div>
         </div>

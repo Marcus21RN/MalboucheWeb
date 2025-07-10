@@ -8,7 +8,7 @@ export default function Navbar() {
       <div className="container flex items-center mx-auto my-auto">
         {/* Contenedor centrado para los links */}
         <div className="absolute transform -translate-x-1/2 left-1/2">
-          <ul className="flex gap-20 font-['Alice'] text-accent">
+          <ul className="flex gap-20 font-['Alice'] text-accent text-xl">
             {[
               { to: "/", label: "HOME" }, 
               { to: "/menu", label: "MENU" },

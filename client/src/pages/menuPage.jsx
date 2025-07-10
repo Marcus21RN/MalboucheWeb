@@ -2,34 +2,46 @@
 
 // src/pages/MenuPage.jsx
 import React, { useState } from "react";
+import barImage from "../assets/imagenes/bar5.jpg";
+
 
 const menuData = {
   "Pócimas Mágicas": [
     { 
-      nombre: "ELIXIR DE LA REINA ROJA", 
-      ingredientes: "Ginebra, jugo de granada, especias secretas, limón fresco lorem impsum dolor sit amet lorem  ",
+      nombre: "Mad Hatter Mojito",
+      ingredientes: "Ron, crema de coco y jugo de piña",
       precio: "$130.00 MXN" 
     },
     { 
-      nombre: "TÉ DEL SOMBRERERO LOCO", 
-      ingredientes: "Té negro, ron especiado, miel, limón fresco",
+      nombre: "White Rabbit Shot",
+      ingredientes: "Ron, crema de coco y jugo de piña",
       precio: "$120.00 MXN" 
     },
     { 
-      nombre: "LÁGRIMAS DEL FÉNIX", 
-      ingredientes: "Mezcal, aperol, jugo de piña, lima fresca",
+      nombre: "Queen’s Sour Elixir",
+      ingredientes: "Whiskey, jugo de limón y jarabe simple",
       precio: "$145.00 MXN" 
+    },
+    { 
+      nombre: "Cheshire Cat Martini",
+      ingredientes: "Vodka, licor de melón y jugo de arándano",
+      precio: "$150.00 MXN" 
+    },
+    { 
+      nombre: "Potion of Eternal Youth",
+      ingredientes: "Tequila, licor de durazno y jugo de naranja",
+      precio: "$140.00 MXN" 
     }
   ],
   "Delicias del País": [
     { 
-      nombre: "EMPAREDADO DEL RELOJ", 
-      ingredientes: "Pan de centeno, jamón serrano, queso brie, mostaza miel",
+      nombre: "Hamburguesa BBQ",
+      ingredientes: "Jugosa hamburguesa con salsa BBQ y queso cheddar",
       precio: "$160.00 MXN" 
     },
     { 
-      nombre: "TARTA DE TIEMPO CONGELADO", 
-      ingredientes: "Chocolate blanco, frambuesas, crema de vainilla",
+      nombre: "Papas Gajo",
+      ingredientes: "Papas gajo crujientes con especias",
       precio: "$95.00 MXN" 
     }
   ]
@@ -39,12 +51,12 @@ export default function MenuPage() {
   const [categoriaActiva, setCategoriaActiva] = useState("Pócimas Mágicas");
 
   return (
-    <div className="min-h-screen bg-[#080f24] py-12 px-4 sm:px-8 text-[#FFE3A9]">
-        <div className="relative w-full h-[500px] overflow-hidden">
+    <div className="min-h-screen bg-[#080f24] text-[#FFE3A9] pt-16  ">
+        <div className="relative w-full h-[300px] overflow-hidden">
             {/* Imagen de fondo desenfocada */}
             <div
               className="absolute inset-0 bg-center bg-cover scale-105 blur-xs"
-              style={{ backgroundImage: "url('https://heraldodemexico.com.mx/u/fotografias/m/2020/11/26/f1280x720-287408_419083_5050.jpg')" }}
+              style={{ backgroundImage:"url('https://raisedbywolveslv.com/wp-content/uploads/2024/06/louis-hansel-yLUvnCFI500-unsplash-960x750.jpg')" }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#080f24] via-[#080f24]/20 to-transparent" />
 
@@ -53,7 +65,7 @@ export default function MenuPage() {
                 <h1 className="mb-2 font-['Alice'] font-semibold text-7xl not-italic text-amber-50 drop-shadow-md">
                     Magical Bites & Sips
                 </h1>
-                <p className="text-2xl text-[#FFE3A9] font-['Cormorant'] font-normal  not-italic drop-shadow-sm">
+                <p className="text-2xl text-[#FFE3A9] font-['Cormorant'] font-bold  not-italic drop-shadow-sm">
                  Drink me. Eat me. Lose yourself.
                 </p>
               </div>
@@ -77,8 +89,8 @@ export default function MenuPage() {
             onClick={() => setCategoriaActiva(categoria)}
             className={`px-6 py-2 text-lg transition-all duration-300 font-['Alice'] ${
               categoriaActiva === categoria
-                ? "text-[#FFE3A9] border-b-2 border-[#FFE3A9]"
-                : "text-[#8CCDEB] hover:text-[#FFE3A9]"
+                ? "text-[#FFE3A9] border-b-2 border-[#8CCDEB]"
+                : "text-[#725CAD] hover:text-[#FFE3A9]"
             }`}
           >
             {categoria}

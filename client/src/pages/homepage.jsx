@@ -10,6 +10,10 @@ import bar3 from "../assets/imagenes/bar3.jpg";
 import bar4 from "../assets/imagenes/bar4.jpg";
 import sureloj from "../assets/imagenes/madhatters.jpg";
 
+import poster1 from "../assets/imagenes/poster1.png";
+import poster2 from "../assets/imagenes/poster2.png";
+import poster3 from "../assets/imagenes/poster3.png";
+import poster4 from "../assets/imagenes/poster4.png";
 
 
 
@@ -27,17 +31,17 @@ export default function HomePage() {
   const bebidas = [
     {
       nombre: "Mad Hatter Mojito",
-      imagen: "https://www.saveur.com/uploads/2007/02/SAVEUR_Mojito_1149-Edit-scaled.jpg?auto=webp",
+      imagen: "https://vegas411.com/wp-content/uploads/2024/10/Nice-Blossoms-Sakura-3-1024x684.jpg",
       descripcion: "Ron, crema de coco y jugo de piña"
     },
     {
       nombre: "White Rabbit Shot",
-      imagen: "https://i.pinimg.com/736x/e4/b1/63/e4b163cc8e3ff732336db619dc3e3de2.jpg",
+      imagen: "https://theblast.prod.media.wordpress.mattersmedia.io/brand-img/123/0x0/2024/11/01160616/Raspberry-No-Gin-Fizz-3-scaled.jpg?",
       descripcion: "Ron, crema de coco y jugo de piña"
     },
     {
       nombre: "Queen’s Sour Elixir",
-      imagen: "https://cdn.diffordsguide.com/cocktail/rVQbYA/square/0/512x512.webp",
+      imagen: "https://theblast.prod.media.wordpress.mattersmedia.io/brand-img/123/0x0/2024/11/01153534/Its-Time-for-the-Percolator-1.jpg?",
       descripcion: "Whiskey, jugo de limón y jarabe simple"
     },
 
@@ -47,79 +51,80 @@ export default function HomePage() {
   const alimentos = [
     {
       nombre: "Hamburguesa BBQ",
-      imagen: "https://media.scoolinary.app/recipes/images/2024/06/bbq-chedar-burger.jpg",
+      imagen: "https://img.chilango.com/2018/06/unnamed-15-1024x682.jpg",
       descripcion: "Jugosa hamburguesa con salsa BBQ y queso cheddar"
     },
     {
       nombre: "Boneless",
-      imagen: "https://editorialtelevisa.brightspotcdn.com/ca/1e/1516a1f140c8bea0c43e1959fbfe/boneless1-transformed.jpg",
+      imagen: "https://i.pinimg.com/736x/fe/a9/ec/fea9eccef2e7e1a922201297221434ac.jpg",
       descripcion: "Chicken boneless BBQ"
     },
     {
       nombre: "Papas Gajo",
-      imagen: "https://thecookinglab.es/wp-content/uploads/2024/09/Patatas-gajo-en-freidora-de-aire.jpg",
+      imagen: "https://cdn.pixabay.com/photo/2020/05/15/18/43/food-5174664_1280.jpg",
       descripcion: "Papas gajo crujientes con especias"
     },
     
   ];
 
   // === Lista de promociones actuales ===
-  const promociones = [
-    {
-      id: 1,
-      nombre: "Happy Hour",
-      descripcion: "Disfruta de 2x1 en todas las bebidas de 6 a 8 PM",
-      imagen: "https://d1csarkz8obe9u.cloudfront.net/posterpreviews/happy-hour-template%2C-cocktails-design-561dfde55f3345e809292117fc9c0c3d_screen.jpg?ts=1674381558",
-    },
-    {
-      id: 2,
-      nombre: "Noche de Chicas",
-      descripcion: "Disfruta de un 20% de descuento en tu cuenta total",
-      imagen: "https://heraldodemexico.com.mx/u/fotografias/m/2020/11/26/f1280x720-287408_419083_5050.jpg",
-    },
-    {
-      id: 3,
-      nombre: "Noche de Chicos",
-      descripcion: "Disfruta de un 20% de descuento en tu cuenta total",
-      imagen: "https://heraldodemexico.com.mx/u/fotografias/m/2020/11/26/f1280x720-287408_419083_5050.jpg",
-    },
-    {
-      id: 4,
-      nombre: "Martes de Trivia",
-      descripcion: "Participa en nuestra trivia y gana premios especiales",
-      imagen: "https://heraldodemexico.com.mx/u/fotografias/m/2020/11/26/f1280x720-287408_419083_5050.jpg",
-    },
-  ];
+    const promociones = [
+      {
+        id: 1,
+        nombre: "Happy Hour",
+        descripcion: "Disfruta de 2x1 en todas las bebidas de 6 a 8 PM",
+        
+        imagen: `${poster1}`,
+      },
+      {
+        id: 2,
+        nombre: "Noche de Chicas",
+        descripcion: "Disfruta de un 20% de descuento en tu cuenta total",
+        imagen: `${poster2}`,
+      },
+      {
+        id: 3,
+        nombre: "Noche de Chicos",
+        descripcion: "Los Miércoles de un 20% de descuento en tu cuenta total.",
+        imagen: `${poster3}`,
+      },
+      {
+        id: 4,
+        nombre: "Martes de Trivia",
+        descripcion: "Participa en nuestra trivia y gana premios especiales",
+        imagen: `${poster4}`,
+      },
+    ];
 
-  const PrevArrow = (props) => {
-  const { className, style, onClick } = props;
-  return (
-    <div
-      className={`${className} before:content-none`}
-      style={{ ...style, left: '-25px', color: '#FFE3A9' }}
-      onClick={onClick}
-    >
-      <svg className="w-8 h-8 text-[#FFE3A9]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-      </svg>
-    </div>
-  );
-};
+    const PrevArrow = (props) => {
+    const { className, style, onClick } = props;
+    return (
+      <div
+        className={`${className} before:content-none`}
+        style={{ ...style, left: '-25px', color: '#FFE3A9' }}
+        onClick={onClick}
+      >
+        <svg className="w-8 h-8 text-[#FFE3A9]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+        </svg>
+      </div>
+    );
+  };
 
-const NextArrow = (props) => {
-  const { className, style, onClick } = props;
-  return (
-    <div
-      className={`${className} before:content-none`}
-      style={{ ...style, right: '-25px', color: '#FFE3A9' }}
-      onClick={onClick}
-    >
-      <svg className="w-8 h-8 text-[#FFE3A9]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-      </svg>
-    </div>
-  );
-};
+  const NextArrow = (props) => {
+    const { className, style, onClick } = props;
+    return (
+      <div
+        className={`${className} before:content-none`}
+        style={{ ...style, right: '-25px', color: '#FFE3A9' }}
+        onClick={onClick}
+      >
+        <svg className="w-8 h-8 text-[#FFE3A9]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+        </svg>
+      </div>
+    );
+  };
 
   return (
     <div className="bg-[#080f24] pt-15">
@@ -140,7 +145,7 @@ const NextArrow = (props) => {
               <h1 className="mb-2 font-['Alice'] font-semibold text-7xl not-italic text-amber-50 drop-shadow-md">
                 MALBOUCHE BAR
               </h1>
-              <p className="text-2xl text-[#FFE3A9] font-['Cormorant'] font-normal  not-italic drop-shadow-sm">
+              <p className="text-2xl text-[#FFE3A9] font-['Cormorant'] font-bold  not-italic drop-shadow-sm">
                 A crazy experience inspired by Alice in Wonderland
               </p>
             </div>
@@ -231,8 +236,8 @@ const NextArrow = (props) => {
                   className="w-full h-130 object-cover filter: brightness(0.9) contrast(1.1) saturate(1.2)"
                 />
                 <div className="p-4 text-[#FFE3A9] text-center">
-                  <h3 className="text-lg font-bold mb-1">{bebida.nombre}</h3>
-                  <p className="text-sm text-amber-50 font-['Cormorant']">{bebida.descripcion}</p>
+                  <h3 className="text-20px font-extrabold mb-1">{bebida.nombre}</h3>
+                  <p className="text-xl text-[#8CCDEB] font-['Cormorant'] ">{bebida.descripcion}</p>
                 </div>
               </div>
             ))}
@@ -242,11 +247,11 @@ const NextArrow = (props) => {
         {/* === SEPARADOR DECORATIVO === */}
         <div className="relative my-12">
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="border-t border-[#725CAD]/70 w-3/12"></div>
+            <div className="border-t border-[#8CCDEB]/70 w-3/12 "></div>
           </div>
-          <div className="relative flex justify-center">
-            <span className="bg-[#080f24] px-4 font-['Alice'] text-[#FFE3A9]">
-              ✧
+          <div className="relative flex justify-center ">
+            <span className="bg-[#080f24] px-4 font-['Alice'] text-2xl text-[#725CAD] ">
+              ✦ ✦ ✦
             </span>
           </div>
         </div>
@@ -262,15 +267,15 @@ const NextArrow = (props) => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-8xl mx-auto">
             {alimentos.map((alimentos) => (
-              <div key={alimentos.id} className=" bg-[#0f122e] rounded-sm overflow-hidden shadow-md hover:shadow-xl transform hover:scale-105 transition duration-500">
+              <div key={alimentos.id} className="  bg-[#0f122e] rounded-sm w-full overflow-hidden shadow-md hover:shadow-[0_0_20px_#725CAD80] transform hover:scale-105 transition duration-500">
                 <img
                   src={alimentos.imagen}
                   alt={alimentos.nombre}
                   className="w-full h-130 object-cover "
                 />
                 <div className="p-4 text-[#FFE3A9] text-center">
-                  <h3 className="text-lg font-bold mb-1">{alimentos.nombre}</h3>
-                  <p className="text-sm text-amber-50 font-['Cormorant']">{alimentos.descripcion}</p>
+                  <h3 className="text-20px font-extrabold mb-1">{alimentos.nombre}</h3>
+                  <p className="text-xl text-[#8CCDEB] font-['Cormorant']">{alimentos.descripcion}</p>
                 </div>
                 
               </div>
@@ -284,8 +289,8 @@ const NextArrow = (props) => {
               <div className="border-t border-[#725CAD]/70 w-3/12"></div>
             </div>
             <div className="relative flex justify-center">
-              <span className="bg-[#080f24] px-4 font-['Alice'] text-[#FFE3A9]">
-                ✧
+              <span className="bg-[#080f24] px-4 font-['Alice'] text-[#FFE3A9] text-2xl">
+                ✦ ✦ ✦
               </span>
             </div>
           </div>
@@ -296,16 +301,16 @@ const NextArrow = (props) => {
               Mad Specials
             </h2>
             <p className="text-center text-amber-50 mb-8 font-['Cormorant']">
-            One bite, and you may never be the same size again... 
+            It’s always tea time somewhere 
             </p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-10 max-w-5xl mx-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-10 max-w-4xl mx-auto">
               {promociones.map((promociones) => (
                 <div key={promociones.id} className=" bg-[#0f122e] rounded-sm overflow-hidden shadow-md hover:shadow-xl transform hover:scale-105 transition duration-500">
                   <img
                     src={promociones.imagen}
                     alt={promociones.nombre}
-                    className="w-full h-130 object-cover "
+                    className="w-full h-160 object-cover "
                   />
                   <div className="p-4 text-[#FFE3A9] text-center">
                     <h3 className="text-lg font-bold mb-1">{promociones.nombre}</h3>
