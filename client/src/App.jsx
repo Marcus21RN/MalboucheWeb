@@ -16,16 +16,16 @@ function App() {
         {/* Navbar se muestra en todas las páginas */}
         <Navbar />
 
-        {/* Rutas principales */}
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/menu" element={<MenuPage />} />
-          <Route path="/events" element={<EventsPage />} />
-          <Route path="/reservations" element={<ReservationsPage />} />
-          <Route path="/contact" element={<ContactPage />} />
-          <Route path="/login" element={<LoginPage />} />
-        </Routes>
-<Footer />
+            {/* Rutas principales */}
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/menu" element={<MenuPage />} />
+              <Route path="/events" element={<EventsPage />} />
+              <Route path="/reservations" element={<ReservationsPage />} />
+              <Route path="/contact" element={<ContactPage />} />
+              <Route path="/login" element={<LoginPage />} />
+            </Routes>
+        <Footer />
       </div>
     </Router>
 
