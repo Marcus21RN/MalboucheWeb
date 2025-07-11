@@ -2,7 +2,7 @@
 
 // src/pages/MenuPage.jsx
 import React, { useState } from "react";
-import barImage from "../assets/imagenes/bar5.jpg";
+import barImage from "../../assets/imagenes/bar.jpg"; // Importa la imagen del bar
 
 
 const menuData = {

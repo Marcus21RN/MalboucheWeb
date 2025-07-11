@@ -1,5 +1,5 @@
 import React from 'react';
-import ubi from "../assets/imagenes/ubi.png";
+import ubi from "../../assets/imagenes/ubi.png";
 
 export default function contactPage() {
   return (

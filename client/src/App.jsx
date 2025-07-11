@@ -2,11 +2,11 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route  } from 'react-router-dom';
 import Navbar from "./components/navBar";
 import Footer from "./components/footer"
-import HomePage from './pages/homePage';
-import MenuPage from './pages/menuPage'
-import EventsPage from './pages/eventsPage';
-import ReservationsPage from './pages/reservationPage';
-import ContactPage from './pages/contactPage'
+import HomePage from './pages/clientPages/homePage';
+import MenuPage from './pages/clientPages/menuPage'
+import EventsPage from './pages/clientPages/eventsPage';
+import ReservationsPage from './pages/clientPages/reservationPage';
+import ContactPage from './pages/clientPages/contactPage'
 import LoginPage from './pages/userPages/loginPage';
 
 function App() {

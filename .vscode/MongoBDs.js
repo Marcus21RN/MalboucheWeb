@@ -28,6 +28,7 @@ db.createCollection("empleado", {
         },
         correo:{
             bsonType: "string",
+            uniqueItems: true,
             description: "Correo electrónico del empleado"
         },
         password:{

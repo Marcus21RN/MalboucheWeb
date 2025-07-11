@@ -2,10 +2,12 @@ import express from 'express';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import Empleado from '../models/empleado.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const router = express.Router();
-const JWT_SECRET = process.env.JWT_SECRET || 'clave-secreta-super-segura'; // Idealmente usar .env
-
+const JWT_SECRET = process.env.JWT_SECRET || 'A!@E=MC^2'; // usando dotenv para manejar variables de entorno
 // LOGIN
 router.post('/login', async (req, res) => {
   const { correo, password } = req.body;

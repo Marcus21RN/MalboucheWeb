@@ -2,18 +2,18 @@
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import barImage from "../assets/imagenes/bar.jpg";
+import barImage from "../../assets/imagenes/bar.jpg";
 
-import bar1 from "../assets/imagenes/bar1.jpg";
-import bar2 from "../assets/imagenes/bar2.jpg";
-import bar3 from "../assets/imagenes/bar3.jpg";
-import bar4 from "../assets/imagenes/bar4.jpg";
-import sureloj from "../assets/imagenes/madhatters.jpg";
+import bar1 from "../../assets/imagenes/bar1.jpg";
+import bar2 from "../../assets/imagenes/bar2.jpg";
+import bar3 from "../../assets/imagenes/bar3.jpg";
+import bar4 from "../../assets/imagenes/bar4.jpg";
+import sureloj from "../../assets/imagenes/madhatters.jpg";
 
-import poster1 from "../assets/imagenes/poster1.png";
-import poster2 from "../assets/imagenes/poster2.png";
-import poster3 from "../assets/imagenes/poster3.png";
-import poster4 from "../assets/imagenes/poster4.png";
+import poster1 from "../../assets/imagenes/poster1.png";
+import poster2 from "../../assets/imagenes/poster2.png";
+import poster3 from "../../assets/imagenes/poster3.png";
+import poster4 from "../../assets/imagenes/poster4.png";
 
 
 
@@ -51,13 +51,13 @@ export default function HomePage() {
   const alimentos = [
     {
       nombre: "Hamburguesa BBQ",
-      imagen: "https://img.chilango.com/2018/06/unnamed-15-1024x682.jpg",
+      imagen: "https://i.pinimg.com/736x/fe/a9/ec/fea9eccef2e7e1a922201297221434ac.jpg",
       descripcion: "Jugosa hamburguesa con salsa BBQ y queso cheddar"
     },
     {
-      nombre: "Boneless",
-      imagen: "https://i.pinimg.com/736x/fe/a9/ec/fea9eccef2e7e1a922201297221434ac.jpg",
-      descripcion: "Chicken boneless BBQ"
+      nombre: "Cueritos preparados",
+      imagen: "https://img.chilango.com/2018/06/unnamed-15-1024x682.jpg",
+      descripcion: "Six pack de cueritos con salsa de chile de árbol y limón"
     },
     {
       nombre: "Papas Gajo",

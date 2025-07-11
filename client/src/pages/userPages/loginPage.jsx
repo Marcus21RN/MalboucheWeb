@@ -19,7 +19,7 @@ export default function LoginPage() {
 
       if (res.status === 200) {
         localStorage.setItem("token", res.data.token); // guardamos el token
-        navigate("/admin"); // Redirigir al panel de administrador
+        navigate("/homeUser"); // Redirigir al panel de usuario administrador.
       }
     } catch (err) { // Está resaltado en rojo esta linea de código pero es funcional. No implica que no compile.
       setMensaje("Credenciales incorrectas o error en el servidor.");
@@ -84,22 +84,7 @@ export default function LoginPage() {
                   Log In
                 </button>
               </div>
-
-              <div className="text-sm text-right">
-                <button type="button" className="text-purple-600 hover:underline">
-                  Forgot your password?
-                </button>
-              </div>
             </form>
-
-            <div className="mt-8 text-center">
-              <p className="text-sm">
-                Don't have an account?
-                <button type="button" className="text-purple-600 ml-1 hover:underline">
-                  Sign up
-                </button>
-              </p>
-            </div>
           </div>
         </div>
       </div>
