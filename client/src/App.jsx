@@ -1,35 +1,81 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route  } from 'react-router-dom';
-import Navbar from "./components/navBar";
-import Footer from "./components/footer"
+import { BrowserRouter as Router, Routes, Route, Outlet  } from 'react-router-dom';
+
+// Componentes importados de CLIENTES
+import Navbar from "./pages/clientPages/components/navBar";
+import Footer from "./pages/clientPages/components/footer"
 import HomePage from './pages/clientPages/homePage';
 import MenuPage from './pages/clientPages/menuPage'
 import EventsPage from './pages/clientPages/eventsPage';
 import ReservationsPage from './pages/clientPages/reservationPage';
 import ContactPage from './pages/clientPages/contactPage'
+
+// Componentes importados de USUARIOS
 import LoginPage from './pages/userPages/loginPage';
+import HomeUser from "./pages/userPages/homeUser";
+
+// Componentes importados de ADMINISTRADORES
+import HomeAdmin from "./pages/adminPages/homeAdmin";
+import EmpleadoAdmin from "./pages/adminPages/empleadoAdmin.jsx";
+
+// Layouts
+function ClientLayout(){
+  return(
+    <>
+    <Navbar />
+    <Outlet />
+    <Footer />
+    </>
+  );
+}
+
+function UserLayout(){
+  return(
+    <>
+    <Outlet/>
+    </>
+  );
+}
+
+function AdminLayout(){
+  return(
+    <>
+    <Outlet/>
+    </>
+  );
+}
 
 function App() {
   return (
-   <Router>
-      <div className="min-h-screen bg-gray-50 text-gray-800">
-        {/* Navbar se muestra en todas las páginas */}
-        <Navbar />
+    <Router>
+      <Routes>
+        {/* Rutas para clientes */}
+        <Route element={<ClientLayout />}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/menu" element={<MenuPage />} />
+          <Route path="/events" element={<EventsPage />} />
+          <Route path="/reservations" element={<ReservationsPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+        </Route>
 
-            {/* Rutas principales */}
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/menu" element={<MenuPage />} />
-              <Route path="/events" element={<EventsPage />} />
-              <Route path="/reservations" element={<ReservationsPage />} />
-              <Route path="/contact" element={<ContactPage />} />
-              <Route path="/login" element={<LoginPage />} />
-            </Routes>
-        <Footer />
-      </div>
+        {/* Rutas para usuarios */}
+        <Route element={<UserLayout />}>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/user/home" element={<HomeUser />} />
+          {/* Otras rutas de usuario */}
+        </Route>
+
+        {/* Rutas para admin */}
+        <Route element={<AdminLayout />}>
+          <Route path="/admin/home" element={<HomeAdmin />} />
+          <Route path="/admin/empleados" element={<EmpleadoAdmin />} />
+          {/* <Route path="/admin/home" element={<AdminHome />} /> */}
+          {/* Otras rutas de admin */}
+        </Route>
+      </Routes>
     </Router>
-
   );
 }
+
 
 export default App;

@@ -1,7 +1,7 @@
 export default function HomeUser() {
     return(
         <div>
-            <h1 className="text-2x1 ">Welcome to the User Home Page</h1>
+            <h1 className="text-2xl font-bold text-center mt-10">Bienvenido al Panel de Empleado</h1>
         </div>
     )
 }

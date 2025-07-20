@@ -6,6 +6,7 @@ import eventRoutes from './clientBackend/routes/events.js';
 import reservationRoutes from './clientBackend/routes/reservations.js';
 import connectDB from './config/db.js';
 import authRoutes from './userBackend/routes/authRoutes.js';
+import adminBackend from './adminBackend/index.js';
 
 dotenv.config();
 connectDB();
@@ -18,5 +19,6 @@ app.use(express.json());
 app.use('/api/reservations', reservationRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/adminBackend', adminBackend);
 
 export default app;

@@ -19,7 +19,14 @@ export default function LoginPage() {
 
       if (res.status === 200) {
         localStorage.setItem("token", res.data.token); // guardamos el token
-        navigate("/homeUser"); // Redirigir al panel de usuario administrador.
+        const rol = res.data.user.rol;
+        if (rol === "ADMIN") {
+          navigate("/admin/home"); // Redirigir a la página de inicio del admin
+        } else if (rol === "EMPLE") {
+          navigate("/user/home"); // Redirigir a la página de inicio del empleado
+        } else {
+          setMensaje("Rol no reconocido.");
+        }
       }
     } catch (err) { // Está resaltado en rojo esta linea de código pero es funcional. No implica que no compile.
       setMensaje("Credenciales incorrectas o error en el servidor.");

@@ -8,7 +8,7 @@ db.createCollection("empleado", {
   validator: {
     $jsonSchema: {
       bsonType: "object",
-      required: ["_id", "nombre", "primerApellido", "estado", "IDRol"],
+      required: ["_id", "nombre", "primerApellido","correo", "password", "estado", "IDRol"],
       properties: {
         _id: {
           bsonType: "number",
@@ -28,7 +28,6 @@ db.createCollection("empleado", {
         },
         correo:{
             bsonType: "string",
-            uniqueItems: true,
             description: "Correo electrónico del empleado"
         },
         password:{
@@ -37,10 +36,12 @@ db.createCollection("empleado", {
         },
         estado: {
           bsonType: "string",
+          enum: ["activo", "inactivo"],
           description: "Estado (activo/inactivo)"
         },
         IDRol: {
           bsonType: "string",
+          enum: ["ADMIN", "EMPLE"],
           description: "ID del rol asignado al empleado (Administrador/Empleado)"
         }
       }
@@ -122,7 +123,6 @@ db.createCollection("rol", {
 db.rol.insertMany([
   { _id: "ADMIN", nombre: "Administrador"},
   { _id: "EMPLE", nombre: "Empleado"},
-
 ])
 
 // COLECCIÓN: EVENTO

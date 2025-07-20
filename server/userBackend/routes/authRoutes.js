@@ -7,7 +7,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const router = express.Router();
-const JWT_SECRET = process.env.JWT_SECRET || 'A!@E=MC^2'; // usando dotenv para manejar variables de entorno
+const JWT_SECRET = process.env.JWT_SECRET; // usando dotenv para manejar variables de entorno
 // LOGIN
 router.post('/login', async (req, res) => {
   const { correo, password } = req.body;
