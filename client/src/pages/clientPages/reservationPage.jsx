@@ -27,7 +27,7 @@ export default function ReservationPage() {
         ...formData
       };
 
-      const response = await axios.post('http://localhost:3000/api/reservations', reservation);
+      const response = await axios.post('http://localhost:3000/clientBackend/reservations', reservation);
       alert('Reservation submitted successfully');
       console.log(response.data);
       setFormData({

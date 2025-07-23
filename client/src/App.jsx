@@ -15,6 +15,8 @@ import ContactPage from './pages/clientPages/contactPage'
 // Componentes importados de USUARIOS
 import LoginPage from './pages/userPages/loginPage';
 import HomeUser from "./pages/userPages/homeUser";
+import PromoUser from './pages/userPages/promoUser.jsx';
+import MenusUser from './pages/userPages/menu.jsx';
 
 // Componentes importados de ADMINISTRADORES
 import HomeAdmin from "./pages/adminPages/homeAdmin";
@@ -66,6 +68,8 @@ function App() {
           <Route element={<UserLayout />}>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/user/home" element={<HomeUser />} />
+            <Route path="/user/promotions" element={<PromoUser />} />
+            <Route path="/user/menus" element={<MenusUser />} />
           </Route>
 
           {/* Rutas para admin */}

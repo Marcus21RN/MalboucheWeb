@@ -2,10 +2,16 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 
-import eventRoutes from './clientBackend/routes/events.js';
-import reservationRoutes from './clientBackend/routes/reservations.js';
+// Importación de la conexión a la base de datos
 import connectDB from './config/db.js';
-import authRoutes from './userBackend/routes/authRoutes.js';
+
+// RUTAS DE IMPORTACIÓN PARA EL BACKEND DE CLIENTE
+import clientBackend from './clientBackend/index.js';
+
+// RUTAS DE IMPORTACIÓN PARA EL BACKEND DE USUARIO
+import userBackend from './userBackend/index.js';
+
+// RUTAS DE IMPORTACIÓN PARA EL BACKEND DE ADMINISTRADOR
 import adminBackend from './adminBackend/index.js';
 
 dotenv.config();
@@ -16,9 +22,17 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use('/api/reservations', reservationRoutes);
-app.use('/api/events', eventRoutes);
-app.use('/api/auth', authRoutes);
+
+// APIs PARA EL BACKEND DE CLIENTE
+app.use('/clientBackend', clientBackend);
+
+
+// APIs PARA EL BACKEND DE USUARIO
+app.use('/userBackend', userBackend);
+
+
+
+// APIs PARA EL BACKEND DE ADMINISTRADOR
 app.use('/adminBackend', adminBackend);
 
 export default app;

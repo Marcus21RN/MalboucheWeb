@@ -194,7 +194,7 @@ export default function HomePage() {
 
             {/* Texto */}
             <div className="text-[#fbf7f4] font-['montserrat']">
-              <text className=" font-normal text-[#b76ba3]">About Us</text>
+              <span className=" font-normal text-[#b76ba3]">About Us</span>
               <h2 className="text-3xl md:text-4xl font-bold mt-2 mb-6 text-center md:text-left font-['oswald'] text-[#fbf7f4]">
                 WELCOME TO MALBOUCHE BAR
               </h2>
@@ -249,7 +249,7 @@ export default function HomePage() {
 
             {/* Texto */}
             <div className="text-[#fbf7f4] font-['montserrat']">
-              <text className=" font-normal text-[#b76ba3]">New experiences</text>
+              <span className=" font-normal text-[#b76ba3]">New experiences</span>
                 <h2 className="text-3xl md:text-6xl font-bold mt-2 mb-6 text-center md:text-left font-['oswald'] text-[#fbf7f4]">
                   CHECK OUR EVENTS
                   <span className="text-[#b76ba3]">.</span> 
