@@ -341,7 +341,7 @@ export default function HomePage() {
         
           </section>
           {/* === SECCIÓN DE PROMOCIONES === */}
-          <section className="py-8 px-6 bg-gradient-to-b from-[#1e00188a] to-[#3e0132] text-white font-['oswald'] h-[630px]">
+          <section className="py-8 px-6 bg-gradient-to-b from-[#1e00188a] to-[#3e0132] text-white font-['oswald'] h-[450px]">
             <h2 className="text-5xl text-center font-bold mb-10 drop-shadow-md">
               DON'T MISS OUR PROMOS
             </h2>
