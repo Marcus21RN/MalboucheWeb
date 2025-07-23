@@ -1,5 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Outlet  } from 'react-router-dom';
+import { ParallaxProvider } from 'react-scroll-parallax';
+
 
 // Componentes importados de CLIENTES
 import Navbar from "./pages/clientPages/components/navBar";
@@ -48,36 +50,36 @@ function AdminLayout(){
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        {/* Rutas para clientes */}
-        <Route element={<ClientLayout />}>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/menu" element={<MenuPage />} />
-          <Route path="/events" element={<EventsPage />} />
-          <Route path="/reservations" element={<ReservationsPage />} />
-          <Route path="/contact" element={<ContactPage />} />
-        </Route>
+    <ParallaxProvider>
+      <Router>
+        <Routes>
+          {/* Rutas para clientes */}
+          <Route element={<ClientLayout />}>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/menu" element={<MenuPage />} />
+            <Route path="/events" element={<EventsPage />} />
+            <Route path="/reservations" element={<ReservationsPage />} />
+            <Route path="/contact" element={<ContactPage />} />
+          </Route>
 
-        {/* Rutas para usuarios */}
-        <Route element={<UserLayout />}>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/user/home" element={<HomeUser />} />
-          {/* Otras rutas de usuario */}
-        </Route>
+          {/* Rutas para usuarios */}
+          <Route element={<UserLayout />}>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/user/home" element={<HomeUser />} />
+          </Route>
 
-        {/* Rutas para admin */}
-        <Route element={<AdminLayout />}>
-          <Route path="/admin/home" element={<HomeAdmin />} />
-          <Route path="/admin/empleados" element={<EmpleadoAdmin />} />
-          <Route path="/admin/iot" element={<DashboardIoT />} />
-          {/* <Route path="/admin/home" element={<AdminHome />} /> */}
-          {/* Otras rutas de admin */}
-        </Route>
-      </Routes>
-    </Router>
+          {/* Rutas para admin */}
+          <Route element={<AdminLayout />}>
+            <Route path="/admin/home" element={<HomeAdmin />} />
+            <Route path="/admin/empleados" element={<EmpleadoAdmin />} />
+            <Route path="/admin/iot" element={<DashboardIoT />} />
+          </Route>
+        </Routes>
+      </Router>
+    </ParallaxProvider>
   );
 }
+
 
 
 export default App;

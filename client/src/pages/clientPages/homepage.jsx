@@ -1,71 +1,93 @@
 
 import Slider from "react-slick";
+import { Link } from 'react-router-dom'; // Importa Link
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import barImage from "../../assets/imagenes/bar.jpg";
+import { Parallax } from 'react-scroll-parallax';
+import React, { useEffect, useState } from 'react';
 
-import bar1 from "../../assets/imagenes/bar1.jpg";
+import { IoIosArrowForward } from "react-icons/io";
+import { IoCloseSharp } from "react-icons/io5";
+
+
+import barImage from "../../assets/imagenes/bar.jpg";
+import neon2 from "../../assets/imagenes/neon2.jpg";
+import banner2 from "../../assets/imagenes/banner2.jpg";
+
+import bar1 from "../../assets/imagenes/bar6.jpg";
 import bar2 from "../../assets/imagenes/bar2.jpg";
 import bar3 from "../../assets/imagenes/bar3.jpg";
 import bar4 from "../../assets/imagenes/bar4.jpg";
-import sureloj from "../../assets/imagenes/madhatters.jpg";
+import sureloj from "../../assets/imagenes/aboutUs.jpg";
 
 import poster1 from "../../assets/imagenes/poster1.png";
 import poster2 from "../../assets/imagenes/poster2.png";
 import poster3 from "../../assets/imagenes/poster3.png";
 import poster4 from "../../assets/imagenes/poster4.png";
 
-
-
 export default function HomePage() {
   // === Galería de imágenes del bar ===
-  const galeria = [
+  const imagenes = [
     { id: 1, imagen: bar1 },
-    { id: 2, imagen: bar2 },
-    { id: 3, imagen: bar3 },
+    { id: 2, imagen: bar3 },
+    { id: 3, imagen: bar2 },
     { id: 4, imagen: bar4 },
   ];
 
   // === Lista de bebidas destacadas ===
 
-  const bebidas = [
-    {
-      nombre: "Mad Hatter Mojito",
-      imagen: "https://vegas411.com/wp-content/uploads/2024/10/Nice-Blossoms-Sakura-3-1024x684.jpg",
-      descripcion: "Ron, crema de coco y jugo de piña"
-    },
-    {
-      nombre: "White Rabbit Shot",
-      imagen: "https://theblast.prod.media.wordpress.mattersmedia.io/brand-img/123/0x0/2024/11/01160616/Raspberry-No-Gin-Fizz-3-scaled.jpg?",
-      descripcion: "Ron, crema de coco y jugo de piña"
-    },
-    {
-      nombre: "Queen’s Sour Elixir",
-      imagen: "https://theblast.prod.media.wordpress.mattersmedia.io/brand-img/123/0x0/2024/11/01153534/Its-Time-for-the-Percolator-1.jpg?",
-      descripcion: "Whiskey, jugo de limón y jarabe simple"
-    },
+  const [menuData, setMenuData] = useState([]);
 
-  ];
+    useEffect(() => {
+    // Simulamos una llamada a una base de datos
+    setTimeout(() => {
+      const fakeDataFromDB = [
+        {
+          categoria: 'Beer',
+          imagen: 'https://images.unsplash.com/photo-1620219365994-f443a86ea626?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+          items: [
+            { nombre: 'Pale Ale', precio: 6, descripcion: 'Ligera, frutal y refrescante.' },
+            { nombre: 'IPA', precio: 7, descripcion: 'Amarga con notas cítricas.' },
+            { nombre: 'Stout', precio: 8, descripcion: 'Oscura, cremosa y tostada.' },
+          ],
+        },
+        {
+          categoria: 'Cocktails',
+          imagen: 'https://images.unsplash.com/photo-1566417713940-fe7c737a9ef2?q=80&w=2029&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+          items: [
+            { nombre: 'Margarita', precio: 8, descripcion: 'Tequila, triple sec y lima.' },
+            { nombre: 'Mojito', precio: 7, descripcion: 'Ron, menta, azúcar y soda.' },
+            { nombre: 'Cosmopolitan', precio: 9, descripcion: 'Vodka, Cointreau, arándano y lima.' },
+          ],
+        },
+         {
+          categoria: 'Shots',
+          imagen: 'https://images.unsplash.com/photo-1730698394350-76b6f0ac8e03?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+          items: [
+            { nombre: 'Margarita', precio: 8, descripcion: 'Tequila, triple sec y lima.' },
+            { nombre: 'Mojito', precio: 7, descripcion: 'Ron, menta, azúcar y soda.' },
+            { nombre: 'Cosmopolitan', precio: 9, descripcion: 'Vodka, Cointreau, arándano y lima.' },
+          ],
+        },
+        {
+          categoria: 'Snacks',
+          imagen: 'https://images.unsplash.com/photo-1565060299172-42f7895549f0?q=80&w=1173&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+          items: [
+            { nombre: 'Nachos', precio: 6, descripcion: 'Totopos con queso y jalapeños.' },
+            { nombre: 'Alitas', precio: 8, descripcion: 'Alitas de pollo con salsa BBQ.' },
+            { nombre: 'Papas a la francesa', precio: 4, descripcion: 'Papas fritas crujientes.' },
+            
+          ],
+        },
+        
+        
+      ];
+      setMenuData(fakeDataFromDB);
+    }, 1000); // Simula retraso de red
+  }, []);
 
-  // === Lista de alimentos destacados ===
-  const alimentos = [
-    {
-      nombre: "Hamburguesa BBQ",
-      imagen: "https://i.pinimg.com/736x/fe/a9/ec/fea9eccef2e7e1a922201297221434ac.jpg",
-      descripcion: "Jugosa hamburguesa con salsa BBQ y queso cheddar"
-    },
-    {
-      nombre: "Cueritos preparados",
-      imagen: "https://img.chilango.com/2018/06/unnamed-15-1024x682.jpg",
-      descripcion: "Six pack de cueritos con salsa de chile de árbol y limón"
-    },
-    {
-      nombre: "Papas Gajo",
-      imagen: "https://cdn.pixabay.com/photo/2020/05/15/18/43/food-5174664_1280.jpg",
-      descripcion: "Papas gajo crujientes con especias"
-    },
-    
-  ];
+
+
 
   // === Lista de promociones actuales ===
     const promociones = [
@@ -78,37 +100,35 @@ export default function HomePage() {
       },
       {
         id: 2,
-        nombre: "Noche de Chicas",
+        nombre: "GIRL'S NIGHT",
         descripcion: "Disfruta de un 20% de descuento en tu cuenta total",
         imagen: `${poster2}`,
       },
       {
         id: 3,
-        nombre: "Noche de Chicos",
+        nombre: "BOY'S NIGHT",
         descripcion: "Los Miércoles de un 20% de descuento en tu cuenta total.",
         imagen: `${poster3}`,
       },
       {
         id: 4,
-        nombre: "Martes de Trivia",
+        nombre: "Trivia Night",
         descripcion: "Participa en nuestra trivia y gana premios especiales",
         imagen: `${poster4}`,
       },
     ];
+    
+      const [modalAbierto, setModalAbierto] = useState(false);
+  const [promocionSeleccionada, setPromocionSeleccionada] = useState(null);
 
-    const PrevArrow = (props) => {
-    const { className, style, onClick } = props;
-    return (
-      <div
-        className={`${className} before:content-none`}
-        style={{ ...style, left: '-25px', color: '#FFE3A9' }}
-        onClick={onClick}
-      >
-        <svg className="w-8 h-8 text-[#FFE3A9]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-        </svg>
-      </div>
-    );
+  const abrirModal = (promocion) => {
+    setPromocionSeleccionada(promocion);
+    setModalAbierto(true);
+  };
+
+  const cerrarModal = () => {
+    setModalAbierto(false);
+    setPromocionSeleccionada(null);
   };
 
   const NextArrow = (props) => {
@@ -127,48 +147,55 @@ export default function HomePage() {
   };
 
   return (
-    <div className="bg-[#080f24] pt-15">
-     
-      <div className="min-h-screen bg-[#080f24] ">
+    <div className="bg-[#000000]">
+      <div className="min-h-screen bg-[#000000] ">
 
-        {/* === BANNER PRINCIPAL === */}
-        <div className="relative w-full h-[500px] overflow-hidden">
-          {/* Imagen de fondo desenfocada */}
-          <div
-            className="absolute inset-0 bg-center bg-cover scale-105 blur-xs"
-            style={{ backgroundImage: `url(${barImage})` }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#080f24] via-[#080f24]/20 to-transparent" />
+      {/* === BANNER PRINCIPAL === */}
+        <div className="relative w-full h-[570px] overflow-hidden">
+          {/* Imagen Parallax */}
+          <Parallax speed={-20}>
+            <img
+              src={barImage}
+              alt="Bar Banner"
+              className="w-full h-full object-cover scale-150"
+            />
+          </Parallax>
 
-          <div className="relative z-10 flex items-center justify-center h-full text-center px-4">
-            <div>
-              <h1 className="mb-2 font-['Alice'] font-semibold text-7xl not-italic text-amber-50 drop-shadow-md">
-                MALBOUCHE BAR
+          {/* Contenido encima del fondo */}
+          <div className="absolute inset-0 z-10 flex flex-col justify-center items-start pl-40 h-full px-4">
+            <div className="mb-8">
+              <div className="w-16 h-1 bg-white mb-5"></div>
+              <h1 className="font-['oswald'] font-semibold text-6xl text-white drop-shadow-md">
+                <span className="block">UNFORGETTABLE NIGHTS</span>
+                <span className="block mt-4">AT MALBOUCHE BAR</span>
               </h1>
-              <p className="text-2xl text-[#FFE3A9] font-['Cormorant'] font-bold  not-italic drop-shadow-sm">
-                A crazy experience inspired by Alice in Wonderland
-              </p>
             </div>
+            <Link
+              to="/reservations"
+              className="px-8 py-3 text-white font-['montserrat'] border-1 hover:border-[#b76ba3] transition-colors duration-300 transform hover:scale-105"
+            >
+              BOOK NOW
+            </Link>
           </div>
         </div>
-
        
         {/* === SECCIÓN SOBRE NOSOTROS === */}
-        <section className="px-6 mt-10 py-12 bg-[#080f24]">
+        <section className="px-6 mt-10 py-12 bg-[#000000]">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-6xl mx-auto items-center">
           
             {/* Imagen */}
             <div className="overflow-hidden rounded-md ">
               <img
-                src={sureloj}
+                src={sureloj} 
                 alt="Reloj surrealista"
                 className="w-full h-[400px] md:h-[500px] object-cover object-center"
               />
             </div>
 
             {/* Texto */}
-            <div className="text-[#FFE3A9] font-['Cormorant']">
-              <h2 className="text-3xl md:text-4xl font-bold mb-6 text-center md:text-left font-['Alice'] text-amber-50">
+            <div className="text-[#fbf7f4] font-['montserrat']">
+              <text className=" font-normal text-[#b76ba3]">About Us</text>
+              <h2 className="text-3xl md:text-4xl font-bold mt-2 mb-6 text-center md:text-left font-['oswald'] text-[#fbf7f4]">
                 WELCOME TO MALBOUCHE BAR
               </h2>
               <p className="mb-4 text-lg leading-relaxed text-center md:text-left">
@@ -182,148 +209,188 @@ export default function HomePage() {
         </section>
 
         {/* === GALERÍA DE IMÁGENES === */}
-        <section className="w-full  bg-[#080f24]">
-          <div className="w-full">
-            <Slider
-              dots={true}
-              infinite={true}
-              speed={1000}
-              slidesToShow={1}
-              slidesToScroll={1}
-              autoplay={true}
-              autoplaySpeed={3000}
-              arrows={false}
-              // Estilo para los puntos (dots)
-              appendDots={dots => (
-                <div className="absolute bottom-0 w-full">
-                  <ul className="flex justify-center" style={{ margin: "0", padding: "30px 0 " }}>{dots}</ul>
-                </div>
-              )}
-              customPaging={() => (
-                <div className="w-3 h-3 mx-1 rounded-full bg-[#8CCDEB]/60 hover:bg-[#725CAD] transition-colors"></div>
-              )}
-            >
-              {galeria.map((foto) => (
-                <div key={foto.id} className="w-full">
-                  <div className="w-full h-[400px] md:h-[600px] overflow-hidden">
-                    <img
-                      src={foto.imagen}
-                      alt={`Imagen ${foto.id}`}
-                      className="object-cover w-full h-full"
-                    />
-                  </div>
-                </div>
-              ))}
-            </Slider>
+      <section className="bg-[#000000] py-16 px-4">
+        <div className="max-w-8xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            {imagenes.map((item, index) => (
+              <div
+                key={index}
+                className={`
+                  overflow-hidden rounded-md
+                  ${index === 0 ? 'md:col-span-2 md:row-span-1' : ''}
+                  ${index === 1 ? 'md:col-span-1 md:row-span-2' : ''}
+                  ${index === 2 ? 'md:col-span-1 md:row-span-1' : ''}
+                  ${index === 3 ? 'md:col-span-1 md:row-span-1' : ''}
+                `}
+              >
+                <img
+                  src={item.imagen}
+                  alt={`Imagen ${index}`}
+                  className="w-full h-full object-cover rounded-sm transition duration-500 ease-in-out hover:scale-105 hover:brightness-110"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+        {/* === SECCIÓN DE BOTON DE EVENTOS === */}
+        <section className="px-6  py-12 bg-[#000000] mb-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-6xl mx-auto items-center">
+
+            {/* Imagen */}
+            <div className="overflow-hidden rounded-md ">
+              <img
+                src={neon2} 
+                alt="Reloj surrealista"
+                className="w-full h-[600px] md:h-[400px] object-cover object-center"
+              />
+            </div>
+
+            {/* Texto */}
+            <div className="text-[#fbf7f4] font-['montserrat']">
+              <text className=" font-normal text-[#b76ba3]">New experiences</text>
+                <h2 className="text-3xl md:text-6xl font-bold mt-2 mb-6 text-center md:text-left font-['oswald'] text-[#fbf7f4]">
+                  CHECK OUR EVENTS
+                  <span className="text-[#b76ba3]">.</span> 
+                </h2>
+             
+              <p className="mb-6 text-lg leading-relaxed text-center md:text-left">
+                When searching for the right place to get lost and enjoy new experiences, Malbouche bar is the perfect choice.
+                We offer a wide variety of events, from live music to themed parties, where you can enjoy the best atmosphere and meet new people.
+                Join us and discover why we are the favorite place for those who seek to escape reality.
+              </p>
+
+              <Link 
+                to="/events" 
+                className="px-8 py-3  text-white font-['montserrat'] border-1 hover:border-[#b76ba3] font-normal  transition-colors duration-300 transform hover:scale-105"
+              >
+                GO TO EVENTS
+              </Link>
+            </div>
           </div>
         </section>
         
-        {/* === SECCIÓN DE BEBIDAS DESTACADAS === */}
-        <section className="py-16 px-6 bg-[#080f24] text-[#FFE3A9] font-['Alice'] text-2xl">
-          <h2 className="text-4xl text-center font-bold mb-4 drop-shadow-md">
-            Potions & Elixirs
-          </h2>
-          <p className="text-center text-amber-50 mb-8 font-['Cormorant']">
-            Drink me, and let the madness begin...
-          </p>
+        {/* === SEGUNDO BANNER === */}
+        <div className="relative w-full h-[630px] overflow-hidden">
+          {/* Imagen Parallax */}
+          <Parallax speed={-20}>
+            <img
+              src={banner2}
+              alt="Bar Banner"
+              className="w-full h-full object-cover scale-150"
+            />
+          </Parallax>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-8xl mx-auto">
-            {bebidas.map((bebida) => (
-              <div key={bebida.id} className=" bg-[#0f122e] rounded-sm w-full overflow-hidden shadow-md hover:shadow-[0_0_20px_#725CAD80] transform hover:scale-105 transition duration-500">
-                <img
-                  src={bebida.imagen}
-                  alt={bebida.nombre}
-                  className="w-full h-130 object-cover filter: brightness(0.9) contrast(1.1) saturate(1.2)"
-                />
-                <div className="p-4 text-[#FFE3A9] text-center">
-                  <h3 className="text-20px font-extrabold mb-1">{bebida.nombre}</h3>
-                  <p className="text-xl text-[#8CCDEB] font-['Cormorant'] ">{bebida.descripcion}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
+          {/* Contenido encima del fondo */}
+          <div className="absolute inset-0 z-10 flex flex-col justify-center items-center text-center  h-full px-4">
+            <div className="mb-8">
+            
+                <h1 className="font-['oswald'] font-semibold text-5xl text-white drop-shadow-md">
+                  <span className="block mt-4">"</span>
+                  <span className="block">I HAD AN AMAZING TIME AT THIS BAR! THE ATMOSPHERE WAS GREAT,</span>
+                  <span className="block mt-4">THE DRINKS WERE TOP-NOTCH, AND THE FOOD WAS DELICIOUS.</span>  
+                  
+                </h1>
+                <h2 className="text-2xl text-white font-['oswald'] mt-4">- A Happy Customer</h2>
 
-        {/* === SEPARADOR DECORATIVO === */}
-        <div className="relative my-12">
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="border-t border-[#8CCDEB]/70 w-3/12 "></div>
-          </div>
-          <div className="relative flex justify-center ">
-            <span className="bg-[#080f24] px-4 font-['Alice'] text-2xl text-[#725CAD] ">
-              ✦ ✦ ✦
-            </span>
+            </div>
+            
           </div>
         </div>
 
-      {/* === SECCIÓN DE ALIMENTOS DESTACADOS === */}
-        <section className="py-5 px-6 bg-[#080f24] text-[#FFE3A9] font-['Alice'] text-2xl">
-          <h2 className="text-4xl text-center font-bold mb-4 drop-shadow-md">
-            Magical Bites
+      {/* === SECCIÓN DE MENUS === */}
+        <section className="py-16 px-6 bg-[#000000] text-white font-['montserrat'] min-h-screen">
+          <h2 className="text-xl text-center font-light mb-4 text-[#b76ba3]">
+            OUR MENU
           </h2>
-          <p className="text-center text-amber-50 mb-8 font-['Cormorant']">
-           One bite, and you may never be the same size again... 
+          <p className="text-center text-white mb-12 font-['oswald'] font-bold text-5xl md:text-6xl">
+            GREAT FOOD. AMAZING DRINKS.
           </p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-8xl mx-auto">
-            {alimentos.map((alimentos) => (
-              <div key={alimentos.id} className="  bg-[#0f122e] rounded-sm w-full overflow-hidden shadow-md hover:shadow-[0_0_20px_#725CAD80] transform hover:scale-105 transition duration-500">
-                <img
-                  src={alimentos.imagen}
-                  alt={alimentos.nombre}
-                  className="w-full h-130 object-cover "
-                />
-                <div className="p-4 text-[#FFE3A9] text-center">
-                  <h3 className="text-20px font-extrabold mb-1">{alimentos.nombre}</h3>
-                  <p className="text-xl text-[#8CCDEB] font-['Cormorant']">{alimentos.descripcion}</p>
-                </div>
-                
-              </div>
-            ))}
-          </div>
-        </section>
-
-          {/* === SEPARADOR DECORATIVO === */}
-          <div className="relative my-12">
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="border-t border-[#725CAD]/70 w-3/12"></div>
-            </div>
-            <div className="relative flex justify-center">
-              <span className="bg-[#080f24] px-4 font-['Alice'] text-[#FFE3A9] text-2xl">
-                ✦ ✦ ✦
-              </span>
-            </div>
-          </div>
-
-          {/* === SECCIÓN DE PROMOCIONES === */}
-          <section className="py-8 px-6 bg-[#080f24] text-[#FFE3A9] font-['Alice'] text-2xl">
-            <h2 className="text-4xl text-center font-bold mb-4 drop-shadow-md">
-              Mad Specials
-            </h2>
-            <p className="text-center text-amber-50 mb-8 font-['Cormorant']">
-            It’s always tea time somewhere 
-            </p>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-10 max-w-4xl mx-auto">
-              {promociones.map((promociones) => (
-                <div key={promociones.id} className=" bg-[#0f122e] rounded-sm overflow-hidden shadow-md hover:shadow-xl transform hover:scale-105 transition duration-500">
-                  <img
-                    src={promociones.imagen}
-                    alt={promociones.nombre}
-                    className="w-full h-160 object-cover "
-                  />
-                  <div className="p-4 text-[#FFE3A9] text-center">
-                    <h3 className="text-lg font-bold mb-1">{promociones.nombre}</h3>
-                    <p className="text-sm text-amber-50 font-['Cormorant']">{promociones.descripcion}</p>
+          {menuData.length === 0 ? (
+            <p className="text-center text-white">Cargando menú...</p>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-6xl mx-auto">
+              {menuData.map((cat, index) => (
+                <div key={index} className="bg-[#000000] text-white shadow-lg border border-[#b76ba3] rounded-sm overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                  <img src={cat.imagen} alt={cat.categoria} className="w-full h-64 object-cover" />
+                  <div className="p-6">
+                    <h3 className="text-2xl font-bold uppercase text-[#b34789] mb-4">{cat.categoria}</h3>
+                    {cat.items.map((item, i) => (
+                      <div key={i} className="mb-6 border-b-2  border-[#660152] pb-4">
+                        <p className="font-semibold text-lg">
+                          {item.nombre} <span className="text-[#b34789]">${item.precio.toFixed(2)}</span>
+                        </p>
+                        <p className="text-sm text-white 700">{item.descripcion}</p>
+                      </div>
+                    ))}
                   </div>
-                  
+                </div>
+              ))}
+              </div>
+            )}
+            <div className="text-center mt-12">
+                <Link 
+                  to="/menu" 
+                  className="px-10 py-5  text-white font-['montserrat'] border-1 hover:border-[#b76ba3] font-normal  transition-colors duration-300 transform hover:scale-105"
+                >
+                  SEE FULL MENU
+              </Link>
+            </div>
+        
+          </section>
+          {/* === SECCIÓN DE PROMOCIONES === */}
+          <section className="py-8 px-6 bg-gradient-to-b from-[#1e00188a] to-[#3e0132] text-white font-['oswald'] h-[630px]">
+            <h2 className="text-5xl text-center font-bold mb-10 drop-shadow-md">
+              DON'T MISS OUR PROMOS
+            </h2>
+
+            <div className="flex overflow-x-auto gap-6 scrollbar-hide items-start pl-4 pr-4 justify-center ">
+              {promociones.map((promo) => (
+                <div
+                  key={promo.id}
+                  className="min-w-[300px] text-center py-8 px-4 transition-transform transform  flex-shrink-0"
+                >
+                  <h3 className="text-4xl font-['oswald'] font-bold text-white hover:text-[#b76ba3] mb-4 uppercase">
+                    {promo.nombre}
+                  </h3>
+                  <div className="justify-center items-center flex mb-4">
+                    <button
+                    onClick={() => abrirModal(promo)}
+                    className="text-[#b76ba3] flex items-center justify-centergap-2 px-4 py-2 hover:text-white transition font-bold font-['montserrat']"
+                  >
+                    LEARN MORE
+                    <IoIosArrowForward className="text-xl justify-center" />
+                  </button>
+                  </div>
+                
                 </div>
               ))}
             </div>
-          </section>
 
 
-      
+        {/* Modal */}
+        {modalAbierto && promocionSeleccionada && (
+          <div className="fixed inset-0 z-50 bg-[rgba(23,26,30,0.8)] flex justify-center items-center">
+            <div className="bg-[#35002a] text-white font-['montserrat'] p-6 rounded-md max-w-md w-full relative shadow-2xl">
+              <button
+                onClick={cerrarModal}
+                className="absolute top-1 right-2 text-white text-4xl hover:text-[#f5f5f5]"
+              >
+                &times;
+              </button>
+              <img
+                src={promocionSeleccionada.imagen}
+                alt={promocionSeleccionada.nombre}
+                className="w-full h-150 object-cover rounded mb-4"
+              />
+              <h3 className="text-2xl font-bold mb-2">{promocionSeleccionada.nombre}</h3>
+              <p className="text-sm">{promocionSeleccionada.descripcion}</p>
+            </div>
+          </div>
+        )}
+      </section>
     </div>
   </div>
   
