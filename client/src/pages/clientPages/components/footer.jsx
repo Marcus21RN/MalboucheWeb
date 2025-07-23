@@ -1,33 +1,106 @@
 import React from "react";
-import { Link } from "react-router-dom";
-/* import loguimage from "../assets/imagenes/logui.png"; */
+import { motion } from "framer-motion";
+import logo from "../../../assets/imagenes/logui.png"; 
+import { FaFacebookF, FaInstagram, FaTwitter, FaTiktok } from "react-icons/fa";
 
 export default function Footer() {
   return (
-      <>
-      {/* Footer Wonderland */}
-      <footer className="bg-[#080f24] text-[#F9F4EF] py-6 px-6 md:px-16  shadow-inner">
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-m">
-          <p>© 2025 Malbouche Bar. All rights reserved.</p>
-            <ul className="flex flex-col md:flex-row justify-between items-center gap-1 text-m text-white">
-              <p> Extra information? </p>
-                        {[
-                          { to: "/contact", label: "CONTACT" },
-                        ].map((link) => (
-                          <li key={link.to} className="relative group">
-                            <Link
-                              to={link.to}
-                              className="text-white font-['Alice'] "
-                            >
-                              {link.label}
-                            </Link> 
-                            <span className="absolute left-0 bottom-[-2px] w-0 h-[2px] bg-[#f5c9f9] group-hover:w-full transition-all duration-300"></span>
-                          </li>
-                        ))}
-                      </ul>
+    <motion.footer
+      initial={{ opacity: 0, y: 40 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 1.2, ease: "easeOut" }}
+      className="bg-[#000000] text-[#F9F4EF] px-6 md:px-16 py-10 shadow-inner"
+    >
+      {/* Contenedor principal centrado */}
+      <div className="max-w-7xl mx-auto">
+        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 text-sm md:text-base justify-items-center">
+          {/* Horarios */}
+          <div className="text-center md:text-left">
+            <h2 className="text-lg font-bold tracking-wide font-['oswald'] mb-4 text-[#F9F4EF]">
+              OPENING HOURS<span className="text-[#b76ba3]">.</span>
+            </h2>
+            <ul className="space-y-1 font-['montserrat']">
+              <li className="flex max-w-xs mx-auto md:mx-0">
+                <span>Mon ....................</span>
+                <span className="text-[#e16eab] font-bold font-['oswald']">  CLOSED</span>
+              </li>
+              <li className="flex  max-w-xs mx-auto md:mx-0">
+                <span>Tue - Thu </span>
+                <span> ......... 03:00 PM - 12:00 AM</span>
+              </li>
+              <li className="flex  max-w-xs mx-auto md:mx-0">
+                <span>Fri - Sat</span>
+                <span> .............. 12:00 PM - 03:00 AM</span>
+              </li>
+              <li className="flex  max-w-xs mx-auto md:mx-0">
+                <span>Sun</span>
+                <span> ...................... 12:00 PM - 12:00 AM</span>
+              </li>
+            </ul>
+          </div>
+
+          {/* Contacto */}
+          <div className="text-center md:text-left">
+            <h2 className="text-lg font-bold tracking-wide font-['oswald'] mb-4 text-[#F9F4EF]">
+              CONTACT US<span className="text-[#b76ba3]">.</span>
+            </h2>
+            <ul className="space-y-1 font-['montserrat']">
+              <li>Email: info@malbouche.com</li>
+              <li>Phone: (123) 456-7890</li>
+            </ul>
+          </div>
+
+          {/* Ubicación */}
+          <div className="text-center md:text-left">
+            <h2 className="text-lg font-bold tracking-wide font-['oswald'] mb-4 text-[#F9F4EF]">
+              LOCATION<span className="text-[#b76ba3]">.</span>
+            </h2>
+            <p className="font-['montserrat']">123 Wonderland St, Fantasy City</p>
+          </div>
+
+          {/* Redes sociales */}
+          <div className="text-center">
+            <h2 className="text-lg font-bold tracking-wide font-['oswald'] mb-4 text-[#F9F4EF]">
+              FOLLOW US<span className="text-[#b76ba3]">.</span>
+            </h2>
+            <div className="flex justify-center gap-4">
+              <motion.a whileHover={{ scale: 1.2 }} href="https://www.facebook.com" target="_blank" rel="noopener noreferrer">
+                <FaFacebookF className="text-2xl text-white hover:text-[#b76ba3] transition" />
+              </motion.a>
+              <motion.a whileHover={{ scale: 1.2 }} href="https://www.instagram.com" target="_blank" rel="noopener noreferrer">
+                <FaInstagram className="text-2xl text-white hover:text-[#b76ba3] transition" />
+              </motion.a>
+              <motion.a whileHover={{ scale: 1.2 }} href="https://www.twitter.com" target="_blank" rel="noopener noreferrer">
+                <FaTwitter className="text-2xl text-white hover:text-[#b76ba3] transition" />
+              </motion.a>
+              <motion.a whileHover={{ scale: 1.2 }} href="https://www.tiktok.com" target="_blank" rel="noopener noreferrer">
+                <FaTiktok className="text-2xl text-white hover:text-[#b76ba3] transition" />
+              </motion.a>
+            </div>
+          </div>
+        </section>
+
+        {/* Línea divisora */}
+        <div className="my-6 border-t border-[#660152]"></div>
+
+        {/* Derechos de autor y logo */}
+        <div className="flex flex-col items-center space-y-4">
+          <div className="text-center text-sm md:text-base font-['montserrat'] text-[#c5a2bb]">
+            © 2025 Malbouche Bar. All rights reserved.
+          </div>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+          >
+            <img
+              src={logo}
+              alt="Malbouche Logo"
+              className="h-20 object-contain"
+            />
+          </motion.div>
         </div>
-      </footer>
-      </>
+      </div>
+    </motion.footer>
   );
 }
-
