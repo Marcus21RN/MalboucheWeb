@@ -17,6 +17,7 @@ import HomeUser from "./pages/userPages/homeUser";
 // Componentes importados de ADMINISTRADORES
 import HomeAdmin from "./pages/adminPages/homeAdmin";
 import EmpleadoAdmin from "./pages/adminPages/empleadoAdmin.jsx";
+import DashboardIoT from "./pages/adminPages/dashboardIoT.jsx";
 
 // Layouts
 function ClientLayout(){
@@ -69,6 +70,7 @@ function App() {
         <Route element={<AdminLayout />}>
           <Route path="/admin/home" element={<HomeAdmin />} />
           <Route path="/admin/empleados" element={<EmpleadoAdmin />} />
+          <Route path="/admin/iot" element={<DashboardIoT />} />
           {/* <Route path="/admin/home" element={<AdminHome />} /> */}
           {/* Otras rutas de admin */}
         </Route>
