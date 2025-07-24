@@ -118,13 +118,13 @@ export default function HomePage() {
       },
     ];
     
-      const [modalAbierto, setModalAbierto] = useState(false);
-  const [promocionSeleccionada, setPromocionSeleccionada] = useState(null);
+    const [modalAbierto, setModalAbierto] = useState(false);
+    const [promocionSeleccionada, setPromocionSeleccionada] = useState(null);
 
-  const abrirModal = (promocion) => {
-    setPromocionSeleccionada(promocion);
-    setModalAbierto(true);
-  };
+    const abrirModal = (promocion) => {
+      setPromocionSeleccionada(promocion);
+      setModalAbierto(true);
+    };
 
   const cerrarModal = () => {
     setModalAbierto(false);
