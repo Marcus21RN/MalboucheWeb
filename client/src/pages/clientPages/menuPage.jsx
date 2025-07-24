@@ -11,7 +11,7 @@ export default function MenuPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState('Todos');
   const [showSearch, setShowSearch] = useState(false);
-const [showFilter, setShowFilter] = useState(false);
+  const [showFilter, setShowFilter] = useState(false);
   
   const bannerImages = {
   Beer: 'https://images.unsplash.com/photo-1620219365994-f443a86ea626?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
@@ -141,10 +141,10 @@ const [showFilter, setShowFilter] = useState(false);
       </div>
       <section
         ref={containerRef}
-        className="bg-gradient-to-b from-[#1e00188a] to-[#3e0132] text-white font-['oswald'] py-8 px-6"
+        className=" text-white font-['oswald'] py-8 px-6 mr-45"
       >
-        <div className="flex flex-col items-end w-full space-y-4">
-          <div className="relative flex items-center gap-4">
+        <div className="flex flex-col items-end w-full space-y-4 ">
+          <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-end gap-4 w-full sm:w-auto">
 
             {/* Filtro flotante */}
             <AnimatePresence>
@@ -152,12 +152,12 @@ const [showFilter, setShowFilter] = useState(false);
                 <motion.select
                   key="filter-dropdown"
                   initial={{ width: 0, opacity: 0 }}
-                  animate={{ width: 200, opacity: 1 }}
+                  animate={{ width: window.innerWidth < 640 ? '100%' : 200, opacity: 1 }}
                   exit={{ width: 0, opacity: 0 }}
                   transition={{ duration: 0.3 }}
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                    className="px-3 py-1.5 rounded border border-gray-400 bg-black text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#b76ba3] shadow"
+                  className="w-full sm:w-auto px-3 py-1.5 rounded border border-gray-400 bg-black text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#b76ba3] shadow"
                 >
                   <option value="Todos">All</option>
                   {Object.keys(menuData).map((tipoMenu, i) => (
@@ -167,51 +167,55 @@ const [showFilter, setShowFilter] = useState(false);
               )}
             </AnimatePresence>
 
-            {/* Contenedor del input + icono que se mueve juntos */}
+            {/* Input + ícono, se mueve si hay filtro abierto */}
             <motion.div
-              animate={{ x: showFilter ? -220 : 0 }}
+              animate={{
+                x: showFilter && window.innerWidth >= 640 ? -220 : 0,
+              }}
               transition={{ duration: 0.3 }}
-              className="flex items-center gap-2 absolute right-8 top-1/2 -translate-y-1/2 z-10"
+              className="flex items-center gap-2 w-full sm:w-auto sm:absolute sm:right-8 sm:top-1/2 sm:-translate-y-1/2 z-10"
             >
-              {/* Input de búsqueda (condicional) */}
+              {/* Input búsqueda */}
               <AnimatePresence>
                 {showSearch && (
                   <motion.input
                     key="search-input"
                     initial={{ width: 0, opacity: 0 }}
-                    animate={{ width: 300, opacity: 1 }}
+                    animate={{ width: window.innerWidth < 640 ? '100%' : 300, opacity: 1 }}
                     exit={{ width: 0, opacity: 0 }}
                     transition={{ duration: 0.3 }}
                     type="text"
                     placeholder="Search Something..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="px-3 py-1.5 rounded border border-gray-400 bg-black text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#b76ba3] shadow"
+                    className="w-full sm:w-auto px-3 py-1.5 rounded border border-gray-400 bg-black text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#b76ba3] shadow"
                   />
                 )}
               </AnimatePresence>
 
-              {/* Icono de búsqueda SIEMPRE visible */}
+              {/* Ícono búsqueda */}
               <button
                 onClick={() => {
                   setShowSearch(!showSearch);
                   if (!showSearch) setShowFilter(false);
                 }}
-                className="text-white hover:text-[#b76ba3] transition z-20 "
-                >
+                className="text-[#b76ba3] hover:text-white transition z-20"
+              >
                 <FaSearch size={25} />
               </button>
             </motion.div>
-            {/* Botón de filtro */}
+
+            {/* Ícono filtro */}
             <button
               onClick={() => setShowFilter(!showFilter)}
-              className="text-white hover:text-[#b76ba3] transition z-20"
+              className="text-[#b76ba3] hover:text-white transition z-20"
             >
               <FaFilter size={25} />
             </button>
           </div>
         </div>
       </section>
+
 
       {/* === SECCIÓN DE MENÚS === */}
       <div className="max-w-6xl mx-auto px-6 py-16">
