@@ -5,6 +5,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Parallax } from 'react-scroll-parallax';
 import React, { useEffect, useState } from 'react';
+import axios from "axios";
 
 import { IoIosArrowForward } from "react-icons/io";
 import { IoCloseSharp } from "react-icons/io5";
@@ -20,10 +21,6 @@ import bar3 from "../../assets/imagenes/bar3.jpg";
 import bar4 from "../../assets/imagenes/bar4.jpg";
 import sureloj from "../../assets/imagenes/aboutUs.jpg";
 
-import poster1 from "../../assets/imagenes/poster1.png";
-import poster2 from "../../assets/imagenes/poster2.png";
-import poster3 from "../../assets/imagenes/poster3.png";
-import poster4 from "../../assets/imagenes/poster4.png";
 
 export default function HomePage() {
   // === Galería de imágenes del bar ===
@@ -38,85 +35,25 @@ export default function HomePage() {
 
   const [menuData, setMenuData] = useState([]);
 
-    useEffect(() => {
-    // Simulamos una llamada a una base de datos
-    setTimeout(() => {
-      const fakeDataFromDB = [
-        {
-          categoria: 'Beer',
-          imagen: 'https://images.unsplash.com/photo-1620219365994-f443a86ea626?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-          items: [
-            { nombre: 'Pale Ale', precio: 6, descripcion: 'Ligera, frutal y refrescante.' },
-            { nombre: 'IPA', precio: 7, descripcion: 'Amarga con notas cítricas.' },
-            { nombre: 'Stout', precio: 8, descripcion: 'Oscura, cremosa y tostada.' },
-          ],
-        },
-        {
-          categoria: 'Cocktails',
-          imagen: 'https://images.unsplash.com/photo-1566417713940-fe7c737a9ef2?q=80&w=2029&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-          items: [
-            { nombre: 'Margarita', precio: 8, descripcion: 'Tequila, triple sec y lima.' },
-            { nombre: 'Mojito', precio: 7, descripcion: 'Ron, menta, azúcar y soda.' },
-            { nombre: 'Cosmopolitan', precio: 9, descripcion: 'Vodka, Cointreau, arándano y lima.' },
-          ],
-        },
-         {
-          categoria: 'Shots',
-          imagen: 'https://images.unsplash.com/photo-1730698394350-76b6f0ac8e03?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-          items: [
-            { nombre: 'Margarita', precio: 8, descripcion: 'Tequila, triple sec y lima.' },
-            { nombre: 'Mojito', precio: 7, descripcion: 'Ron, menta, azúcar y soda.' },
-            { nombre: 'Cosmopolitan', precio: 9, descripcion: 'Vodka, Cointreau, arándano y lima.' },
-          ],
-        },
-        {
-          categoria: 'Snacks',
-          imagen: 'https://images.unsplash.com/photo-1565060299172-42f7895549f0?q=80&w=1173&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-          items: [
-            { nombre: 'Nachos', precio: 6, descripcion: 'Totopos con queso y jalapeños.' },
-            { nombre: 'Alitas', precio: 8, descripcion: 'Alitas de pollo con salsa BBQ.' },
-            { nombre: 'Papas a la francesa', precio: 4, descripcion: 'Papas fritas crujientes.' },
-            
-          ],
-        },
-        
-        
-      ];
-      setMenuData(fakeDataFromDB);
-    }, 1000); // Simula retraso de red
-  }, []);
+
+
+useEffect(() => {
+  axios.get("http://localhost:3000/clientBackend/destacados-home")
+    .then(res => setMenuData(res.data))
+    .catch(() => setMenuData([]));
+}, []);
 
 
 
 
   // === Lista de promociones actuales ===
-    const promociones = [
-      {
-        id: 1,
-        nombre: "Happy Hour",
-        descripcion: "Disfruta de 2x1 en todas las bebidas de 6 a 8 PM",
-        
-        imagen: `${poster1}`,
-      },
-      {
-        id: 2,
-        nombre: "GIRL'S NIGHT",
-        descripcion: "Disfruta de un 20% de descuento en tu cuenta total",
-        imagen: `${poster2}`,
-      },
-      {
-        id: 3,
-        nombre: "BOY'S NIGHT",
-        descripcion: "Los Miércoles de un 20% de descuento en tu cuenta total.",
-        imagen: `${poster3}`,
-      },
-      {
-        id: 4,
-        nombre: "Trivia Night",
-        descripcion: "Participa en nuestra trivia y gana premios especiales",
-        imagen: `${poster4}`,
-      },
-    ];
+const [promociones, setPromociones] = useState([]);
+
+useEffect(() => {
+  axios.get("http://localhost:3000/clientBackend/promociones-activas")
+    .then(res => setPromociones(res.data))
+    .catch(() => setPromociones([]));
+}, []);
     
     const [modalAbierto, setModalAbierto] = useState(false);
     const [promocionSeleccionada, setPromocionSeleccionada] = useState(null);
@@ -349,7 +286,7 @@ export default function HomePage() {
             <div className="flex overflow-x-auto gap-6 scrollbar-hide items-start pl-4 pr-4 justify-center ">
               {promociones.map((promo) => (
                 <div
-                  key={promo.id}
+                  key={promo._id}
                   className="min-w-[300px] text-center py-8 px-4 transition-transform transform  flex-shrink-0"
                 >
                   <h3 className="text-4xl font-['oswald'] font-bold text-white hover:text-[#b76ba3] mb-4 uppercase">
@@ -387,6 +324,12 @@ export default function HomePage() {
               />
               <h3 className="text-2xl font-bold mb-2">{promocionSeleccionada.nombre}</h3>
               <p className="text-sm">{promocionSeleccionada.descripcion}</p>
+              {promocionSeleccionada.fechaInicio && promocionSeleccionada.fechaFin && (
+                <p className="text-sm mt-2">
+                  Inicio promoción: {new Date(promocionSeleccionada.fechaInicio).toLocaleDateString()} <br />
+                  Fin promoción: {new Date(promocionSeleccionada.fechaFin).toLocaleDateString()}
+                </p>
+              )}
             </div>
           </div>
         )}

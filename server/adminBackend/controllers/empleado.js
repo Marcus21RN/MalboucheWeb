@@ -1,4 +1,4 @@
-import Empleado from '../models/empleado.js';
+import Empleado from '../../models/empleado.js';
 import { validarRolExistente } from '../validations/empleadoValidation.js';
 import bcrypt from 'bcrypt';
 

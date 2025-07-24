@@ -1,4 +1,4 @@
-import Galeria from "../models/galeria.js";
+import Galeria from "../../models/galeria.js";
 
 export const obtenerGaleria = async (req, res) => {
   try {

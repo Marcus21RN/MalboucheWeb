@@ -400,8 +400,8 @@ db.createCollection("producto", {
         },
         categoria: {
           bsonType: "string",
-          description: "Categoría del producto (cócteles, licores, bebidas, botanas, etc.)",
-        },
+          description: "Categoría del producto (ej. Cócteles, Licores, Bebidas, Botanas)"
+        }
       }
     }
   }
@@ -593,43 +593,6 @@ db.menus.insertMany([
       { IDProducto: "maito" },
       { IDProducto: "negto" },
       { IDProducto: "blory" }
-    ]
-  },
-  {
-    _id: "MENU008",
-    nombre: "Menú de Bebidas",
-    descripcion: "Selección de cócteles, cervezas y cafés.",
-    tipoMenu: "bebidas",
-    estado: "activo",
-    productos: [
-      { IDProducto: "maito" },
-      { IDProducto: "negto" },
-      { IDProducto: "teqha" },
-      { IDProducto: "daisa" },
-      { IDProducto: "mojde" },
-      { IDProducto: "whiva" },
-      { IDProducto: "rumco" },
-      { IDProducto: "tongo" },
-      { IDProducto: "blory" },
-      { IDProducto: "ginum" },
-      { IDProducto: "caial" },
-      { IDProducto: "ceria" },
-      { IDProducto: "cerra" },
-      { IDProducto: "micca" },
-      { IDProducto: "cerne" },
-      { IDProducto: "certo" },
-      { IDProducto: "cerpa" },
-      { IDProducto: "gindo" },
-      { IDProducto: "ronna" },
-      { IDProducto: "teqta" },
-      { IDProducto: "cerut" },
-      { IDProducto: "cerss" },
-      { IDProducto: "cafno" },
-      { IDProducto: "capno" },
-      { IDProducto: "teado" },
-      { IDProducto: "limal" },
-      { IDProducto: "cafhe" },
-      { IDProducto: "jugal" }
     ]
   },
   {

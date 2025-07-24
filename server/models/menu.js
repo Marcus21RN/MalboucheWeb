@@ -11,7 +11,7 @@ const MenuSchema = new mongoose.Schema({
   productos: [
     {
       IDProducto: {
-        type: String,
+        type: String, ref: "Producto",
         required: true
       }
     }

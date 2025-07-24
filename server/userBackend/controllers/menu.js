@@ -1,5 +1,5 @@
-import Menu from "../models/menu.js";
-import Producto from "../models/producto.js";
+import Menu from "../../models/menu.js";
+import Producto from "../../models/producto.js";
 
 export const obtenerMenus = async (req, res) => {
   try {

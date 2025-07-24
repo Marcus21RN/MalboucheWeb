@@ -1,6 +1,6 @@
-import DHT11 from "../models/dht11.js";
-import Ultrasonico from "../models/ultrasonico.js";
-import MLX90615 from "../models/mlx90615.js";
+import DHT11 from '../../models/dht11.js';
+import Ultrasonico from "../../models/ultrasonico.js";
+import MLX90615 from "../../models/mlx90615.js";
 
 export const obtenerLecturasDHT11 = async (req, res) => {
   try {

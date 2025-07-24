@@ -1,7 +1,7 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import Empleado from '../models/empleado.js';
+import Empleado from '../../models/empleado.js';
 import dotenv from 'dotenv';
 
 dotenv.config();

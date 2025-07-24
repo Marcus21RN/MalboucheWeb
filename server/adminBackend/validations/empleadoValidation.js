@@ -1,4 +1,4 @@
-import Rol from '../models/rol.js';
+import Rol from '../../models/rol.js';
 
 const validarRolExistente = async (IDRol) => {
   const rol = await Rol.findById(IDRol);

@@ -1,4 +1,4 @@
-import Reservation from '../models/reservation.js';
+import Reservation from '../../models/reservation.js';
 import { v4 as uuidv4 } from 'uuid';
 
 export const createReservation = async (req, res) => {

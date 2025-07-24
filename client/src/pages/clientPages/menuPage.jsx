@@ -5,6 +5,7 @@ import React, { useState, useEffect, useRef} from "react";
 import { Parallax } from 'react-scroll-parallax';
 import { FaSearch, FaFilter } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
+import axios from 'axios';
 
 export default function MenuPage() {
   const [menuData, setMenuData] = useState([]);
@@ -14,90 +15,32 @@ export default function MenuPage() {
   const [showFilter, setShowFilter] = useState(false);
   
   const bannerImages = {
-  Beer: 'https://images.unsplash.com/photo-1620219365994-f443a86ea626?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-  Wine: 'https://images.unsplash.com/photo-1548025396-689d647d00c5?q=80&w=2067&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-  Food: 'https://images.unsplash.com/photo-1565060299172-42f7895549f0?q=80&w=1173&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-  Cocktails: 'https://images.unsplash.com/photo-1566417713940-fe7c737a9ef2?q=80&w=2029&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+  bebidas: 'https://images.unsplash.com/photo-1620219365994-f443a86ea626?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+  cafés: 'https://images.unsplash.com/photo-1548025396-689d647d00c5?q=80&w=2067&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+  botanas: 'https://images.unsplash.com/photo-1565060299172-42f7895549f0?q=80&w=1173&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+  cócteles: 'https://images.unsplash.com/photo-1566417713940-fe7c737a9ef2?q=80&w=2029&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
   // etc.
   };
   const containerRef = useRef(null);
 
-  useEffect(() => {
-    const fetchMenuData = async () => {
-      // Simulación de respuesta de la base de datos
-      const fakeDataFromDB = [
-        {
-          nombre: "Craft Beer",
-          descripcion: "Selección de cervezas artesanales",
-          tipoMenu: "Beer",
-          estado: "activo",
-          productos: [
-            { nombre: "IPA", descripcion: "Cítrica y amarga", precio: 7 },
-            { nombre: "Stout", descripcion: "Cremosa con notas a chocolate", precio: 8 },
-          ],
-        },
-        {
-          nombre: "Comercial Beer",
-          descripcion: "Selección de cervezas comerciales",
-          tipoMenu: "Beer",
-          estado: "activo",
-          productos: [
-            { nombre: "IPA", descripcion: "Cítrica y amarga", precio: 7 },
-            { nombre: "Stout", descripcion: "Cremosa con notas a chocolate", precio: 8 },
-            { nombre: "Lager", descripcion: "Suave y refrescante", precio: 6 },
-            { nombre: "Pale Ale", descripcion: "Equilibrada y aromática", precio: 7 },
-
-          ],
-        },
-        {
-          nombre: "White Wine",
-          descripcion: "Vinos blancos elegantes",
-          tipoMenu: "Cocktails",
-          estado: "activo",
-          productos: [
-            { nombre: "Chardonnay", descripcion: "Afrutado y seco", precio: 9 },
-            { nombre: "Sauvignon Blanc", descripcion: "Fresco y herbal", precio: 10 },
-          ],
-        },
-        {
-          nombre: "Red Wine",
-          descripcion: "Vinos blancos elegantes",
-          tipoMenu: "Wine",
-          estado: "activo",
-          productos: [
-            { nombre: "Chardonnay", descripcion: "Afrutado y seco", precio: 9 },
-            { nombre: "Sauvignon Blanc", descripcion: "Fresco y herbal", precio: 10 },
-          ],
-        },       
-        {
-          nombre: "Snacks",
-          descripcion: "Para picar",
-          tipoMenu: "Food",
-          estado: "activo",
-          productos: [
-            { nombre: "Nachos", descripcion: "Con queso y jalapeños", precio: 6 },
-            { nombre: "Papas", descripcion: "Fritas y crujientes", precio: 4 },
-          ],
-        },
-      ];
-
-      // Agrupar por tipoMenu
-      const grouped = fakeDataFromDB.reduce((acc, item) => {
-        if (!acc[item.tipoMenu]) {
-          acc[item.tipoMenu] = [];
-        }
-        acc[item.tipoMenu].push({
-          ...item,
-         
-        });
+ useEffect(() => {
+  const fetchMenuData = async () => {
+    try {
+      const res = await axios.get("http://localhost:3000/clientBackend/menu");
+      // Agrupa los menús por tipoMenu como antes
+      const grouped = res.data.reduce((acc, item) => {
+        if (!acc[item.tipoMenu]) acc[item.tipoMenu] = [];
+        acc[item.tipoMenu].push(item);
         return acc;
       }, {});
-
       setMenuData(grouped);
-    };
-
-    fetchMenuData();
-  }, []);
+    } catch (error) {
+      console.error("Error al obtener los menús:", error);
+      setMenuData({});
+    }
+  };
+  fetchMenuData();
+}, []);
 
   // Manejo de clics fuera del contenedor para cerrar búsqueda y filtro
   useEffect(() => {
@@ -233,8 +176,8 @@ export default function MenuPage() {
               const matchMenuName = menu.nombre.toLowerCase().includes(lowerSearch);
               const matchTipoMenu = tipoMenu.toLowerCase().includes(lowerSearch);
               const matchProducto = menu.productos.some(producto =>
-                producto.nombre.toLowerCase().includes(lowerSearch) ||
-                producto.descripcion.toLowerCase().includes(lowerSearch)
+                producto.IDProducto?.nombre.toLowerCase().includes(lowerSearch) ||
+                producto.IDProducto?.descripcion.toLowerCase().includes(lowerSearch)
               );
               return matchMenuName || matchTipoMenu || matchProducto;
             });
@@ -266,8 +209,8 @@ export default function MenuPage() {
                 const filteredProductos = !searchTerm || matchMenuName || matchTipoMenu
                 ? menu.productos
                 : menu.productos.filter(producto =>
-                  producto.nombre.toLowerCase().includes(lowerSearch) ||
-                  producto.descripcion.toLowerCase().includes(lowerSearch)
+                  producto.IDProducto.nombre.toLowerCase().includes(lowerSearch) ||
+                  producto.IDProducto.descripcion.toLowerCase().includes(lowerSearch)
                 );
                 if (filteredProductos.length === 0) return null;
                 return (
@@ -279,13 +222,15 @@ export default function MenuPage() {
                       <div key={k} className="mb-6 border-b border-[#660152] pb-4">
                         <div className="flex justify-between items-baseline mb-1">
                           <h3 className="text-xl font-['oswald'] font-bold text-white tracking-wider">
-                            {producto.nombre}
+                            {producto.IDProducto?.nombre || "Sin nombre"}
                           </h3>
                           <span className="font-['montserrat'] font-bold text-[#b34789]">
-                            ${producto.precio.toFixed(2)} MXN
+                            {producto.IDProducto && typeof producto.IDProducto.precio === "number"
+                              ? `$${producto.IDProducto.precio.toFixed(2)} MXN`
+                              : "Precio no disponible"}
                           </span>
                         </div>
-                        <p className="text-white font-['montserrat'] italic">{producto.descripcion}</p>
+                        <p className="text-white font-['montserrat'] italic">{producto.IDProducto?.descripcion || ""}</p>
                       </div>
                     ))}
                   </div>
