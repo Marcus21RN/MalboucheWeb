@@ -23,6 +23,7 @@ import DashboardIoT from "./pages/adminPages/dashboardIoT.jsx";
 import MenuAdmin from './pages/adminPages/menuAdmin.jsx';
 import ReservationAdmin from './pages/adminPages/reservationAdmin.jsx';
 import EventsAdmin from './pages/adminPages/eventsAdmin.jsx';
+import AdminLayout from "./layouts/AdminLayout";
 
 // Layouts
 function ClientLayout(){
@@ -36,14 +37,6 @@ function ClientLayout(){
 }
 
 function UserLayout(){
-  return(
-    <>
-    <Outlet/>
-    </>
-  );
-}
-
-function AdminLayout(){
   return(
     <>
     <Outlet/>
