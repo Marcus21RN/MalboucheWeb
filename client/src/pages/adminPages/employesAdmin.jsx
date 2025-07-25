@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
 
-export default function EmpleadoAdmin() {
+
+
+//
+  // ESTA INTERFAZ SE CREO ÚNICAMENTE PARA HACER PRUEBAS DE FUNCIONALIDAD DEL BACKEND. NO ES EL DISEÑO FINAL
+//
+export default function EmployesAdmin() {
   const [empleados, setEmpleados] = useState([]);
   const [formData, setFormData] = useState({
     _id: "",
