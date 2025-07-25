@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
+import { Parallax } from 'react-scroll-parallax';
+import { FaCalendarAlt, FaClock } from "react-icons/fa";
+import { IoIosArrowUp } from "react-icons/io";
+import sureloj from "../../assets/imagenes/aboutUs.jpg"; // Ensure this path is correct
 
 export default function ReservationPage() {
   const [formData, setFormData] = useState({
@@ -11,6 +15,7 @@ export default function ReservationPage() {
     primerApell: '',
     segundoApell: '',
     correoCliente: '',
+    telefono: '',
     estado: 'pendiente',
   }); 
 
@@ -38,6 +43,7 @@ export default function ReservationPage() {
         primerApell: '',
         segundoApell: '',
         correoCliente: '',
+        telefono: '',
         estado: 'pendiente',
       });
     } catch (error) {
@@ -47,167 +53,192 @@ export default function ReservationPage() {
   };
 
   return (
-    <div className="bg-[#080f24] text-[#FFE3A9] min-h-screen pt-16">
-      {/* Hero Section */}
-      <section className="relative w-full h-[300px] overflow-hidden">
-        <div 
-          className="absolute inset-0 bg-cover bg-center blur-xs"
-          style={{ 
-            backgroundImage: "url('https://www.juliacharleseventmanagement.co.uk/wp-content/uploads/2019/10/Alice-In-Wonderland-Tea-Cups-600x300.jpg')" 
-          }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#080f24] via-[#080f24]/70 to-transparent" />
-        <div className="relative z-10 flex items-center justify-center h-full text-center px-4">
-          <div>
-            <h1 className="mb-2 font-['Alice'] font-semibold text-7xl text-amber-50 drop-shadow-md">
-              Book Your Experience
+    <div className="bg-[#000000] text-white min-h-screen ">
+      {/* === BANNER PRINCIPAL === */}
+      <div className="relative w-full h-[480px] overflow-hidden">
+        <Parallax speed={-40}>
+          <img
+            src={'https://images.unsplash.com/photo-1709211078586-bf3ad96ccfdb?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'}
+            alt="Bar Banner"
+            className="w-full h-full object-cover scale-150"
+          />
+        </Parallax>
+        <div className="absolute inset-0 z-10 flex flex-col justify-center items-center  h-full px-4">
+          <div className="mb-8">
+            <h1 className="font-['oswald'] font-semibold text-7xl tracking-wider text-white drop-shadow-lg">
+              <span className="block text-lg font-semibold font-[montserrat] text-[#660152] ">MAKE YOUR</span>
+              RESERVATION
+              <span className=" text-[#660152]">.</span>
             </h1>
-            <p className="text-2xl text-[#FFE3A9] font-['Cormorant'] font-bold drop-shadow-sm">
-              & follow the White Rabbit
-            </p>
           </div>
-        </div>
-      </section>
-
-      {/* Form */}
-      <div className="max-w-4xl mx-auto py-16 px-4 md:px-8">
-        <form onSubmit={handleSubmit} className="bg-[#0f122e] border border-[#725CAD]/50 rounded-xl shadow-2xl p-8 md:p-10 space-y-8">
-          {/* Basic Information Section */}
-          <div className="space-y-6">
-            <h2 className="text-2xl font-['Alice'] font-semibold text-[#FFE3A9] border-b border-[#725CAD]/50 pb-2">
-              Reservation Details
-            </h2>
-            <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <label className="block font-['Cormorant'] text-[#8CCDEB] mb-2 font-bold text-xl">Number of Guests</label>
-                <input 
-                  type="number" 
-                  name="cantidadPersonas" 
-                  value={formData.cantidadPersonas} 
-                  onChange={handleChange} 
-                  placeholder="e.g. 2" 
-                  min="1" 
-                  className="w-full bg-[#080f24] border border-[#725CAD]/50 rounded-lg p-3 text-[#FFE3A9] focus:border-[#FFE3A9] focus:ring-1 focus:ring-[#FFE3A9]"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block font-['Cormorant'] text-[#8CCDEB] mb-2 font-bold text-xl">Date</label>
-                <input 
-                  type="date" 
-                  name="fecha" 
-                  value={formData.fecha} 
-                  onChange={handleChange} 
-                  className="w-full bg-[#080f24] border border-[#725CAD]/50 rounded-lg p-3 text-[#FFE3A9] focus:border-[#FFE3A9] focus:ring-1 focus:ring-[#FFE3A9]"
-                  required
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Schedule Section */}
-          <div className="space-y-6">
-            <h2 className="text-2xl font-['Alice'] font-semibold text-[#FFE3A9] border-b border-[#725CAD]/50 pb-2">
-              Time Selection
-            </h2>
-            <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <label className="block font-['Cormorant'] text-[#8CCDEB] mb-2 font-bold text-xl">Arrival Time</label>
-                <input 
-                  type="time"  
-                  name="horaInicio" 
-                  value={formData.horaInicio} 
-                  onChange={handleChange} 
-                  className="w-full bg-[#080f24] border border-[#725CAD]/50 rounded-lg p-3 text-[#FFE3A9] focus:border-[#FFE3A9] focus:ring-1 focus:ring-[#FFE3A9]"
-                  required
-                />
-              </div>
-              <div className="rounded-lg p-4 text-center border-b-2 border-[#8CCDEB]/40 bg-[#080f24]">
-                <h3 className="font-bold text-lg mb-4 text-amber-50 font-['Alice']">Opening Hours</h3>
-                <p className="mb-2 text-[#FFE3A9] font-['Cormorant']">
-                  <span className="font-semibold text-[#8CCDEB]">Mon - Thu:</span> 18:00 - 01:00
-                </p>
-                <p className="text-[#FFE3A9] font-['Cormorant']">
-                  <span className="font-semibold text-[#8CCDEB]">Fri - Sat:</span> 18:00 - 03:00
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Personal Information Section */}
-          <div className="space-y-6">
-            <h2 className="text-2xl font-['Alice'] font-semibold text-[#FFE3A9] border-b border-[#725CAD]/50 pb-2">
-              Personal Information
-            </h2>
-            <div className="grid md:grid-cols-3 gap-6">
-              <div>
-                <label className="block font-['Cormorant'] text-[#8CCDEB] mb-2 font-bold text-xl">First Name</label>
-                <input 
-                  type="text" 
-                  name="nombreCliente" 
-                  value={formData.nombreCliente} 
-                  onChange={handleChange} 
-                  placeholder="e.g. John" 
-                  className="w-full bg-[#080f24] border border-[#725CAD]/50 rounded-lg p-3 text-[#FFE3A9] focus:border-[#FFE3A9] focus:ring-1 focus:ring-[#FFE3A9]"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block font-['Cormorant'] text-[#8CCDEB] mb-2 font-bold text-xl">First Last Name</label>
-                <input 
-                  type="text" 
-                  name="primerApell" 
-                  value={formData.primerApell} 
-                  onChange={handleChange} 
-                  placeholder="e.g. Smith" 
-                  className="w-full bg-[#080f24] border border-[#725CAD]/50 rounded-lg p-3 text-[#FFE3A9] focus:border-[#FFE3A9] focus:ring-1 focus:ring-[#FFE3A9]"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block font-['Cormorant'] text-[#8CCDEB] mb-2 font-bold text-xl">Second Last Name</label>
-                <input 
-                  type="text" 
-                  name="segundoApell" 
-                  value={formData.segundoApell} 
-                  onChange={handleChange} 
-                  placeholder="e.g. Johnson" 
-                  className="w-full bg-[#080f24] border border-[#725CAD]/50 rounded-lg p-3 text-[#FFE3A9] focus:border-[#FFE3A9] focus:ring-1 focus:ring-[#FFE3A9]"
-                  required
-                />
-              </div>
-
-            </div>
-            <div>
-              <label className="block font-['Cormorant'] text-[#8CCDEB] mb-2 font-bold text-xl">Email Address</label>
-              <input 
-                type="email" 
-                name="correoCliente" 
-                value={formData.correoCliente} 
-                onChange={handleChange} 
-                placeholder="example@email.com" 
-                className="w-full bg-[#080f24] border border-[#725CAD]/50 rounded-lg p-3 text-[#FFE3A9] focus:border-[#FFE3A9] focus:ring-1 focus:ring-[#FFE3A9]"
-                required
-              />
-            </div>
-          </div>
-
-          {/* Submit Button */}
-          <div className="pt-6 text-center">
-            <button 
-              type="submit" 
-              className="bg-[#725CAD] hover:bg-[#8A6FDF] text-[#FFE3A9] font-['Alice'] font-bold py-3 px-10 rounded-full text-lg "
-            >
-              Confirm Reservation
-            </button>
-          </div>
-        </form>
-
-        {/* Decorative Elements */}
-        <div className="flex justify-center mt-16">
-          <span className="text-2xl text-[#725CAD] animate-pulse">✦ ✦ ✦</span>
         </div>
       </div>
+
+      {/* TITLE */}
+      <div className="py-16 px-6 sm:px-10 w-full max-w-[1400px] mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-12 items-start">
+          {/* Sección del Formulario */}
+          <div className="order-2 lg:order-1">
+            <div className="mb-8">
+              <h1 className="text-xl font-['oswald'] font-bold text-start mb-2 text-[#660152]">
+                OUR
+              </h1>
+              <h2 className="text-white text-5xl font-['oswald'] mb-2">
+                RESERVATION FORM <span className="text-[#660152] text-5xl">.</span>
+              </h2>
+              <p className="text-lg font-['montserrat'] text-white">
+                Please fill out the form below to make a reservation at our bar. We look forward to welcoming you!
+              </p>
+            </div>
+
+            {/* FORM */}
+            <form onSubmit={handleSubmit} className="bg-[#111418] shadow-2xl p-8 md:p-10 space-y-12">
+              {/* Reservation Details */}
+              <section>
+                <h2 className="text-2xl font-['oswald'] font-semibold text-white border-b-2 border-[#660152]/50 pb-2 mb-6 uppercase ">
+                  Details
+                </h2>
+                <div className="grid md:grid-cols-2 gap-8">
+                  <div className="relative w-full">
+                    <input
+                      type="number"
+                      name="cantidadPersonas"
+                      value={formData.cantidadPersonas}
+                      onChange={handleChange}
+                      placeholder=" "
+                      min="1"
+                      required
+                      className="peer h-10 w-full border-b-2 border-[#555] bg-transparent text-white placeholder-transparent focus:outline-none focus:border-[#b76ba3]"
+                    />
+                    <label className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#b76ba3] peer-focus:text-sm">
+                      Number of Guests
+                    </label>
+                  </div>
+                  <div className="relative w-full">
+                    <input
+                      type="date" 
+                      name="fecha"
+                      value={formData.fecha}
+                      onChange={handleChange}
+                      placeholder=" "
+                      required
+                      className="peer h-10 w-full border-b-2 border-[#555] bg-transparent text-white placeholder-transparent focus:outline-none focus:border-[#b76ba3]"
+                    />
+                    <label className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#b76ba3] peer-focus:text-sm">
+                      Date
+                    </label>
+                  </div>
+                  <div className="relative w-full md:col-span-2">
+                    <input
+                      type="time"
+                      name="horaInicio"
+                      value={formData.horaInicio}
+                      onChange={handleChange}
+                      placeholder=" "
+                      required
+                      className="peer h-10 w-full border-b-2 border-[#555] bg-transparent text-white placeholder-transparent focus:outline-none focus:border-[#b76ba3]"
+                    />
+                    <label className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#b76ba3] peer-focus:text-sm">
+                      Arrival Time
+                    </label>
+                  </div>
+                </div>
+              </section>
+              {/* Personal Information */}
+              <section>
+                <h2 className="text-2xl font-['oswald'] font-semibold text-white border-b-2 border-[#660152]/50 pb-2 mb-6 uppercase">
+                  Personal Information
+                </h2>
+                <div className="grid md:grid-cols-3 gap-8">
+                  {[
+                    { label: 'First Name', name: 'nombreCliente', placeholder: 'e.g. John' },
+                    { label: 'First Last Name', name: 'primerApell', placeholder: 'e.g. Smith' },
+                    { label: 'Second Last Name', name: 'segundoApell', placeholder: 'e.g. Johnson' },
+                  ].map(({ label, name,  }) => (
+                    <div key={name} className="relative w-full">
+                      <input
+                        type="text"
+                        name={name}
+                        value={formData[name]}
+                        onChange={handleChange}
+                        placeholder=" "
+                        required
+                        className="peer h-10 w-full border-b-2 border-[#555] bg-transparent text-white placeholder-transparent focus:outline-none focus:border-[#b76ba3]"
+                      />
+                      <label className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#b76ba3] peer-focus:text-sm">
+                        {label}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="relative mt-8 grid md:grid-cols-2 gap-8">
+                  <div className="relative">
+                    <input
+                      type="email"
+                      name="correoCliente"
+                      value={formData.correoCliente}
+                      onChange={handleChange}
+                      placeholder=" "
+                      required
+                      className="peer h-10 w-full border-b-2 border-[#555] bg-transparent text-white placeholder-transparent focus:outline-none focus:border-[#b76ba3]"
+                    />
+                    <label className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#b76ba3] peer-focus:text-sm">
+                      Email Address
+                    </label>
+                  </div>
+
+                  <div className="relative">
+                    <input
+                      type="tel"
+                      name="telefono"
+                      value={formData.telefono}
+                      onChange={handleChange}
+                      placeholder=" "
+                      required
+                      className="peer h-10 w-full border-b-2 border-[#555] bg-transparent text-white placeholder-transparent focus:outline-none focus:border-[#b76ba3]"
+                    />
+                    <label className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#b76ba3] peer-focus:text-sm">
+                      Phone Number
+                    </label>
+                  </div>
+                </div>
+              </section>
+              {/* Submit */}
+              <div className="pt-6 text-center">
+                <button
+                  type="submit"
+                  className="w-full bg-[#b76ba3] hover:bg-white text-white hover:text-[#000000] font-normal font-['oswald'] py-4 uppercase tracking-widest transition duration-300"
+                >
+                  SUBMIT
+                </button>
+              </div>
+            </form>
+          </div>
+          {/* Sección de la Imagen - Ahora perfectamente alineada */}
+          <div className="order-1 lg:order-2 h-full flex items-center justify-center pt-40">
+            <div className="relative w-full h-[400px] lg:h-[500px] overflow-hidden rounded-sm group ">
+              <img
+                src={sureloj}
+                alt="Reloj surrealista"
+                className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+              <div className="absolute bottom-6 left-6 text-white">
+                <FaClock className="text-4xl text-[#b76ba3] mb-2" />
+                <h3 className="text-2xl font-['oswald'] font-bold">Reserve Your Moment</h3>
+                <p className="font-['montserrat']">We'll keep your time</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button
+        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        className="fixed bottom-4 right-4 bg-[#660152c9] text-white p-3 rounded-full shadow-lg hover:bg-white hover:text-[#b76ba3] transition"
+      >
+        <IoIosArrowUp size={24} />
+      </button>
     </div>
   );
 }

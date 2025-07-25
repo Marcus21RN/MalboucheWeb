@@ -8,6 +8,8 @@ import React, { useEffect, useState } from 'react';
 import axios from "axios";
 
 import { IoIosArrowForward } from "react-icons/io";
+import { IoIosArrowUp } from "react-icons/io";
+
 import { IoCloseSharp } from "react-icons/io5";
 
 
@@ -334,6 +336,13 @@ useEffect(() => {
           </div>
         )}
       </section>
+      {/* BOTÓN DE VOLVER AL PRINCIPIO */}
+      <button
+        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        className="fixed bottom-4 right-4 bg-[#660152c9] text-white p-3 rounded-full shadow-lg hover:bg-white hover:text-[#b76ba3] transition"
+      >
+        <IoIosArrowUp size={24} />
+      </button>
     </div>
   </div>
   

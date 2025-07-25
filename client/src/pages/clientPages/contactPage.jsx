@@ -1,6 +1,7 @@
 import React from 'react';
 import { Parallax } from 'react-scroll-parallax';
 import { FaMapMarkerAlt, FaPhone, FaEnvelope, FaClock } from 'react-icons/fa';
+import { IoIosArrowUp } from "react-icons/io";
 
 export default function ContactPage() {
   return (
@@ -205,6 +206,12 @@ export default function ContactPage() {
           </div>
         </div>
       </div>
+      <button
+        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        className="fixed bottom-4 right-4 bg-[#660152c9] text-white p-3 rounded-full shadow-lg hover:bg-white hover:text-[#b76ba3] transition"
+      >
+        <IoIosArrowUp size={24} />
+      </button>
     </div>
   );
 }

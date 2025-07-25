@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef} from "react";
 
 import { Parallax } from 'react-scroll-parallax';
 import { FaSearch, FaFilter } from 'react-icons/fa';
+import { IoIosArrowUp } from "react-icons/io";
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 
@@ -110,7 +111,7 @@ export default function MenuPage() {
               )}
             </AnimatePresence>
 
-            {/* Input + ícono, se mueve si hay filtro abierto */}
+            {/* Input búsqueda */}
             <motion.div
               animate={{
                 x: showFilter && window.innerWidth >= 640 ? -220 : 0,
@@ -161,7 +162,7 @@ export default function MenuPage() {
 
 
       {/* === SECCIÓN DE MENÚS === */}
-      <div className="max-w-6xl mx-auto px-6 py-16">
+      <div className="px-4 py-10 max-w-7xl mx-auto space-y-6">
         {Object.entries(menuData)
           .filter(([tipoMenu, menus]) => {
             if (selectedCategory !== 'Todos' && selectedCategory !== tipoMenu) return false;
@@ -203,7 +204,7 @@ export default function MenuPage() {
                 </h1>
               </div>
             )}
-            <div className={`${menus.length > 1 ? 'grid grid-cols-1 md:grid-cols-2 gap-10' : ''}`}>
+            <div className={`${menus.length > 1 ? 'grid grid-cols-1 md:grid-cols-2 gap-6' : ''}`}>
               {menus.map((menu, j) => {
                 const matchMenuName = menu.nombre.toLowerCase().includes(lowerSearch);
                 const filteredProductos = !searchTerm || matchMenuName || matchTipoMenu
@@ -241,6 +242,12 @@ export default function MenuPage() {
             );
         })}
       </div>
+      <button
+        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        className="fixed bottom-4 right-4 bg-[#660152c9] text-white p-3 rounded-full shadow-lg hover:bg-white hover:text-[#b76ba3] transition"
+      >
+        <IoIosArrowUp size={24} />
+      </button>
     </div>
   );
 }

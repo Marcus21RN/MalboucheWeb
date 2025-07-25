@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
+import { Link } from 'react-router-dom';
 import { Parallax } from 'react-scroll-parallax';
-import { IoIosArrowForward } from "react-icons/io";
+import { IoIosArrowUp } from "react-icons/io";
 import { IoCloseSharp } from "react-icons/io5";
 import { FaFilter } from "react-icons/fa";
 
@@ -108,7 +109,7 @@ export default function EventsPage() {
       </div>
 
       {/* LISTA DE EVENTOS */}
-      <div className="px-4 py-10 max-w-5xl mx-auto space-y-6">
+      <div className="px-4 py-10 max-w-7xl mx-auto space-y-6">
         {eventos.map((evento) => {
           const { day, month, year } = formatDate(evento.fecha);
           
@@ -210,6 +211,34 @@ export default function EventsPage() {
           </div>
         </div>
       )}
+<div className="w-full bg-gradient-to-b from-[#1e00188a] to-[#3e0132] py-12">
+  <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-center">
+    <div className="w-full flex flex-col md:flex-row items-center justify-between gap-8">
+      {/* Texto */}
+      <div className="text-center md:text-left max-w-2xl">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold font-['oswald'] text-white uppercase tracking-wider leading-tight">
+          DON'T MISS OUT THE FUN. <span className="text-[#b76ba3] block md:inline">BOOK NOW.</span>
+        </h1>
+      
+      </div>
+      
+      {/* Botón */}
+      <Link 
+        to="/reservations" 
+        className="px-12 py-4 border-2 border-[#b76ba3] bg-transparent hover:bg-[#b76ba3] text-white hover:text-white font-semibold font-['oswald'] uppercase tracking-wider rounded-sm transition-all duration-300"
+      >
+        BOOK YOUR TABLE
+      </Link>
+    </div>
+  </div>
+</div>
+      {/* BOTÓN DE VOLVER AL PRINCIPIO */}
+      <button
+        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        className="fixed bottom-4 right-4 bg-[#660152c9]  text-white p-3 rounded-full shadow-lg hover:bg-white hover:text-[#b76ba3] transition"
+      >
+        <IoIosArrowUp size={24} />
+      </button>
     </div>
   );
 }
