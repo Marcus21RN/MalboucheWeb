@@ -55,6 +55,11 @@ export default function EventsPage() {
     return { day, month, year };
   };
 
+   // Función para manejar navegación con recarga
+  const handleNavigation = (to) => {
+      window.location.href = to;
+  };
+
   return (
     <div className="min-h-screen bg-[#000000] text-gray-500 font-['oswald']">
 
@@ -223,12 +228,12 @@ export default function EventsPage() {
       </div>
       
       {/* Botón */}
-      <Link 
-        to="/reservations" 
+      <button 
+        onClick={() => handleNavigation("/reservations")}
         className="px-12 py-4 border-2 border-[#b76ba3] bg-transparent hover:bg-[#b76ba3] text-white hover:text-white font-semibold font-['oswald'] uppercase tracking-wider rounded-sm transition-all duration-300"
       >
         BOOK YOUR TABLE
-      </Link>
+      </button>
     </div>
   </div>
 </div>

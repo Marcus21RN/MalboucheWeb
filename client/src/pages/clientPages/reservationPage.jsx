@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { v4 as uuidv4 } from 'uuid';
 import { Parallax } from 'react-scroll-parallax';
 import { FaCalendarAlt, FaClock } from "react-icons/fa";
 import { IoIosArrowUp } from "react-icons/io";
-import sureloj from "../../assets/imagenes/aboutUs.jpg"; // Ensure this path is correct
+import sureloj from "../../assets/imagenes/aboutUs.jpg";
 
 export default function ReservationPage() {
   const [formData, setFormData] = useState({
@@ -15,26 +14,134 @@ export default function ReservationPage() {
     primerApell: '',
     segundoApell: '',
     correoCliente: '',
-    telefono: '',
+    numTel: '',
     estado: 'pendiente',
-  }); 
+  });
+
+  const [errors, setErrors] = useState({});
+  const [minDate, setMinDate] = useState('');
+  const [maxDate, setMaxDate] = useState('');
+  const [minTime, setMinTime] = useState('');
+  // eslint-disable-next-line no-unused-vars
+  const [currentTime, setCurrentTime] = useState('');
+
+  // Configurar fechas y horas válidas
+  useEffect(() => {
+    // Fechas (hoy hasta 1 semana después)
+    const today = new Date();
+    const nextWeek = new Date();
+    nextWeek.setDate(today.getDate() + 7);
+    
+    setMinDate(today.toISOString().split('T')[0]);
+    setMaxDate(nextWeek.toISOString().split('T')[0]);
+
+    // Hora mínima (2 horas después de ahora o 3:00 PM si es más temprano)
+    const now = new Date();
+    now.setHours(now.getHours() + 2);
+    
+    const minHour = now.getHours() < 15 ? 15 : now.getHours();
+    const formattedTime = `${minHour.toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+    
+    setCurrentTime(formattedTime);
+    setMinTime(formattedTime);
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    
+    // Validaciones en tiempo real
+    if (name === 'numTel') {
+      if (!/^\d*$/.test(value)) return; // Solo números
+      if (value.length > 10) return; // Máximo 10 dígitos
+    }
+    
+    // Validación para nombres (solo letras)
+    if (['nombreCliente', 'primerApell', 'segundoApell'].includes(name)) {
+      if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$/.test(value)) return;
+    }
+
+    setFormData(prev => ({ 
+      ...prev, 
+      [name]: value 
+    }));
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    
+    // Validación de cantidad de personas (1-4)
+    if (!formData.cantidadPersonas || formData.cantidadPersonas < 1 || formData.cantidadPersonas > 4) {
+      newErrors.cantidadPersonas = 'Number of guests must be between 1 and 4';
+    }
+    
+    // Validación de fecha (hasta 1 semana después)
+    if (!formData.fecha) {
+      newErrors.fecha = 'Please select a date';
+    } else {
+      const selectedDate = new Date(formData.fecha);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      
+      if (selectedDate < today) {
+        newErrors.fecha = 'Date cannot be in the past';
+      }
+    }
+    
+    // Validación de hora (3:00 PM - 12:00 AM)
+    if (!formData.horaInicio) {
+      newErrors.horaInicio = 'Please select arrival time';
+    } else {
+      const [hours] = formData.horaInicio.split(':').map(Number);
+      if (hours < 15 || hours >= 24) {
+        newErrors.horaInicio = 'Arrival time must be between 3:00 PM and 12:00 AM';
+      }
+    }
+    
+    // Validación de nombres (solo letras)
+    const nameFields = ['nombreCliente', 'primerApell', 'segundoApell'];
+    nameFields.forEach(field => {
+      if (!formData[field]) {
+        newErrors[field] = 'This field is required';
+      } else if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(formData[field])) {
+        newErrors[field] = 'Only letters allowed';
+      }
+    });
+    
+    // Validación de email
+    if (!formData.correoCliente) {
+      newErrors.correoCliente = 'Email is required';
+    } else if (!emailRegex.test(formData.correoCliente)) {
+      newErrors.correoCliente = 'Please enter a valid email';
+    }
+    
+    // Validación de teléfono (10 dígitos)
+    if (!formData.numTel) {
+      newErrors.numTel = 'Phone number is required';
+    } else if (formData.numTel.length !== 10) {
+      newErrors.numTel = 'Phone number must be 10 digits';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (!validateForm()) return;
+    
     try {
       const reservation = {
-        _id: uuidv4(),
+        _id: `RES-${Date.now().toString(36).toUpperCase()}`,
         ...formData
       };
 
       const response = await axios.post('http://localhost:3000/clientBackend/reservations', reservation);
       alert('Reservation submitted successfully');
       console.log(response.data);
+      
+      // Reset form
       setFormData({
         cantidadPersonas: '',
         fecha: '',
@@ -43,7 +150,7 @@ export default function ReservationPage() {
         primerApell: '',
         segundoApell: '',
         correoCliente: '',
-        telefono: '',
+        numTel: '',
         estado: 'pendiente',
       });
     } catch (error) {
@@ -107,13 +214,18 @@ export default function ReservationPage() {
                       onChange={handleChange}
                       placeholder=" "
                       min="1"
+                      max="4"
                       required
                       className="peer h-10 w-full border-b-2 border-[#555] bg-transparent text-white placeholder-transparent focus:outline-none focus:border-[#b76ba3]"
                     />
                     <label className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#b76ba3] peer-focus:text-sm">
                       Number of Guests
                     </label>
+                    {errors.cantidadPersonas && (
+                      <p className="text-red-500 text-xs mt-1">{errors.cantidadPersonas}</p>
+                    )}
                   </div>
+                  
                   <div className="relative w-full">
                     <input
                       type="date" 
@@ -122,12 +234,18 @@ export default function ReservationPage() {
                       onChange={handleChange}
                       placeholder=" "
                       required
+                      min={minDate}
+                      max={maxDate}
                       className="peer h-10 w-full border-b-2 border-[#555] bg-transparent text-white placeholder-transparent focus:outline-none focus:border-[#b76ba3]"
                     />
                     <label className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#b76ba3] peer-focus:text-sm">
                       Date
                     </label>
+                    {errors.fecha && (
+                      <p className="text-red-500 text-xs mt-1">{errors.fecha}</p>
+                    )}
                   </div>
+                  
                   <div className="relative w-full md:col-span-2">
                     <input
                       type="time"
@@ -136,14 +254,21 @@ export default function ReservationPage() {
                       onChange={handleChange}
                       placeholder=" "
                       required
+                      min={minTime}
+                      max="21:59"
+                      step="900" // Intervalos de 15 minutos
                       className="peer h-10 w-full border-b-2 border-[#555] bg-transparent text-white placeholder-transparent focus:outline-none focus:border-[#b76ba3]"
                     />
                     <label className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#b76ba3] peer-focus:text-sm">
                       Arrival Time
                     </label>
+                    {errors.horaInicio && (
+                      <p className="text-red-500 text-xs mt-1">{errors.horaInicio}</p>
+                    )}
                   </div>
                 </div>
               </section>
+              
               {/* Personal Information */}
               <section>
                 <h2 className="text-2xl font-['oswald'] font-semibold text-white border-b-2 border-[#660152]/50 pb-2 mb-6 uppercase">
@@ -154,7 +279,7 @@ export default function ReservationPage() {
                     { label: 'First Name', name: 'nombreCliente', placeholder: 'e.g. John' },
                     { label: 'First Last Name', name: 'primerApell', placeholder: 'e.g. Smith' },
                     { label: 'Second Last Name', name: 'segundoApell', placeholder: 'e.g. Johnson' },
-                  ].map(({ label, name,  }) => (
+                  ].map(({ label, name }) => (
                     <div key={name} className="relative w-full">
                       <input
                         type="text"
@@ -163,11 +288,15 @@ export default function ReservationPage() {
                         onChange={handleChange}
                         placeholder=" "
                         required
+                        pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+"
                         className="peer h-10 w-full border-b-2 border-[#555] bg-transparent text-white placeholder-transparent focus:outline-none focus:border-[#b76ba3]"
                       />
                       <label className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#b76ba3] peer-focus:text-sm">
                         {label}
                       </label>
+                      {errors[name] && (
+                        <p className="text-red-500 text-xs mt-1">{errors[name]}</p>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -186,24 +315,34 @@ export default function ReservationPage() {
                     <label className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#b76ba3] peer-focus:text-sm">
                       Email Address
                     </label>
+                    {errors.correoCliente && (
+                      <p className="text-red-500 text-xs mt-1">{errors.correoCliente}</p>
+                    )}
                   </div>
 
                   <div className="relative">
                     <input
                       type="tel"
-                      name="telefono"
-                      value={formData.telefono}
+                      name="numTel"
+                      value={formData.numTel}
                       onChange={handleChange}
                       placeholder=" "
                       required
+                      minLength="10"
+                      maxLength="10"
+                      pattern="\d{10}"
                       className="peer h-10 w-full border-b-2 border-[#555] bg-transparent text-white placeholder-transparent focus:outline-none focus:border-[#b76ba3]"
                     />
                     <label className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#b76ba3] peer-focus:text-sm">
                       Phone Number
                     </label>
+                    {errors.numTel && (
+                      <p className="text-red-500 text-xs mt-1">{errors.numTel}</p>
+                    )}
                   </div>
                 </div>
               </section>
+              
               {/* Submit */}
               <div className="pt-6 text-center">
                 <button
@@ -215,7 +354,8 @@ export default function ReservationPage() {
               </div>
             </form>
           </div>
-          {/* Sección de la Imagen - Ahora perfectamente alineada */}
+          
+          {/* Sección de la Imagen */}
           <div className="order-1 lg:order-2 h-full flex items-center justify-center pt-40">
             <div className="relative w-full h-[400px] lg:h-[500px] overflow-hidden rounded-sm group ">
               <img
@@ -233,6 +373,8 @@ export default function ReservationPage() {
           </div>
         </div>
       </div>
+      
+      {/* Botón para volver arriba */}
       <button
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         className="fixed bottom-4 right-4 bg-[#660152c9] text-white p-3 rounded-full shadow-lg hover:bg-white hover:text-[#b76ba3] transition"

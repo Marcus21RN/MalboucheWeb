@@ -1,5 +1,4 @@
-
-
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect, useRef} from "react";
 
 import { Parallax } from 'react-scroll-parallax';

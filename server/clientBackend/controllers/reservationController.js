@@ -1,22 +1,23 @@
 import Reservation from '../../models/reservation.js';
-import { v4 as uuidv4 } from 'uuid';
 
 export const createReservation = async (req, res) => {
   try {
     // Extraer y convertir campos necesarios
     const {
-      _id = uuidv4(), // Generar un ID único si no se proporciona
+      _id, // Generar un ID único si no se proporciona
       nombreCliente,
       primerApell,
       segundoApell= ' ', // Asignar un valor por defecto si no se proporciona
       correoCliente,
+      numTel,
       fecha,
       horaInicio,
       cantidadPersonas,
       fechaReservacion,
       estado
     } = req.body;
-
+    
+    console.log('Received reservation data:', req.body);
     // Crear objeto con conversión de tipos
     const newReservation = new Reservation({
       _id,
@@ -24,6 +25,7 @@ export const createReservation = async (req, res) => {
       primerApell,
       segundoApell,
       correoCliente,
+      numTel,
       fecha,
       horaInicio,
       cantidadPersonas,

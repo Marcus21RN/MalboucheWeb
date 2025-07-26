@@ -85,6 +85,12 @@ useEffect(() => {
     );
   };
 
+ // Función para manejar navegación con recarga
+  const handleNavigation = (to) => {
+      window.location.href = to;
+  };
+
+
   return (
     <div className="bg-[#000000]">
       <div className="min-h-screen bg-[#000000] ">
@@ -109,12 +115,12 @@ useEffect(() => {
                 <span className="block mt-4">AT MALBOUCHE BAR</span>
               </h1>
             </div>
-            <Link
-              to="/reservations"
+            <button
+              onClick={() => handleNavigation("/reservations")}
               className="px-8 py-3 text-white font-['montserrat'] border-1 hover:border-[#b76ba3] transition-colors duration-300 transform hover:scale-105"
             >
               BOOK NOW
-            </Link>
+            </button>
           </div>
         </div>
        
@@ -200,12 +206,12 @@ useEffect(() => {
                 Join us and discover why we are the favorite place for those who seek to escape reality.
               </p>
 
-              <Link 
-                to="/events" 
+              <button 
+                onClick={() => handleNavigation("/events")}
                 className="px-8 py-3  text-white font-['montserrat'] border-1 hover:border-[#b76ba3] font-normal  transition-colors duration-300 transform hover:scale-105"
               >
                 GO TO EVENTS
-              </Link>
+              </button>
             </div>
           </div>
         </section>
@@ -270,12 +276,12 @@ useEffect(() => {
               </div>
             )}
             <div className="text-center mt-12">
-                <Link 
-                  to="/menu" 
+                <button 
+                  onClick={() => handleNavigation("/menu")}
                   className="px-10 py-5  text-white font-['montserrat'] border-1 hover:border-[#b76ba3] font-normal  transition-colors duration-300 transform hover:scale-105"
                 >
                   SEE FULL MENU
-              </Link>
+              </button>
             </div>
         
           </section>

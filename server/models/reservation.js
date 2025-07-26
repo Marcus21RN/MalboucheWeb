@@ -21,6 +21,10 @@ const reservationSchema = new mongoose.Schema({
     type: String,
     required:true
   },
+  numTel: {
+    type: Number,
+    required: true,
+  },
   fecha:{
     type: Date,
     required: true
