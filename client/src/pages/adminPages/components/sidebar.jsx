@@ -23,11 +23,11 @@ import {
 } from "@mui/icons-material";
 
 
-const Sidebar = () => {
+
+const Sidebar = ({ collapsed, setCollapsed }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [activeItem, setActiveItem] = useState(location.pathname);
-  const [collapsed, setCollapsed] = useState(false);
 
 const menuItems = [
   { text: "Dashboard", icon: <DashboardIcon />, path: "/admin/home" },
@@ -47,9 +47,9 @@ const menuItems = [
 
   return (
     <div
-      className={`${
+      className={`bg-white text-[#660152] h-screen transition-all duration-300 ease-in-out ${
         collapsed ? "w-[80px]" : "w-[280px]"
-      } h-full bg-white text-[#660152] fixed shadow-xl transition-all duration-300`}
+      } fixed left-0 top-0 overflow-hidden z-50`}
     >
       {/* Toggle/Logo */}
       <div className="flex items-center justify-between p-5 text-xl font-bold">
