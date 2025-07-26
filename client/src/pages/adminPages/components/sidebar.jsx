@@ -31,12 +31,12 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
 
 const menuItems = [
   { text: "Dashboard", icon: <DashboardIcon />, path: "/admin/home" },
-  { text: "Menú", icon: <MenuIcon />, path: "/admin/menu" }, // `RestaurantMenu` da un toque más de "platos"
-  { text: "Empleados", icon: <EmployeesIcon />, path: "/admin/employes" },
-  { text: "Eventos", icon: <EventsIcon />, path: "/admin/events" },
-  { text: "Reservas", icon: <ReservationsIcon />, path: "/admin/reservations" },
-  { text: "Promociones", icon: <PromotionsIcon />, path: "/admin/promotions" },
-  { text: "Perfil", icon: <ProfileIcon />, path: "/admin/profile" },
+  { text: "Menu", icon: <MenuIcon />, path: "/admin/menu" }, // `RestaurantMenu` da un toque más de "platos"
+  { text: "Employees", icon: <EmployeesIcon />, path: "/admin/employes" },
+  { text: "Events", icon: <EventsIcon />, path: "/admin/events" },
+  { text: "Reservations", icon: <ReservationsIcon />, path: "/admin/reservations" },
+  { text: "Promos", icon: <PromotionsIcon />, path: "/admin/promotions" },
+  
 ];
 
 
@@ -134,21 +134,21 @@ const menuItems = [
         ))}
       </List>
 
-      {/* Footer/Configuración */}
+      {/* Footer/Profile */}
       <div className="absolute bottom-0 w-full border-t border-gray-200">
-        <Tooltip title={collapsed ? "Configuración" : ""} placement="right">
+        <Tooltip title={collapsed ? "Profile" : ""} placement="right">
           <ListItem disablePadding>
             <ListItemButton
-              onClick={() => handleItemClick("/admin/settings")}
+              onClick={() => handleItemClick("/admin/profile")}
               className="!py-3 !px-6"
-              selected={activeItem === "/admin/settings"}
+              selected={activeItem === "/admin/profile"}
               sx={{
                 backgroundColor:
-                  activeItem === "/admin/settings" ? "#660152" : "inherit",
+                  activeItem === "/admin/profile" ? "#660152" : "inherit",
                 borderRadius: "10px",
                 "&:hover": {
                   backgroundColor:
-                    activeItem === "/admin/settings"
+                    activeItem === "/admin/profile"
                       ? "#660152"
                       : "rgba(247, 210, 240, 0.3)",
                 },
@@ -158,20 +158,20 @@ const menuItems = [
                 className="!min-w-[40px]"
                 sx={{
                   color:
-                    activeItem === "/admin/settings" ? "white" : "#6b7280",
+                    activeItem === "/admin/profile" ? "white" : "#6b7280",
                 }}
               >
-                <SettingsIcon />
+                <ProfileIcon />
               </ListItemIcon>
               {!collapsed && (
                 <ListItemText
-                  primary="Configuración"
+                  primary="Profile"
                   primaryTypographyProps={{
                     sx: {
                       color:
-                        activeItem === "/admin/settings" ? "white" : "#6b7280",
+                        activeItem === "/admin/profile" ? "white" : "#6b7280",
                       fontWeight:
-                        activeItem === "/admin/settings"
+                        activeItem === "/admin/profile"
                           ? "medium"
                           : "normal",
                     },
