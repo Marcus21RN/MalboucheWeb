@@ -837,8 +837,52 @@ db["iot-dht11_Lecturas"].insertMany([
     humedad: 65,
     fecha: ISODate("2025-07-01T00:00:00Z"),
     hora: "12:00"
+  },
+  {
+    _id: "DHT11-004",
+    temperaturaC: 30.0,
+    humedad: 80,
+    fecha: ISODate("2025-07-01T00:00:00Z"),
+    hora: "10:30"
+  },
+  {
+    _id: "DHT11-005",
+    temperaturaC: 10.0,
+    humedad: 20,
+    fecha: ISODate("2025-07-01T00:00:00Z"),
+    hora: "11:30"
+  },
+  {
+    _id: "DHT11-006",
+    temperaturaC: 30.2,
+    humedad: 10,
+    fecha: ISODate("2025-07-01T00:00:00Z"),
+    hora: "12:30"
+  },
+  {
+    _id: "DHT11-007",
+    temperaturaC: 25.0,
+    humedad: 30,
+    fecha: ISODate("2025-07-01T00:00:00Z"),
+    hora: "13:00"
+  },
+  {
+    _id: "DHT11-008",
+    temperaturaC: 15.0,
+    humedad: 40,
+    fecha: ISODate("2025-07-01T00:00:00Z"),
+    hora: "14:00"
+  },
+  {
+    _id: "DHT11-009",
+    temperaturaC: 20.0,
+    humedad: 50,
+    fecha: ISODate("2025-07-01T00:00:00Z"),
+    hora: "15:00"
   }
-])
+]),
+
+
 
 // ESQUEMA PARA EL SENSOR DE DISTANCIA ULTRASÓNICA (HC-SR04)
 db.createCollection("iot-hc-sr04_Lecturas", {
@@ -887,6 +931,48 @@ db["iot-hc-sr04_Lecturas"].insertMany([
     distanciaCM: 180.5,
     fecha: ISODate("2025-07-01T00:00:00Z"),
     hora: "12:00"
+  },
+  {
+    _id: "HC-SR04-004",
+    distanciaCM: 220.0,
+    fecha: ISODate("2025-07-01T00:00:00Z"),
+    hora: "13:00"
+  },
+  {
+    _id: "HC-SR04-005",
+    distanciaCM: 250.0,
+    fecha: ISODate("2025-07-01T00:00:00Z"),
+    hora: "14:00"
+  },
+  {
+    _id: "HC-SR04-006",
+    distanciaCM: 300.0,
+    fecha: ISODate("2025-07-01T00:00:00Z"),
+    hora: "15:00"
+  },
+  {
+    _id: "HC-SR04-007",
+    distanciaCM: 350.0,
+    fecha: ISODate("2025-07-01T00:00:00Z"),
+    hora: "16:00"
+  },
+  {
+    _id: "HC-SR04-008",
+    distanciaCM: 400.0,
+    fecha: ISODate("2025-07-01T00:00:00Z"),
+    hora: "17:00"
+  },
+  {
+    _id: "HC-SR04-009",
+    distanciaCM: 450.0,
+    fecha: ISODate("2025-07-01T00:00:00Z"),
+    hora: "18:00"
+  },
+  {
+    _id: "HC-SR04-010",
+    distanciaCM: 500.0,
+    fecha: ISODate("2025-07-01T00:00:00Z"),
+    hora: "19:00"
   }
 ])
 
@@ -937,5 +1023,47 @@ db["iot-mlx90615_Lecturas"].insertMany([
     temperaturaC: 24.0,
     fecha: ISODate("2025-07-01T00:00:00Z"),
     hora: "12:00"
+  },
+  {
+    _id: "MLX90615-004",
+    temperaturaC: 27.0,
+    fecha: ISODate("2025-07-01T00:00:00Z"),
+    hora: "13:00"
+  },
+  {
+    _id: "MLX90615-005",
+    temperaturaC: 28.0,
+    fecha: ISODate("2025-07-01T00:00:00Z"),
+    hora: "14:00"
+  },
+  {
+    _id: "MLX90615-006",
+    temperaturaC: 29.0,
+    fecha: ISODate("2025-07-01T00:00:00Z"),
+    hora: "15:00"
+  },
+  {
+    _id: "MLX90615-007",
+    temperaturaC: 30.0,
+    fecha: ISODate("2025-07-01T00:00:00Z"),
+    hora: "16:00"
+  },
+  {
+    _id: "MLX90615-008",
+    temperaturaC: 31.0,
+    fecha: ISODate("2025-07-01T00:00:00Z"),
+    hora: "17:00"
+  },
+  {
+    _id: "MLX90615-009",
+    temperaturaC: 32.0,
+    fecha: ISODate("2025-07-01T00:00:00Z"),
+    hora: "18:00"
+  },
+  {
+    _id: "MLX90615-010",
+    temperaturaC: 33.0,
+    fecha: ISODate("2025-07-01T00:00:00Z"),
+    hora: "19:00"
   }
 ])
