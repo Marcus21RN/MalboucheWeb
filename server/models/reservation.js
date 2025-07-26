@@ -44,8 +44,8 @@ const reservationSchema = new mongoose.Schema({
   },
   estado: {
     type: String,
-    enum: ['pendiente', 'confirmada', 'cancelada'],
-    default: 'pendiente',
+    enum: ['confirmada', 'cancelada'],
+    default: 'confirmada',
     required: true
   }
 }, {
@@ -53,4 +53,4 @@ const reservationSchema = new mongoose.Schema({
   versionKey: false    //  No agregar __v
 });
 
-export default mongoose.model('Reservation', reservationSchema, 'reservacion'); // 'reservacion' es el nombre de la colección en MongoDB
+export default mongoose.model('Reservation', reservationSchema, 'reservacion');
