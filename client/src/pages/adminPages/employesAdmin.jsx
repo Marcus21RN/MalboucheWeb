@@ -215,7 +215,7 @@ export default function EmployesAdmin() {
 
   return (
     <Box sx={{ p: 3 }}>
-      <Typography variant="h4" gutterBottom sx={{ color: "#660152", fontFamily: "Montserrat, sans-serif", fontWeight: "Bold", textAlign: "center", marginBottom:5 }}>
+      <Typography variant="h5" gutterBottom sx={{ color: "#660152", fontWeight: "bold", fontFamily : "Montserrat, sans-serif", textAlign:"center" }}>
         EMPLOYEES MANAGEMENT
       </Typography>
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
@@ -380,7 +380,7 @@ export default function EmployesAdmin() {
 <TableContainer component={Paper} elevation={3}>
         <Table sx={{"& .MuiTableCell-root": {color: "#660152",fontFamily: "Montserrat, sans-serif"}}}>
           <TableHead>
-            <TableRow sx={{ backgroundColor: "#f7d2f0" }}>
+            <TableRow sx={{ backgroundColor: "rgba(183, 107, 163, 0.3)" }}>
               <TableCell sx={{ fontWeight: "bold", cursor: "pointer" }} onClick={() => handleSort("_id")}>ID {orderBy === "_id" && (order === "asc" ? "▲" : "▼")}</TableCell>
               <TableCell sx={{ fontWeight: "bold", cursor: "pointer" }} onClick={() => handleSort("nombre")}>Nombre {orderBy === "nombre" && (order === "asc" ? "▲" : "▼")}</TableCell>
               <TableCell sx={{ fontWeight: "bold", cursor: "pointer" }} onClick={() => handleSort("correo")}>Correo {orderBy === "correo" && (order === "asc" ? "▲" : "▼")}</TableCell>
@@ -391,7 +391,7 @@ export default function EmployesAdmin() {
           </TableHead>
           <TableBody>
             {paginatedEmpleados.map((emp) => (
-              <TableRow key={emp._id} hover>
+              <TableRow key={emp._id} sx={{ "&:hover": { backgroundColor: "rgba(183, 107, 163, 0.1)" } }}>
                 <TableCell>{emp._id}</TableCell>
                 <TableCell>{`${emp.nombre} ${emp.primerApellido} ${emp.segundoApellido || ""}`}</TableCell>
                 <TableCell>{emp.correo}</TableCell>

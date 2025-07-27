@@ -22,6 +22,8 @@ export default function ReservationPage() {
   const [maxDate, setMaxDate] = useState('');
   const [serverError, setServerError] = useState(null);
 
+  
+
   // Configurar fechas y horas válidas
   useEffect(() => {
     // Fechas (hoy hasta 1 semana después)
@@ -51,6 +53,19 @@ export default function ReservationPage() {
 
       // eslint-disable-next-line no-unused-vars
       const response = await axios.post('http://localhost:3000/clientBackend/reservations', reservation);
+
+      await axios.post('http://localhost:3000/clientBackend/email', {
+        correoCliente: formData.correoCliente,
+        nombreCliente: formData.nombreCliente,
+        reservacion: {
+          folio: reservation._id,
+          fecha: formData.fecha,  
+          horaInicio: formData.horaInicio,
+          cantidadPersonas: formData.cantidadPersonas,
+      }
+      });
+
+
       alert('Reservation submitted successfully');
       // Reset form
       setFormData({
@@ -252,7 +267,7 @@ export default function ReservationPage() {
                   className="w-full bg-[#b76ba3] hover:bg-white text-white hover:text-[#000000] font-normal font-['oswald'] py-4 uppercase tracking-widest transition duration-300"
                 >
                   SUBMIT
-                </button>
+                </button> 
               </div>
             </form>
           </div>
