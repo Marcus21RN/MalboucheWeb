@@ -67,14 +67,16 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           
           {/* Rutas para usuarios */}
-          <Route element={<ProtectedRoute roleRequired="EMPLE"> <UserLayout /> </ProtectedRoute>}>
+          {/*<Route element={<ProtectedRoute roleRequired="EMPLE"> <UserLayout /> </ProtectedRoute>}> */}
+          <Route element={<UserLayout />}>
             <Route path="/user/home" element={<HomeUser />} />
             <Route path="/user/promotions" element={<PromoUser />} />
             <Route path="/user/menus" element={<MenusUser />} />
           </Route>
 
           {/* Rutas para admin */}
-          <Route element={<ProtectedRoute roleRequired="ADMIN"> <AdminLayout /> </ProtectedRoute>}>
+          {/*<Route element={<ProtectedRoute roleRequired="ADMIN"> <AdminLayout /> </ProtectedRoute>}> */}
+          <Route element={<AdminLayout />}>
             <Route path="/admin/home" element={<DashboardIoT />} />
             <Route path="/admin/menu" element={<MenuAdmin />} />
             <Route path="/admin/events" element={<EventsAdmin />} />
