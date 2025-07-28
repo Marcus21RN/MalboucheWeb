@@ -2,6 +2,9 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route, Outlet  } from 'react-router-dom';
 import { ParallaxProvider } from 'react-scroll-parallax';
 
+// Componentes importados de LOGIN
+import LoginPage from './pages/loginPage.jsx';
+import ProtectedRoute from '../utils/protectedRoute.jsx';
 
 // Componentes importados de CLIENTES
 import Navbar from "./pages/clientPages/components/navBar";
@@ -60,15 +63,18 @@ function App() {
             <Route path="/contact" element={<ContactPage />} />
           </Route>
 
+          {/* Rutas para login */}
+          <Route path="/login" element={<LoginPage />} />
+          
           {/* Rutas para usuarios */}
-          <Route element={<UserLayout />}>
+          <Route element={<ProtectedRoute roleRequired="EMPLE"> <UserLayout /> </ProtectedRoute>}>
             <Route path="/user/home" element={<HomeUser />} />
             <Route path="/user/promotions" element={<PromoUser />} />
             <Route path="/user/menus" element={<MenusUser />} />
           </Route>
 
           {/* Rutas para admin */}
-          <Route element={<AdminLayout />}>
+          <Route element={<ProtectedRoute roleRequired="ADMIN"> <AdminLayout /> </ProtectedRoute>}>
             <Route path="/admin/home" element={<DashboardIoT />} />
             <Route path="/admin/menu" element={<MenuAdmin />} />
             <Route path="/admin/events" element={<EventsAdmin />} />
