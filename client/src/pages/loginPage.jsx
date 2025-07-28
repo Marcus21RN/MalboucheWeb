@@ -1,37 +1,60 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [mensaje, setMensaje] = useState("");
   const navigate = useNavigate();
+  const [mensaje, setMensaje] = useState("");
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setMensaje('');
 
     try {
-      const res = await axios.post("http://localhost:3000/userBackend/auth/login", {
+      const res = await axios.post('http://localhost:3000/authJWT/auth/login', {
         correo: email,
-        password,
+        password: password,
       });
 
-      if (res.status === 200) {
-        localStorage.setItem("token", res.data.token); // guardamos el token
-        const rol = res.data.user.rol;
-        if (rol === "ADMIN") {
-          navigate("/admin/home"); // Redirigir a la página de inicio del admin
-        } else if (rol === "EMPLE") {
-          navigate("/user/home"); // Redirigir a la página de inicio del empleado
-        } else {
-          setMensaje("Rol no reconocido.");
-        }
+      const token = res.data.token;
+    
+      localStorage.setItem('token', token);
+
+      const decoded = jwtDecode(token);
+
+      if (decoded.rol === 'ADMIN') {
+        navigate('/admin/home');
+      } else if (decoded.rol === 'EMPLE') {
+        navigate('/user/home');
+      } else {
+        setMensaje('Rol no reconocido');
       }
-    } catch (err) { // Está resaltado en rojo esta linea de código pero es funcional. No implica que no compile.
-      setMensaje("Credenciales incorrectas o error en el servidor.");
+    } catch ( err ){
+      console.error("Error al iniciar sesión:", err);
+      setMensaje("Error al iniciar sesión. Por favor, inténtalo de nuevo.");
+      return;
     }
   };
+
+
+{/*  // Si el usuario ya está autenticado, redirigirlo a la página correspondiente
+    
+  // Redirigir a la página de inicio si ya está autenticado
+  React.useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const decoded = jwtDecode(token);
+      if (decoded.rol === 'ADMIN') {
+        navigate('/admin/home');
+      } else if (decoded.rol === 'EMPLE') {
+        navigate('/user/home');
+      }
+    }
+  }, [navigate]); 
+  */}
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-100 via-purple-100 to-white font-sans">
