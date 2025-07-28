@@ -14,9 +14,6 @@ import userBackend from './userBackend/index.js';
 // RUTAS DE IMPORTACIÓN PARA EL BACKEND DE ADMINISTRADOR
 import adminBackend from './adminBackend/index.js';
 
-// RUTAS DE IMPORTACIÓN PARA EL AUTH JWT
-import authJWT from './authJWT/index.js';
-
 dotenv.config();
 connectDB();
 
@@ -34,12 +31,8 @@ app.use('/clientBackend', clientBackend);
 app.use('/userBackend', userBackend);
 
 
+
 // APIs PARA EL BACKEND DE ADMINISTRADOR
 app.use('/adminBackend', adminBackend);
-
-
-// APIs PARA EL AUTH JWT
-app.use('/authJWT', authJWT);
-
 
 export default app;

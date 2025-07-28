@@ -15,7 +15,7 @@ const empleadoSchema = new mongoose.Schema({
   },
   segundoApellido: {
     type: String,
-    required: false, 
+    required: false, // Este campo es opcional
   },
   correo: {
     type: String,
@@ -29,14 +29,15 @@ const empleadoSchema = new mongoose.Schema({
   estado: {
     type: String,
     required: true,
-    default: 'activo',
-    enum: ['activo', 'inactivo'],
+    default: 'activo', // Por defecto, el estado es 'activo'
+    enum: ['activo', 'inactivo'], // Valores permitidos para el estado
   },
   IDRol: {
     type: String,
     required: true,
-    enum: ['ADMIN', 'EMPLE'], 
+    enum: ['ADMIN', 'EMPLE'], // Valores permitidos para el rol
   },
 });
 
+// Evita el error de sobreescritura del modelo
 export default mongoose.models.Empleado || mongoose.model('Empleado', empleadoSchema, 'empleado');
