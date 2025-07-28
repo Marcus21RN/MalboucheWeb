@@ -1,3 +1,2 @@
 .env
-# Ignorar node_modules en cualquier carpeta
-**/node_modules/
+
