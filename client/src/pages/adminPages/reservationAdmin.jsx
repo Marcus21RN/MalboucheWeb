@@ -218,11 +218,11 @@ const ReservationAdmin = () => {
           Reservations Management
         </Typography>
       </Box>
-      <Box sx={{mb: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-        <Box sx={{ display: 'flex', flexDirection: "row", alignItems: 'center', justifyContent: 'space-between'}}>
-        <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
+      <Box sx={{ display: 'flex', flexDirection: "row", alignItems: 'center', justifyContent: 'space-between'}}>
+        
+        <Box sx={{  display: 'flex', flexDirection: 'row', gap: 2,  }}>
           <FormControl sx={{ maxWidth: 250, minWidth: 250 }}>
-            <InputLabel id="filter-label" >Filter by Status</InputLabel>
+            <InputLabel size="small" sx={{ width: 250, backgroundColor: 'white' }}>Filter by Status</InputLabel>
             <Select
               labelId="filter-label"
               id="filter"
@@ -247,42 +247,43 @@ const ReservationAdmin = () => {
             sx={{ width: 250, backgroundColor: 'white', borderRadius: 1 }}
           />
         </Box>
+        
+        {/* Estadísticas rápidas */}
+        <Box sx={{mb: 3, display: 'flex', gap: 2, justifyContent: "flex-end" }}>
+          <Card sx={{ minWidth: 120 }}>
+            <CardContent sx={{ textAlign: 'center', py: 2 }}>
+              <Typography variant="h4" color="primary.main" fontWeight="bold">
+                {reservaciones.length}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Reservation Count
+              </Typography>
+            </CardContent>
+          </Card>
+          <Card sx={{ minWidth: 120 }}>
+            <CardContent sx={{ textAlign: 'center', py: 2 }}>
+              <Typography variant="h4" color="success.main" fontWeight="bold">
+                {reservaciones.filter(r => r.estado === 'confirmada').length}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Confirmed
+              </Typography>
+            </CardContent>
+          </Card>
+          <Card sx={{ minWidth: 120 }}>
+            <CardContent sx={{ textAlign: 'center', py: 2 }}>
+              <Typography variant="h4" color="error.main" fontWeight="bold">
+                {reservaciones.filter(r => r.estado === 'cancelada').length}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Cancelled
+              </Typography>
+            </CardContent>
+          </Card>
+
+        </Box>
       </Box>
 
-      {/* Estadísticas rápidas */}
-      <Box sx={{mb: 3, display: 'flex', gap: 2, justifyContent: "flex-end" }}>
-        <Card sx={{ minWidth: 120 }}>
-          <CardContent sx={{ textAlign: 'center', py: 2 }}>
-            <Typography variant="h4" color="primary.main" fontWeight="bold">
-              {reservaciones.length}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Reservation Count
-            </Typography>
-          </CardContent>
-        </Card>
-        <Card sx={{ minWidth: 120 }}>
-          <CardContent sx={{ textAlign: 'center', py: 2 }}>
-            <Typography variant="h4" color="success.main" fontWeight="bold">
-              {reservaciones.filter(r => r.estado === 'confirmada').length}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Confirmed
-            </Typography>
-          </CardContent>
-        </Card>
-        <Card sx={{ minWidth: 120 }}>
-          <CardContent sx={{ textAlign: 'center', py: 2 }}>
-            <Typography variant="h4" color="error.main" fontWeight="bold">
-              {reservaciones.filter(r => r.estado === 'cancelada').length}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Cancelled
-            </Typography>
-          </CardContent>
-        </Card>
-      </Box>
-      </Box>
 
 
       <Card elevation={3}>

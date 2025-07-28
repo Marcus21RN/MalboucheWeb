@@ -23,6 +23,7 @@ import DashboardIoT from "./pages/adminPages/dashboardIoT.jsx";
 import MenuAdmin from './pages/adminPages/menuAdmin.jsx';
 import ReservationAdmin from './pages/adminPages/reservationAdmin.jsx';
 import EventsAdmin from './pages/adminPages/eventsAdmin.jsx';
+import PromoAdmin from './pages/adminPages/promoAdmin.jsx';
 import AdminLayout from "./layouts/AdminLayout";
 
 // Layouts
@@ -73,6 +74,7 @@ function App() {
             <Route path="/admin/events" element={<EventsAdmin />} />
             <Route path="/admin/reservations" element={<ReservationAdmin />} />
             <Route path="/admin/employes" element={<EmployesAdmin />} />
+            <Route path="/admin/promos" element={<PromoAdmin />} />
           </Route>
         </Routes>
       </Router>

@@ -35,8 +35,8 @@ const menuItems = [
   { text: "Employees", icon: <EmployeesIcon />, path: "/admin/employes" },
   { text: "Events", icon: <EventsIcon />, path: "/admin/events" },
   { text: "Reservations", icon: <ReservationsIcon />, path: "/admin/reservations" },
-  { text: "Promos", icon: <PromotionsIcon />, path: "/admin/promotions" },
-  
+  { text: "Promos", icon: <PromotionsIcon />, path: "/admin/promos" },
+
 ];
 
 

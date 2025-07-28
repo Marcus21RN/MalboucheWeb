@@ -354,7 +354,7 @@ const handleOpenEventForm = (event = null) => {
       <Box sx={{ display: 'flex', flexDirection: "row", alignItems: 'center', justifyContent: 'space-between'}}>
         <Box sx={{  display: 'flex', flexDirection: 'row', gap: 2,  }}>
           <FormControl sx={{ maxWidth: 200, minWidth: 200}}>
-            <InputLabel id="filter-label" >Filter by status</InputLabel>
+            <InputLabel size="small" sx={{ width: 250, backgroundColor: 'white' }} >Filter by status</InputLabel>
             <Select
               labelId="filter-label"
               id="filter"
