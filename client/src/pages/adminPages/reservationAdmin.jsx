@@ -1,14 +1,23 @@
 import React, { useState } from "react";
 import {
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
-  Paper, TextField, Select, MenuItem, Button, TablePagination,
-  Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions,
-  Snackbar, Alert, Typography, Box, FormControl, InputLabel, Divider, Grid
+  Box, Typography, Table, TableBody, TableCell, TableContainer, 
+  TableHead, TableRow, Paper, TextField, Select, MenuItem, Button, 
+  TablePagination, Dialog, DialogTitle, DialogContent, DialogActions,
+  Snackbar, Alert, FormControl, InputLabel, Divider, Grid, Card, 
+  CardContent, Chip, IconButton, Tooltip, Avatar
 } from "@mui/material";
-import ReceiptIcon from "@mui/icons-material/Receipt";
-import CancelIcon from "@mui/icons-material/Cancel";
+import {
+  Receipt as ReceiptIcon,
+  Cancel as CancelIcon,
+  Event as EventIcon,
+  Person as PersonIcon,
+  Phone as PhoneIcon,
+  Email as EmailIcon,
+  AccessTime as TimeIcon,
+  CalendarToday as CalendarIcon
+} from "@mui/icons-material";
 
-const ReservacionesAdmin = () => {
+const ReservationAdmin = () => {
   const [reservaciones, setReservaciones] = useState([
     {
       _id: "RSV-0015",
@@ -25,91 +34,98 @@ const ReservacionesAdmin = () => {
     },
     {
       _id: "RSV-0016",
-      nombreCliente: "Jorgeeeeeeeeee ",
-      primerApellido: "Castro Aguilaaaaaaaaaaaaaaaaar",
+      nombreCliente: "Jorge",
+      primerApellido: "Castro Aguilar",
       segundoApellido: null,
-      correoCliente: "jorge.ckkkkkkkkkastro@hotmail.com",
+      correoCliente: "jorge.castro@hotmail.com",
       telefono: "664 555 1234",
       fecha: "2025-06-15",
-      
       horaInicio: "19:00",
       cantidadPersonas: 2,
       fechaReservacion: "2025-06-01",
       estado: "confirmada",
     },
-     {
+    {
       _id: "RSV-0017",
-      nombreCliente: "Jorge",
-      primerApellido: "Castro",
+      nombreCliente: "María",
+      primerApellido: "González",
+      segundoApellido: "López",
+      correoCliente: "maria.gonzalez@gmail.com",
+      telefono: "664 555 5678",
+      fecha: "2025-06-20",
+      horaInicio: "20:30",
+      cantidadPersonas: 4,
+      fechaReservacion: "2025-06-02",
+      estado: "cancelada",
+    },
+    {
+      _id: "RSV-0018",
+      nombreCliente: "Carlos",
+      primerApellido: "Mendoza",
       segundoApellido: null,
-      correoCliente: "jorge.castro@hotmail.com",
-      telefono: "664 555 1234",
-      fecha: "2025-06-15",
-      
-      horaInicio: "19:00",
-      cantidadPersonas: 2,
-      fechaReservacion: "2025-06-01",
+      correoCliente: "carlos.mendoza@outlook.com",
+      telefono: "664 555 9012",
+      fecha: "2025-06-22",
+      horaInicio: "21:00",
+      cantidadPersonas: 3,
+      fechaReservacion: "2025-06-03",
       estado: "confirmada",
     },
-     {
-      _id: "RSV-0018",
-      nombreCliente: "Jorge",
-      primerApellido: "Castro",
-      segundoApellido: null,
-      correoCliente: "jorge.castro@hotmail.com",
-      telefono: "664 555 1234",
-      fecha: "2025-06-15",
-      
-      horaInicio: "19:00",
+    {
+      _id: "RSV-0019",
+      nombreCliente: "Ana",
+      primerApellido: "Ramírez",
+      segundoApellido: "Flores",
+      correoCliente: "ana.ramirez@yahoo.com",
+      telefono: "664 555 3456",
+      fecha: "2025-06-25",
+      horaInicio: "18:30",
       cantidadPersonas: 2,
-      fechaReservacion: "2025-06-01",
+      fechaReservacion: "2025-06-04",
       estado: "confirmada",
     },
      {
       _id: "RSV-0019",
-      nombreCliente: "Jorge",
-      primerApellido: "Castro",
-      segundoApellido: null,
-      correoCliente: "jorge.castro@hotmail.com",
-      telefono: "664 555 1234",
-      fecha: "2025-06-15",
-      
-      horaInicio: "19:00",
+      nombreCliente: "Ana",
+      primerApellido: "Ramírez",
+      segundoApellido: "Flores",
+      correoCliente: "ana.ramirez@yahoo.com",
+      telefono: "664 555 3456",
+      fecha: "2025-06-25",
+      horaInicio: "18:30",
       cantidadPersonas: 2,
-      fechaReservacion: "2025-06-01",
+      fechaReservacion: "2025-06-04",
       estado: "confirmada",
     },
      {
-      _id: "RSV-0020",
-      nombreCliente: "Jorge",
-      primerApellido: "Castro",
-      segundoApellido: null,
-      correoCliente: "jorge.castro@hotmail.com",
-      telefono: "664 555 1234",
-      fecha: "2025-06-15",
-      
-      horaInicio: "19:00",
+      _id: "RSV-0019",
+      nombreCliente: "Ana",
+      primerApellido: "Ramírez",
+      segundoApellido: "Flores",
+      correoCliente: "ana.ramirez@yahoo.com",
+      telefono: "664 555 3456",
+      fecha: "2025-06-25",
+      horaInicio: "18:30",
       cantidadPersonas: 2,
-      fechaReservacion: "2025-06-01",
+      fechaReservacion: "2025-06-04",
       estado: "confirmada",
     },
      {
-      _id: "RSV-0021",
-      nombreCliente: "Jorge",
-      primerApellido: "Castro",
-      segundoApellido: null,
-      correoCliente: "jorge.castro@hotmail.com",
-      telefono: "664 555 1234",
-      fecha: "2025-06-15",
-      
-      horaInicio: "19:00",
+      _id: "RSV-0019",
+      nombreCliente: "Ana",
+      primerApellido: "Ramírez",
+      segundoApellido: "Flores",
+      correoCliente: "ana.ramirez@yahoo.com",
+      telefono: "664 555 3456",
+      fecha: "2025-06-25",
+      horaInicio: "18:30",
       cantidadPersonas: 2,
-      fechaReservacion: "2025-06-01",
+      fechaReservacion: "2025-06-04",
       estado: "confirmada",
     },
   ]);
 
-  // Filtros y paginación
+  // Estados de filtros y paginación
   const [filtroNombre, setFiltroNombre] = useState("");
   const [filtroEstado, setFiltroEstado] = useState("");
   const [pagina, setPagina] = useState(0);
@@ -122,7 +138,7 @@ const ReservacionesAdmin = () => {
   const [motivo, setMotivo] = useState("");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
-  // Filtros corregidos
+  // Filtros
   const filtradas = reservaciones.filter((res) => {
     const nombreCompleto = `${res.nombreCliente} ${res.primerApellido} ${res.segundoApellido || ""}`.toLowerCase();
     const coincideNombre = nombreCompleto.includes(filtroNombre.toLowerCase());
@@ -131,7 +147,24 @@ const ReservacionesAdmin = () => {
     
     return (coincideNombre || coincideId) && coincideEstado;
   });
-  
+
+  // Funciones de utilidad para estilos
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'confirmada':
+        return 'success';
+      case 'cancelada':
+        return 'error';
+      default:
+        return 'default';
+    }
+  };
+
+  const getAvatarColor = (nombre) => {
+    const colors = ['#660152', '#b76ba3', '#520040', '#8b4a6b'];
+    const index = nombre.charCodeAt(0) % colors.length;
+    return colors[index];
+  };
 
   // Paginación
   const handleChangePagina = (event, nuevaPagina) => {
@@ -178,171 +211,288 @@ const ReservacionesAdmin = () => {
   };
 
   return (
-    <Box sx={{mb:2}}>
-      <Typography variant="h5" gutterBottom sx={{ color: "#660152", fontWeight: "bold", fontFamily : "Montserrat, sans-serif", textAlign:"center"}}>
-        RESERVATION MANAGEMENT
-      </Typography> 
+    <Box sx={{ padding: 3 }}>
+      {/* Título y controles */}
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+        <Typography variant="h4" color="#660152" fontWeight="bold">
+          Reservations Management
+        </Typography>
+      </Box>
+      <Box sx={{mb: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+        <Box sx={{ display: 'flex', flexDirection: "row", alignItems: 'center', justifyContent: 'space-between'}}>
+        <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
+          <FormControl sx={{ maxWidth: 250, minWidth: 250 }}>
+            <InputLabel id="filter-label" >Filter by Status</InputLabel>
+            <Select
+              labelId="filter-label"
+              id="filter"
+              value={filtroEstado}
+              label="Filter by Status"
+              onChange={(e) => setFiltroEstado(e.target.value)}
+              size="small"
+              sx={{ backgroundColor: 'white', borderRadius: 1 }}
+            >
+              <MenuItem value="">All Reservations</MenuItem>
+              <MenuItem value="confirmada">Confirmed</MenuItem>
+              <MenuItem value="cancelada">Cancelled</MenuItem>
+            </Select>
+          </FormControl>
 
-      {/* Filtros */}
-      <Box sx={{  display: "flex", flexWrap: "wrap", gap: 2, mb: 3, justifyContent: "flex-end" }}>
-        <TextField
-          label="Search by name or Folio"
-          variant="outlined"
-          size="small"
-          value={filtroNombre}
-          onChange={(e) => setFiltroNombre(e.target.value)}
-          sx={{ width: 250 }}
-        />
-        <FormControl sx={{ width: 180 }} size="small">
-          <InputLabel>Estado</InputLabel>
-          <Select
-            value={filtroEstado}
-            onChange={(e) => setFiltroEstado(e.target.value)}
-            label="Estado"
-          >
-            <MenuItem value="">Todos</MenuItem>
-            <MenuItem value="confirmada">Confirmada</MenuItem>
-            <MenuItem value="cancelada">Cancelada</MenuItem>
-          </Select>
-        </FormControl>
+          <TextField
+            label="Search by Name or Folio"
+            variant="outlined"
+            size="small"
+            value={filtroNombre}
+            onChange={(e) => setFiltroNombre(e.target.value)}
+            sx={{ width: 250, backgroundColor: 'white', borderRadius: 1 }}
+          />
+        </Box>
       </Box>
 
-      {/* Tabla */}
-      <TableContainer component={Paper} elevation={3}>
-        <Table sx={{
-          "& .MuiTableCell-root": {
-            
-            fontFamily: "Montserrat, sans-serif",
-          },
-        }}>
-          <TableHead sx={{ backgroundColor: "rgba(102, 1, 82, 0.1)", borderBottom: "2px solid #660152" }}>
-            <TableRow>
-              <TableCell sx={{ fontWeight: "bold", color: "#660152" }}>Folio</TableCell>
-              <TableCell sx={{ fontWeight: "bold", color: "#660152" }}>Date</TableCell>
-              <TableCell sx={{ fontWeight: "bold", color: "#660152" }}>Time</TableCell>
-              <TableCell sx={{ fontWeight: "bold", color: "#660152" }}>People</TableCell>
-              <TableCell sx={{ fontWeight: "bold", color: "#660152" }}>Client Name</TableCell>
-              <TableCell sx={{ fontWeight: "bold", color: "#660152" }}>Email</TableCell>
-              <TableCell sx={{ fontWeight: "bold", color: "#660152" }}>Phone</TableCell>
-              <TableCell sx={{ fontWeight: "bold", color: "#660152" }}>C. Date</TableCell>
-              <TableCell sx={{ fontWeight: "bold", color: "#660152" }}>Status</TableCell>
-              <TableCell sx={{ fontWeight: "bold", color: "#660152" }}>Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {filtradas.length > 0 ? (
-              filtradas
-                .slice(pagina * filasPorPagina, pagina * filasPorPagina + filasPorPagina)
-                .map((res) => (
-                  <TableRow key={res._id} sx={{ "&:hover": { backgroundColor: "rgba(183, 107, 163, 0.1)" }}}>
-                    <TableCell sx={{ maxWidth: 100, whiteSpace: 'normal', wordBreak: 'break-word', fontWeight: 600}}>{res._id}</TableCell>
-                    <TableCell sx={{ maxWidth: 100, whiteSpace: 'normal', wordBreak: 'break-word' }}>{res.fecha}</TableCell>
-                    <TableCell sx={{ maxWidth: 70, whiteSpace: 'normal', wordBreak: 'break-word', textAlign: 'center' }}  >{res.horaInicio}</TableCell>
-                    <TableCell sx={{ maxWidth: 70, whiteSpace: 'normal', wordBreak: 'break-word', textAlign: 'center' }} >{res.cantidadPersonas}</TableCell>
-                    <TableCell sx={{ maxWidth: 180, whiteSpace: 'normal', wordBreak: 'break-word' }}>{`${res.nombreCliente} ${res.primerApellido} ${res.segundoApellido || ""}`}</TableCell>
-                    <TableCell sx={{ maxWidth: 180, whiteSpace: 'normal', wordBreak: 'break-word' }}>{res.correoCliente}</TableCell>
-                    <TableCell sx={{ maxWidth: 140, whiteSpace: 'normal', wordBreak: 'break-word' }}>{res.telefono}</TableCell>
-                    <TableCell  sx={{ maxWidth: 100, whiteSpace: 'normal', wordBreak: 'break-word' }}>{res.fechaReservacion}</TableCell>
-                    <TableCell>
-                      <Typography 
-                        sx={{ 
-                          color: res.estado === "confirmada" ? "#016615" : "#66011F",
-                          fontWeight: 600
-                        }}
-                      >
-                        {res.estado}
-                      </Typography>
+      {/* Estadísticas rápidas */}
+      <Box sx={{mb: 3, display: 'flex', gap: 2, justifyContent: "flex-end" }}>
+        <Card sx={{ minWidth: 120 }}>
+          <CardContent sx={{ textAlign: 'center', py: 2 }}>
+            <Typography variant="h4" color="primary.main" fontWeight="bold">
+              {reservaciones.length}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Reservation Count
+            </Typography>
+          </CardContent>
+        </Card>
+        <Card sx={{ minWidth: 120 }}>
+          <CardContent sx={{ textAlign: 'center', py: 2 }}>
+            <Typography variant="h4" color="success.main" fontWeight="bold">
+              {reservaciones.filter(r => r.estado === 'confirmada').length}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Confirmed
+            </Typography>
+          </CardContent>
+        </Card>
+        <Card sx={{ minWidth: 120 }}>
+          <CardContent sx={{ textAlign: 'center', py: 2 }}>
+            <Typography variant="h4" color="error.main" fontWeight="bold">
+              {reservaciones.filter(r => r.estado === 'cancelada').length}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Cancelled
+            </Typography>
+          </CardContent>
+        </Card>
+      </Box>
+      </Box>
+
+
+      <Card elevation={3}>
+        <CardContent sx={{ p: 0 }}>
+          <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 650 }}>
+              <TableHead>
+                <TableRow sx={{ backgroundColor: '#660152'}}>
+                  <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Folio</TableCell>
+                  <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Client</TableCell>
+                  <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Contact</TableCell>
+                  <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Date & Time</TableCell>
+                  <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>People</TableCell>
+                  <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Status</TableCell>
+                  <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Actions</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {filtradas
+                  .slice(pagina * filasPorPagina, pagina * filasPorPagina + filasPorPagina)
+                  .map((res) => (
+                    <TableRow 
+                      key={res._id}
+                      hover
+                      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                    >
+                      <TableCell>
+                        <Typography variant="body1" fontFamily="montserrat" fontWeight="bold">
+                          {res._id}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          Created: {res.fechaReservacion}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                          <Avatar 
+                            sx={{ 
+                              width: 40, 
+                              height: 40,
+                              backgroundColor: getAvatarColor(res.nombreCliente),
+                              fontWeight: 'bold'
+                            }}
+                          >
+                            {res.nombreCliente.charAt(0)}{res.primerApellido.charAt(0)}
+                          </Avatar>
+                          <Box>
+                            <Typography variant="h6" fontWeight="bold">
+                              {`${res.nombreCliente} ${res.primerApellido}`}
+                            </Typography>
+                            {res.segundoApellido && (
+                              <Typography variant="body2" color="text.secondary">
+                                {res.segundoApellido}
+                              </Typography>
+                            )}
+                          </Box>
+                        </Box>
+                      </TableCell>
+                      <TableCell>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            <EmailIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
+                            <Typography variant="body2">
+                              {res.correoCliente}
+                            </Typography>
+                          </Box>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            <PhoneIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
+                            <Typography variant="body2">
+                              {res.telefono}
+                            </Typography>
+                          </Box>
+                        </Box>
+                      </TableCell>
+                      <TableCell>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            <CalendarIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
+                            <Typography variant="body1" fontWeight="medium">
+                              {new Date(res.fecha).toLocaleDateString('en-GB', {
+                                day: '2-digit',
+                                month: 'short',
+                                year: 'numeric'
+                              })}
+                            </Typography>
+                          </Box>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            <TimeIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
+                            <Typography variant="body2" color="text.secondary">
+                              {res.horaInicio}
+                            </Typography>
+                          </Box>
+                        </Box>
+                      </TableCell>
+                      <TableCell>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          <PersonIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
+                          <Typography variant="h6" fontWeight="bold">
+                            {res.cantidadPersonas}
+                          </Typography>
+                        </Box>
+                      </TableCell>
+                      <TableCell>
+                        <Chip 
+                          label={res.estado.toUpperCase()} 
+                          color={getStatusColor(res.estado)}
+                          size="small"
+                          sx={{ 
+                            fontWeight: 'bold',
+                            minWidth: 100,
+                            textTransform: 'uppercase',
+                            textAlign: 'center',
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Box sx={{ display: 'flex', gap: 1 }}>
+                          <Tooltip title="Show Ticket">
+                            <IconButton
+                              color="primary"
+                              onClick={() => handleGenerarTicket(res)}
+                              size="small"
+                            >
+                              <ReceiptIcon />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip title="Cancellation">
+                            <span>
+                              <IconButton
+                                color="error"
+                                onClick={() => handleOpenDialog(res)}
+                                disabled={res.estado === 'cancelada'}
+                                size="small"
+                              >
+                                <CancelIcon />
+                              </IconButton>
+                            </span>
+                          </Tooltip>
+                        </Box>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                {filtradas.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={7} align="center">
+                      <Box sx={{ py: 6 }}>
+                        <EventIcon sx={{ fontSize: 60, color: 'grey.400', mb: 2 }} />
+                        <Typography variant="h6" color="text.secondary">
+                          There are no reservations available
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          {filtroEstado ? `No reservations found with status "${filtroEstado}"` : 'There are no reservations available'}
+                        </Typography>
+                      </Box>
                     </TableCell>
-                    <TableCell>
-  <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-    <Button
-      variant="outlined"
-      color="secondary"
-      onClick={() => handleGenerarTicket(res)}
-      startIcon={<ReceiptIcon />}
-      sx={{
-        borderColor: "#660152",
-        backgroundColor: "#660152",
-        color: "#fff",
-        '&:hover': {
-          backgroundColor: "#660152",
-          
-          color: "#fff",
-        },
-      }}
-    >
-    Ticket
-    </Button>
-
-    <Button
-      variant="contained"
-      color="error"
-      onClick={() => handleOpenDialog(res)}
-      startIcon={<CancelIcon />}
-      disabled={res.estado === "cancelada"}
-      sx={{
-        '&:disabled': {
-          backgroundColor: "#f2f2f2",
-          color: "#999",
-        },
-      }}
-    >
-      Cancelar
-    </Button>
-  </Box>
-</TableCell>
-
-  </TableRow>
-    ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={9} align="center">
-                  No se encontraron reservaciones
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={filtradas.length}
-          rowsPerPage={filasPorPagina}
-          page={pagina}
-          onPageChange={handleChangePagina}
-          onRowsPerPageChange={handleChangeFilasPorPagina}
-          sx={{ color: "#660152" }}
-        />
-      </TableContainer>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25]}
+              component="div"
+              count={filtradas.length}
+              rowsPerPage={filasPorPagina}
+              page={pagina}
+              onPageChange={handleChangePagina}
+              onRowsPerPageChange={handleChangeFilasPorPagina}
+              sx={{ color: "#660152" }}
+            />
+          </TableContainer>
+        </CardContent>
+      </Card>
 
       {/* Diálogo de Ticket */}
       <Dialog open={!!ticketDialog} onClose={handleCerrarTicket} fullWidth maxWidth="sm">
-        <DialogTitle sx={{ color: "#660152", fontFamily:"montserrat", fontWeight: 600, background: "#f5f5f5" }}>Ticket de Reservación</DialogTitle>
-        <DialogContent >
+        <DialogTitle sx={{ 
+          color: "#660152", 
+          fontFamily: "montserrat", 
+          fontWeight: 600, 
+          background: "#f5f5f5",
+          display: 'flex',
+          alignItems: 'center',
+          gap: 1
+        }}>
+          <ReceiptIcon />
+          Reservation Ticket - {ticketDialog?._id}
+        </DialogTitle>
+        <DialogContent>
           {ticketDialog && (
             <Box sx={{ p: 2 }}>
-              <Grid container spacing={12} sx={{ mb: 2 }}>
-                <Typography variant="h6" gutterBottom>
-                Detalles de la Reservación
+              <Typography variant="h6" gutterBottom color="#660152">
+                Reservation Details
               </Typography>
-              <Typography variant="h6">{ticketDialog.fechaReservacion}</Typography>
-              </Grid>
-
               <Divider sx={{ mb: 2, borderColor: "#660152", borderWidth: 1 }} />
-              <Grid container spacing={2}  >
+              
+              <Grid container spacing={2}>
                 <Grid item xs={6}>
-                  <Typography><strong>Folio:</strong> {ticketDialog._id}</Typography>
-                  <Typography><strong>Cliente:</strong> {ticketDialog.nombreCliente} {ticketDialog.primerApellido}</Typography>
+                  <Typography variant="body1"><strong>Folio:</strong> {ticketDialog._id}</Typography>
+                  <Typography variant="body1"><strong>Client:</strong> {ticketDialog.nombreCliente} {ticketDialog.primerApellido}</Typography>
+                  <Typography variant="body1"><strong>Date:</strong> {ticketDialog.fecha}</Typography>
                 </Grid>
                 <Grid item xs={6}>
-                  <Typography><strong>Fecha:</strong> {ticketDialog.fecha}</Typography>
-                  <Typography><strong>Hora:</strong> {ticketDialog.horaInicio}</Typography>
+                  <Typography variant="body1"><strong>Time:</strong> {ticketDialog.horaInicio}</Typography>
+                  <Typography variant="body1"><strong>People:</strong> {ticketDialog.cantidadPersonas}</Typography>
+                  <Typography variant="body1"><strong>Status:</strong> {ticketDialog.estado}</Typography>
                 </Grid>
                 <Grid item xs={12}>
-                  <Typography><strong>Correo:</strong> {ticketDialog.correoCliente}</Typography>
-                  <Typography><strong>Teléfono:</strong> {ticketDialog.telefono}</Typography>
-                  <Typography><strong>Personas:</strong> {ticketDialog.cantidadPersonas}</Typography>
+                  <Typography variant="body1"><strong>Email:</strong> {ticketDialog.correoCliente}</Typography>
+                  <Typography variant="body1"><strong>Phone:</strong> {ticketDialog.telefono}</Typography>
+                  <Typography variant="body1"><strong>Creation Date:</strong> {ticketDialog.fechaReservacion}</Typography>
                 </Grid>
               </Grid>
             </Box>
@@ -351,30 +501,35 @@ const ReservacionesAdmin = () => {
         <DialogActions>
           <Button 
             onClick={handleCerrarTicket}
-            sx={{ color: "#fff  ", background: "#660152" }}
+            variant="contained"
+            sx={{ 
+              backgroundColor: "#660152",
+              '&:hover': { backgroundColor: "#520040" }
+            }}
           >
-            Cerrar
+            Close
           </Button>
         </DialogActions>
       </Dialog>
 
       {/* Diálogo de Cancelación */}
       <Dialog open={openDialog} onClose={handleCloseDialog} fullWidth maxWidth="sm">
-        <DialogTitle sx={{ color: "#660152" }}>Cancelar Reservación</DialogTitle>
+        <DialogTitle sx={{ color: "#660152" }}>Cancel Reservation</DialogTitle>
         <DialogContent>
           <Typography gutterBottom>
-            ¿Está seguro que desea cancelar la reservación {selected?._id}?
+            Are you sure you want to cancel the reservation <strong>{selected?._id}</strong>?
           </Typography>
           <TextField
             autoFocus
             margin="dense"
-            label="Motivo de cancelación"
+            label="Cancellation Reason"
             fullWidth
             multiline
             minRows={3}
             value={motivo}
             onChange={(e) => setMotivo(e.target.value)}
             sx={{ mt: 2 }}
+            required
           />
         </DialogContent>
         <DialogActions>
@@ -382,7 +537,7 @@ const ReservacionesAdmin = () => {
             onClick={handleCloseDialog}
             sx={{ color: "#660152" }}
           >
-            Volver
+            Cancel
           </Button>
           <Button
             onClick={handleCancelReservation}
@@ -394,7 +549,7 @@ const ReservacionesAdmin = () => {
               '&:disabled': { backgroundColor: "#cccccc" }
             }}
           >
-            Confirmar Cancelación
+            Confirm Cancellation
           </Button>
         </DialogActions>
       </Dialog>
@@ -410,11 +565,10 @@ const ReservacionesAdmin = () => {
           severity="success" 
           sx={{ width: '100%' }}
         >
-          Reservación cancelada exitosamente
+          Reservation cancelled successfully
         </Alert>
       </Snackbar>
     </Box>
   );
 };
-
-export default ReservacionesAdmin;
+export default ReservationAdmin;

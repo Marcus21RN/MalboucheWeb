@@ -1,16 +1,48 @@
-""// Archivo: EmployesAdmin.jsx
-
 import React, { useState, useEffect } from "react";
 import {
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
-  Paper, TextField, Button, Select, MenuItem, FormControl, InputLabel,
-  Dialog, DialogTitle, DialogContent, DialogActions, IconButton,
-  Typography, Box, Snackbar, Alert, TablePagination
+  Box,
+  Button,
+  Card,
+  CardContent,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Paper,
+  Select,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+  Chip,
+  IconButton,
+  Tooltip,
+  Avatar,
+  Modal,
+  TextField,
+  Grid,
+  Snackbar,
+  Alert,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TablePagination
 } from "@mui/material";
 import {
-  Edit as EditIcon, Delete as DeleteIcon,
-  Add as AddIcon, Save as SaveIcon, Cancel as CancelIcon
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+  Add as AddIcon,
+  Close as CloseIcon,
+  Person as PersonIcon,
+  AdminPanelSettings as AdminIcon,
+  Work as WorkIcon,
+  Save as SaveIcon,
+  Cancel as CancelIcon
 } from "@mui/icons-material";
+import { motion } from 'framer-motion';
 
 export default function EmployesAdmin() {
   const [empleados, setEmpleados] = useState([]);
@@ -32,8 +64,8 @@ export default function EmployesAdmin() {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openSaveDialog, setOpenSaveDialog] = useState(false);
   const [empleadoToDelete, setEmpleadoToDelete] = useState(null);
- 
 
+  // Funciones originales mantenidas
   const handleDeleteClick = (id) => {
     setEmpleadoToDelete(id);
     setOpenDeleteDialog(true);
@@ -56,23 +88,21 @@ export default function EmployesAdmin() {
     }
   };
 
-  // Diálogo de confirmación para guardar/editar
   const handleSubmitWithConfirmation = async (e) => {
-  e.preventDefault();
-  
-  // Validación básica
-  if (!formData.nombre || !formData.primerApellido || !formData.correo) {
-    showSnackbar("Por favor complete los campos requeridos", "error");
-    return;
-  }
-  
-  if (!modoEdicion && !formData.password) {
-    showSnackbar("La contraseña es requerida para nuevos empleados", "error");
-    return;
-  }
+    e.preventDefault();
+    
+    if (!formData.nombre || !formData.primerApellido || !formData.correo) {
+      showSnackbar("Por favor complete los campos requeridos", "error");
+      return;
+    }
+    
+    if (!modoEdicion && !formData.password) {
+      showSnackbar("La contraseña es requerida para nuevos empleados", "error");
+      return;
+    }
 
-  setOpenSaveDialog(true);
-};
+    setOpenSaveDialog(true);
+  };
 
   const handleConfirmSave = async () => {
     const url = modoEdicion
@@ -159,33 +189,6 @@ export default function EmployesAdmin() {
     setOpenSnackbar(true);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const url = modoEdicion
-      ? `http://localhost:3000/adminBackend/empleados/${formData._id}`
-      : "http://localhost:3000/adminBackend/empleados";
-    const method = modoEdicion ? "PUT" : "POST";
-
-    try {
-      const res = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      if (res.ok) {
-        fetchEmpleados();
-        resetForm();
-        showSnackbar(modoEdicion ? "Empleado actualizado" : "Empleado registrado", "success");
-      } else {
-        const error = await res.json();
-        showSnackbar("Error: " + error.error, "error");
-      }
-    } catch (error) {
-      showSnackbar("Error en la operación", "error");
-    }
-  };
-
   const resetForm = () => {
     setFormData({
       _id: "", nombre: "", primerApellido: "", segundoApellido: "",
@@ -201,36 +204,74 @@ export default function EmployesAdmin() {
     setOpenDialog(true);
   };
 
-  const handleDelete = async (id) => {
-    try {
-      const res = await fetch(`http://localhost:3000/adminBackend/empleados/${id}`, { method: "DELETE" });
-      if (res.ok) {
-        fetchEmpleados();
-        showSnackbar("Empleado eliminado", "success");
-      }
-    } catch (error) {
-      showSnackbar("Error al eliminar empleado", "error");
+  // Funciones de utilidad para estilos
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'activo':
+        return 'success';
+      case 'inactivo':
+        return 'error';
+      default:
+        return 'default';
     }
   };
 
-  return (
-    <Box sx={{ p: 3 }}>
-      <Typography variant="h5" gutterBottom sx={{ color: "#660152", fontWeight: "bold", fontFamily : "Montserrat, sans-serif", textAlign:"center" }}>
-        EMPLOYEES MANAGEMENT
-      </Typography>
-      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-        <Box sx={{ mb: 3 }}>
-          <Button
-            variant="contained"
-            startIcon={<AddIcon />}
-            sx={{ backgroundColor: "#660152", '&:hover': { backgroundColor: "#520040" } }}
-            onClick={() => setOpenDialog(true)}
-          >
-            New Employee
-          </Button>
-        </Box>
+  const getRoleColor = (role) => {
+    switch (role) {
+      case 'ADMIN':
+        return 'primary';
+      case 'EMPLE':
+        return 'secondary';
+      default:
+        return 'default';
+    }
+  };
 
-        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2, mb: 3 }}>
+  const getRoleIcon = (role) => {
+    switch (role) {
+      case 'ADMIN':
+        return <AdminIcon />;
+      case 'EMPLE':
+        return <WorkIcon />;
+      default:
+        return <PersonIcon />;
+    }
+  };
+
+  const getAvatarColor = (name) => {
+    const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FECA57', '#DDA0DD'];
+    const index = name.charCodeAt(0) % colors.length;
+    return colors[index];
+  };
+
+  return (
+    <Box component={motion.div} 
+      sx={{ padding: 3 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+    >
+      <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+        <PersonIcon sx={{ mr: 2, color: '#660152', fontSize: 40 }} />
+        <Typography variant="h4" color="#660152" fontWeight="bold">
+          Employees Management
+        </Typography>
+      </Box>
+      <Box sx={{ mb: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Box sx={{ mb: 3, display: 'flex', flexDirection: 'column', gap: 2 }}>
+        <Button 
+          variant="contained" 
+          startIcon={<AddIcon />}
+          onClick={() => setOpenDialog(true)}
+          sx={{ 
+            backgroundColor: "#660152", 
+            '&:hover': { backgroundColor: "#520040" },
+            alignSelf: 'flex-start'
+          }}
+        >
+          Add Employee
+        </Button>
+
+        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2 }}>
           <TextField
             label="Search by name, email or ID"
             variant="outlined"
@@ -240,10 +281,10 @@ export default function EmployesAdmin() {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
           <FormControl size="small" sx={{ width: 180 }}>
-            <InputLabel>Filter by status</InputLabel>
+            <InputLabel>Filter by Status</InputLabel>
             <Select
               value={filterEstado}
-              label="Filtrar por estado"
+              label="Filter by Status"
               onChange={(e) => setFilterEstado(e.target.value)}
             >
               <MenuItem value="todos">All</MenuItem>
@@ -254,113 +295,275 @@ export default function EmployesAdmin() {
         </Box>
       </Box>
 
-            {/* Diálogo de confirmación para eliminar */}
-      <Dialog
-        open={openDeleteDialog}
-        onClose={() => setOpenDeleteDialog(false)}
-      >
-        <DialogTitle sx={{ color: "#660152" }}>
-          Confirmar Eliminación
-        </DialogTitle>
-        <DialogContent>
-          <Typography>
-            ¿Estás seguro que deseas eliminar este empleado? Esta acción no se puede deshacer.
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button 
-            onClick={() => setOpenDeleteDialog(false)}
-            sx={{ color: "#660152" }}
-          >
-            Cancelar
-          </Button>
-          <Button
-            onClick={handleConfirmDelete}
-            variant="contained"
-            sx={{ 
-              backgroundColor: "#660152",
-              '&:hover': { backgroundColor: "#520040" }
-            }}
-            startIcon={<DeleteIcon />}
-          >
-            Confirmar Eliminación
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      {/* Diálogo de confirmación para guardar/editar */}
-      <Dialog
-        open={openSaveDialog}
-        onClose={() => setOpenSaveDialog(false)}
-      >
-        <DialogTitle sx={{ color: "#660152" }}>
-          {modoEdicion ? "Confirmar Actualización" : "Confirmar Registro"}
-        </DialogTitle>
-        <DialogContent>
-          <Typography>
-            {modoEdicion
-              ? "¿Estás seguro que deseas actualizar los datos de este empleado?"
-              : "¿Estás seguro que deseas registrar este nuevo empleado?"}
-          </Typography>
-          {!modoEdicion && (
-            <Typography variant="body2" sx={{ mt: 2, fontStyle: "italic" }}>
-              Se enviará un correo al empleado con sus credenciales de acceso.
+      {/* Estadísticas rápidas */}
+      <Box sx={{ mb: 3, display: 'flex', gap: 2, justifyContent: "flex-end" }}>
+        <Card sx={{ minWidth: 120 }}>
+          <CardContent sx={{ textAlign: 'center', py: 2 }}>
+            <Typography variant="h4" color="primary.main" fontWeight="bold">
+              {empleados.length}
             </Typography>
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button 
-            onClick={() => setOpenSaveDialog(false)}
-            sx={{ color: "#660152" }}
-          >
-            Cancelar
-          </Button>
-          <Button
-            onClick={handleConfirmSave}
-            variant="contained"
-            sx={{ 
-              backgroundColor: "#660152",
-              '&:hover': { backgroundColor: "#520040" }
-            }}
-            startIcon={<SaveIcon />}
-          >
-            {modoEdicion ? "Confirmar Actualización" : "Confirmar Registro"}
-          </Button>
-        </DialogActions>
-      </Dialog>
+            <Typography variant="body2" color="text.secondary">
+              Total Users
+            </Typography>
+          </CardContent>
+        </Card>
+        <Card sx={{ minWidth: 120 }}>
+          <CardContent sx={{ textAlign: 'center', py: 2 }}>
+            <Typography variant="h4" color="success.main" fontWeight="bold">
+              {empleados.filter(e => e.estado === 'activo').length}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Active
+            </Typography>
+          </CardContent>
+        </Card>
+        <Card sx={{ minWidth: 120 }}>
+          <CardContent sx={{ textAlign: 'center', py: 2 }}>
+            <Typography variant="h4" color="error.main" fontWeight="bold">
+              {empleados.filter(e => e.estado === 'inactivo').length}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Inactive
+            </Typography>
+          </CardContent>
+        </Card>
+        <Card sx={{ minWidth: 120 }}>
+          <CardContent sx={{ textAlign: 'center', py: 2 }}>
+            <Typography variant="h4" color="primary.main" fontWeight="bold">
+              {empleados.filter(e => e.IDRol === 'ADMIN').length}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Administrators
+            </Typography>
+          </CardContent>
+        </Card>
+      </Box>
+      </Box>
+      
 
+      <Card elevation={3}>
+        <CardContent sx={{ p: 0 }}>
+          <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 650 }}>
+              <TableHead>
+                <TableRow sx={{ backgroundColor: '#660152' }}>
+                  <TableCell sx={{ color: 'white', fontWeight: 'bold', cursor: 'pointer' }} onClick={() => handleSort("_id")}>
+                    ID {orderBy === "_id" && (order === "asc" ? "▲" : "▼")}
+                  </TableCell>
+                  <TableCell sx={{ color: 'white', fontWeight: 'bold', cursor: 'pointer' }} onClick={() => handleSort("nombre")}>
+                    Employee {orderBy === "nombre" && (order === "asc" ? "▲" : "▼")}
+                  </TableCell>
+                  <TableCell sx={{ color: 'white', fontWeight: 'bold', cursor: 'pointer' }} onClick={() => handleSort("correo")}>
+                    Email {orderBy === "correo" && (order === "asc" ? "▲" : "▼")}
+                  </TableCell>
+                  <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Role</TableCell>
+                  <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Status</TableCell>
+                  <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Actions</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {paginatedEmpleados.map((emp) => (
+                  <TableRow 
+                    key={emp._id}
+                    hover
+                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                  >
+                    <TableCell>
+                      <Typography variant="body1" fontFamily="montserrat" fontWeight="bold">
+                        {emp._id}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                        <Avatar 
+                          sx={{ 
+                            width: 50, 
+                            height: 50,
+                            backgroundColor: getAvatarColor(emp.nombre),
+                            fontWeight: 'bold'
+                          }}
+                        >
+                          {emp.nombre.charAt(0)}{emp.primerApellido.charAt(0)}
+                        </Avatar>
+                        <Box>
+                          <Typography variant="h6" fontWeight="bold">
+                            {`${emp.nombre} ${emp.primerApellido}`}
+                          </Typography>
+                          {emp.segundoApellido && (
+                            <Typography variant="body2" color="text.secondary">
+                              {emp.segundoApellido}
+                            </Typography>
+                          )}
+                        </Box>
+                      </Box>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body1">
+                        {emp.correo}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Chip 
+                        icon={getRoleIcon(emp.IDRol)}
+                        label={emp.IDRol === 'ADMIN' ? 'Admin' : 'Employee'} 
+                        color={getRoleColor(emp.IDRol)}
+                        size="small"
+                        sx={{ 
+                          fontWeight: 'medium',
+                          minWidth: 100,
+                          maxWidth: 120,
+                          textAlign: 'center',
+                          display: 'flex',
+                          
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Chip 
+                        label={emp.estado.toUpperCase()} 
+                        color={getStatusColor(emp.estado)}
+                        size="small"
+                        sx={{ 
+                          fontWeight: 'medium',
+                          minWidth: 80,
+                          maxWidth: 90,
+                          textAlign: 'center',
+                          display: 'flex',
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Box sx={{ display: 'flex', gap: 1 }}>
+                        <Tooltip title="Update employee">
+                          <IconButton
+                            color="primary"
+                            onClick={() => handleEdit(emp)}
+                            size="small"
+                          >
+                            <EditIcon />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Delete employee">
+                          <IconButton
+                            color="error"
+                            onClick={() => handleDeleteClick(emp._id)}
+                            size="small"
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Box>
+                    </TableCell>
+                  </TableRow>
+                ))}
+                {empleados.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={6} align="center">
+                      <Box sx={{ py: 6 }}>
+                        <PersonIcon sx={{ fontSize: 60, color: 'grey.400', mb: 2 }} />
+                        <Typography variant="h6" color="text.secondary">
+                          There are no employees available
+                        </Typography>
+                      </Box>
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+            <TablePagination
+              component="div"
+              count={sortedEmpleados.length}
+              page={page}
+              onPageChange={(e, newPage) => setPage(newPage)}
+              rowsPerPage={rowsPerPage}
+              onRowsPerPageChange={(e) => {
+                setRowsPerPage(parseInt(e.target.value, 10));
+                setPage(0);
+              }}
+              rowsPerPageOptions={[5, 10, 25]}
+            />
+          </TableContainer>
+        </CardContent>
+      </Card>
+
+      {/* Dialog original para crear/editar */}
       <Dialog open={openDialog} onClose={resetForm} fullWidth maxWidth="sm">
         <DialogTitle sx={{ color: "#660152" }}>
-          {modoEdicion ? "Editar Empleado" : "Nuevo Empleado"}
+          {modoEdicion ? "Update Employee" : "New Employee"}
         </DialogTitle>
         <form onSubmit={handleSubmitWithConfirmation}>
           <DialogContent>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-              <TextField label="ID" name="_id" value={formData._id} onChange={handleChange} required disabled={modoEdicion} type="number" fullWidth />
-              <TextField label="Nombre" name="nombre" value={formData.nombre} onChange={handleChange} required fullWidth />
-              <TextField label="Primer Apellido" name="primerApellido" value={formData.primerApellido} onChange={handleChange} required fullWidth />
-              <TextField label="Segundo Apellido" name="segundoApellido" value={formData.segundoApellido || ""} onChange={handleChange} fullWidth />
-              <TextField label="Correo" type="email" name="correo" value={formData.correo} onChange={handleChange} required fullWidth />
-              <TextField label="Contraseña" type="password" name="password" value={formData.password} onChange={handleChange} required={!modoEdicion} fullWidth />
+              <TextField 
+                label="ID" 
+                name="_id" 
+                value={formData._id} 
+                onChange={handleChange} 
+                required 
+                disabled={modoEdicion} 
+                type="number" 
+                fullWidth 
+              />
+              <TextField 
+                label="Name" 
+                name="nombre" 
+                value={formData.nombre} 
+                onChange={handleChange} 
+                required 
+                fullWidth 
+              />
+              <TextField 
+                label="First Last Name" 
+                name="primerApellido" 
+                value={formData.primerApellido} 
+                onChange={handleChange} 
+                required 
+                fullWidth 
+              />
+              <TextField 
+                label="Second Last Name" 
+                name="segundoApellido" 
+                value={formData.segundoApellido || ""} 
+                onChange={handleChange} 
+                fullWidth 
+              />
+              <TextField 
+                label="Email" 
+                type="email" 
+                name="correo" 
+                value={formData.correo} 
+                onChange={handleChange} 
+                required 
+                fullWidth 
+              />
+              <TextField 
+                label="Password" 
+                type="password" 
+                name="password" 
+                value={formData.password} 
+                onChange={handleChange} 
+                required={!modoEdicion} 
+                fullWidth 
+              />
               <FormControl fullWidth>
-                <InputLabel>Estado</InputLabel>
-                <Select name="estado" value={formData.estado} onChange={handleChange} label="Estado">
-                  <MenuItem value="activo">Activo</MenuItem>
-                  <MenuItem value="inactivo">Inactivo</MenuItem>
+                <InputLabel>Status</InputLabel>
+                <Select name="estado" value={formData.estado} onChange={handleChange} label="Status">
+                  <MenuItem value="activo">Active</MenuItem>
+                  <MenuItem value="inactivo">Inactive</MenuItem>
                 </Select>
               </FormControl>
               <FormControl fullWidth>
-                <InputLabel>Rol</InputLabel>
-                <Select name="IDRol" value={formData.IDRol} onChange={handleChange} label="Rol">
-                  <MenuItem value="ADMIN">Administrador</MenuItem>
-                  <MenuItem value="EMPLE">Empleado</MenuItem>
+                <InputLabel>Role</InputLabel>
+                <Select name="IDRol" value={formData.IDRol} onChange={handleChange} label="Role">
+                  <MenuItem value="ADMIN">Administrator</MenuItem>
+                  <MenuItem value="EMPLE">Employee</MenuItem>
                 </Select>
               </FormControl>
             </Box>
           </DialogContent>
           <DialogActions>
             <Button onClick={resetForm} startIcon={<CancelIcon />} color="inherit">
-              Cancelar
+              Cancel
             </Button>
             <Button 
               type="submit" 
@@ -377,68 +580,92 @@ export default function EmployesAdmin() {
         </form>
       </Dialog>
 
-<TableContainer component={Paper} elevation={3}>
-        <Table sx={{"& .MuiTableCell-root": {color: "#660152",fontFamily: "Montserrat, sans-serif"}}}>
-          <TableHead>
-            <TableRow sx={{ backgroundColor: "rgba(183, 107, 163, 0.3)" }}>
-              <TableCell sx={{ fontWeight: "bold", cursor: "pointer" }} onClick={() => handleSort("_id")}>ID {orderBy === "_id" && (order === "asc" ? "▲" : "▼")}</TableCell>
-              <TableCell sx={{ fontWeight: "bold", cursor: "pointer" }} onClick={() => handleSort("nombre")}>Nombre {orderBy === "nombre" && (order === "asc" ? "▲" : "▼")}</TableCell>
-              <TableCell sx={{ fontWeight: "bold", cursor: "pointer" }} onClick={() => handleSort("correo")}>Correo {orderBy === "correo" && (order === "asc" ? "▲" : "▼")}</TableCell>
-              <TableCell sx={{ fontWeight: "bold" }}>Estado</TableCell>
-              <TableCell sx={{ fontWeight: "bold" }}>Rol</TableCell>
-              <TableCell align="center" sx={{ fontWeight: "bold" }}>Acciones</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {paginatedEmpleados.map((emp) => (
-              <TableRow key={emp._id} sx={{ "&:hover": { backgroundColor: "rgba(183, 107, 163, 0.1)" } }}>
-                <TableCell>{emp._id}</TableCell>
-                <TableCell>{`${emp.nombre} ${emp.primerApellido} ${emp.segundoApellido || ""}`}</TableCell>
-                <TableCell>{emp.correo}</TableCell>
-                <TableCell>
-                  <Typography sx={{ color: emp.estado === "activo" ? "#016615" : "#66011F", fontWeight: 600 }}>
-                    {emp.estado}
-                  </Typography>
-                </TableCell>
-                <TableCell>{emp.IDRol}</TableCell>
-                <TableCell align="center">
-                  <IconButton color="primary" onClick={() => handleEdit(emp)}>
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton 
-                    color="error" 
-                    onClick={() => handleDeleteClick(emp._id)}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
-            {empleados.length === 0 && (
-              <TableRow>
-                <TableCell colSpan={6} align="center">
-                  No hay empleados registrados
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-        <TablePagination
-          component="div"
-          count={sortedEmpleados.length}
-          page={page}
-          onPageChange={(e, newPage) => setPage(newPage)}
-          rowsPerPage={rowsPerPage}
-          onRowsPerPageChange={(e) => {
-            setRowsPerPage(parseInt(e.target.value, 10));
-            setPage(0);
-          }}
-          rowsPerPageOptions={[5, 10, 25]}
-        />
-      </TableContainer>
+      {/* Diálogo de confirmación para eliminar */}
+      <Dialog
+        open={openDeleteDialog}
+        onClose={() => setOpenDeleteDialog(false)}
+      >
+        <DialogTitle sx={{ color: "#660152" }}>
+          Accept
+        </DialogTitle>
+        <DialogContent>
+          <Typography>
+            Are you sure you want to delete this employee? This action cannot be undone.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button 
+            onClick={() => setOpenDeleteDialog(false)}
+            sx={{ color: "#660152" }}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleConfirmDelete}
+            variant="contained"
+            sx={{ 
+              backgroundColor: "#660152",
+              '&:hover': { backgroundColor: "#520040" }
+            }}
+            startIcon={<DeleteIcon />}
+          >
+            Confirm Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
 
-      <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={() => setOpenSnackbar(false)}>
-        <Alert onClose={() => setOpenSnackbar(false)} severity={snackbarSeverity} sx={{ width: "100%" }}>
+      {/* Diálogo de confirmación para guardar/editar */}
+      <Dialog
+        open={openSaveDialog}
+        onClose={() => setOpenSaveDialog(false)}
+      >
+        <DialogTitle sx={{ color: "#660152" }}>
+          {modoEdicion ? "Confirmar Actualización" : "Confirmar Registro"}
+        </DialogTitle>
+        <DialogContent>
+          <Typography>
+            {modoEdicion
+              ? "Aare you sure you want to update this employee's data?"
+              : "Are you sure you want to register this new employee?"}
+          </Typography>
+          {!modoEdicion && (
+            <Typography variant="body2" sx={{ mt: 2, fontStyle: "italic" }}>
+              An email will be sent to the employee with their access credentials.
+            </Typography>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button 
+            onClick={() => setOpenSaveDialog(false)}
+            sx={{ color: "#660152" }}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleConfirmSave}
+            variant="contained"
+            sx={{ 
+              backgroundColor: "#660152",
+              '&:hover': { backgroundColor: "#520040" }
+            }}
+            startIcon={<SaveIcon />}
+          >
+            {modoEdicion ? "Confirmar Actualización" : "Confirmar Registro"}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Snackbar 
+        open={openSnackbar} 
+        autoHideDuration={6000} 
+        onClose={() => setOpenSnackbar(false)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      >
+        <Alert 
+          onClose={() => setOpenSnackbar(false)} 
+          severity={snackbarSeverity} 
+          sx={{ width: "100%" }}
+        >
           {snackbarMessage}
         </Alert>
       </Snackbar>
