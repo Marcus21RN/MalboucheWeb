@@ -39,73 +39,12 @@ import {
 import { motion } from 'framer-motion';
 import axios from 'axios';
 
-// Datos simulados basados en el formato proporcionado
-const mockEvents = [
-  {
-    _id: "CJ001",
-    nombre: "Concierto de Jazz",
-    descripcion: "Noche de jazz en vivo con la banda Blue Notes",
-    fecha: new Date("2025-06-28T00:00:00Z"),
-    horaInicio: "20:00",
-    horaFinal: "23:00",
-    estado: "pendiente",
-    imagen: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=150"
-  },
-  {
-    _id: "NL002",
-    nombre: "Noche Latina",
-    descripcion: "Fiesta latina con música en vivo y cócteles especiales",
-    fecha: new Date("2025-07-15T00:00:00Z"),
-    horaInicio: "21:00",
-    horaFinal: "02:00",
-    estado: "activo",
-    imagen: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=150"
-  },
-  {
-    _id: "KR003",
-    nombre: "Karaoke Night",
-    descripcion: "Noche de karaoke con premios para los mejores cantantes",
-    fecha: new Date("2025-08-10T00:00:00Z"),
-    horaInicio: "19:00",
-    horaFinal: "23:30",
-    estado: "activo",
-    imagen: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=150"
-  },
-  {
-    _id: "DG004",
-    nombre: "Degustación de Whisky",
-    descripcion: "Cata exclusiva de whiskies premium con maridaje",
-    fecha: new Date("2025-09-05T00:00:00Z"),
-    horaInicio: "18:00",
-    horaFinal: "21:00",
-    estado: "pendiente",
-    imagen: "https://images.unsplash.com/photo-1569529465841-dfecdab7503b?w=150"
-  },
-  {
-    _id: "FC005",
-    nombre: "Fiesta Colombiana",
-    descripcion: "Celebración del folclor colombiano con música y comida típica",
-    fecha: new Date("2025-07-20T00:00:00Z"),
-    horaInicio: "19:30",
-    horaFinal: "01:00",
-    estado: "cancelado",
-    imagen: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=150"
-  },
-  {
-    _id: "BF006",
-    nombre: "Bingo Fun",
-    descripcion: "Noche de bingo con premios especiales y bebidas gratis",
-    fecha: new Date("2025-08-25T00:00:00Z"),
-    horaInicio: "20:30",
-    horaFinal: "23:00",
-    estado: "activo",
-    imagen: "https://images.unsplash.com/photo-1541692641319-981cc691a826?w=150"
-  }
-];
+// El backend espera que la fecha sea 'fechaEvento', pero el frontend usa 'fecha'.
+// Se mapea en fetchEvents y en los handlers de guardado.
 
 const EventsAdmin = () => {
-  const [events, setEvents] = useState(mockEvents);
-  const [filteredEvents, setFilteredEvents] = useState(mockEvents);
+  const [events, setEvents] = useState([]);
+  const [filteredEvents, setFilteredEvents] = useState([]);
   const [filter, setFilter] = useState('');
   const [openEventForm, setOpenEventForm] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -130,18 +69,18 @@ const EventsAdmin = () => {
 
   const fetchEvents = async () => {
     try {
-      // Comentado para usar datos simulados
-      // const response = await axios.get('/api/events');
-      // setEvents(response.data);
-      // setFilteredEvents(response.data);
-      
-      // Usar datos simulados
-      setEvents(mockEvents);
-      setFilteredEvents(mockEvents);
+      const response = await axios.get('http://localhost:3000/adminBackend/events');
+      // Mapear fechaEvento a fecha para el frontend
+      const mapped = response.data.map(ev => ({
+        ...ev,
+        fecha: ev.fechaEvento ? new Date(ev.fechaEvento) : '',
+      }));
+      setEvents(mapped);
+      setFilteredEvents(mapped);
     } catch (error) {
       console.error('Error fetching events:', error);
-      setEvents(mockEvents);
-      setFilteredEvents(mockEvents);
+      setEvents([]);
+      setFilteredEvents([]);
     }
   };
 
@@ -157,29 +96,40 @@ const EventsAdmin = () => {
 const handleOpenEventForm = (event = null) => {
     if (event) {
       setIsEditMode(true);
+      let fechaValue = '';
+      if (event.fecha instanceof Date && !isNaN(event.fecha)) {
+        fechaValue = event.fecha.toISOString().split('T')[0];
+      } else if (typeof event.fecha === 'string' && event.fecha) {
+        const d = new Date(event.fecha);
+        fechaValue = !isNaN(d) ? d.toISOString().split('T')[0] : '';
+      } else if (event.fechaEvento) {
+        // fallback por si viene fechaEvento
+        const d = new Date(event.fechaEvento);
+        fechaValue = !isNaN(d) ? d.toISOString().split('T')[0] : '';
+      }
       setEventFormData({
-        _id: event._id,
-        nombre: event.nombre,
-        descripcion: event.descripcion,
-        fecha: new Date(event.fecha).toISOString().split('T')[0],
-        horaInicio: event.horaInicio,
-        horaFinal: event.horaFinal,
-        estado: event.estado,
-        imagen: event.imagen
+        _id: event._id || '',
+        nombre: event.nombre || '',
+        descripcion: event.descripcion || '',
+        fecha: fechaValue || '',
+        horaInicio: event.horaInicio || '',
+        horaFinal: event.horaFinal || '',
+        estado: event.estado || 'pendiente',
+        imagen: event.imagen || ''
       });
       setImagePreview(event.imagen);
       setImageError(false);
     } else {
       setIsEditMode(false);
       setEventFormData({
-        _id: "",
-        nombre: "",
-        descripcion: "",
-        fecha: "",
-        horaInicio: "",
-        horaFinal: "",
-        estado: "pendiente",
-        imagen: ""
+        _id: '',
+        nombre: '',
+        descripcion: '',
+        fecha: '',
+        horaInicio: '',
+        horaFinal: '',
+        estado: 'pendiente',
+        imagen: ''
       });
       setImagePreview('');
       setImageError(false);
@@ -244,70 +194,55 @@ const handleOpenEventForm = (event = null) => {
 
   const handleSaveEvent = async () => {
     try {
-      if (isEditMode) {
-        // Actualizar evento existente
-        // await axios.put(`/api/events/${eventFormData._id}`, eventFormData);
-        
-        // Simular actualización local
-        const updatedEvents = events.map(event => 
-          event._id === eventFormData._id 
-            ? { ...eventFormData, fecha: new Date(eventFormData.fecha) }
-            : event
-        );
-        setEvents(updatedEvents);
-        setFilteredEvents(
-          filter ? updatedEvents.filter(event => event.estado === filter) : updatedEvents
-        );
-      } else {
-        // Crear nuevo evento
-        // const response = await axios.post('/api/events', eventFormData);
-        
-        // Simular creación local
-        const newEvent = {
-          ...eventFormData,
-          _id: `EV${String(events.length + 1).padStart(3, '0')}`,
-          fecha: new Date(eventFormData.fecha)
-        };
-        const updatedEvents = [...events, newEvent];
-        setEvents(updatedEvents);
-        setFilteredEvents(
-          filter ? updatedEvents.filter(event => event.estado === filter) : updatedEvents
-        );
+      let newId = eventFormData._id;
+      if (!isEditMode || !newId) {
+        // Obtener el número de eventos actuales
+        const response = await axios.get('http://localhost:3000/adminBackend/events');
+        const count = Array.isArray(response.data) ? response.data.length : 0;
+        // Formato: EVENTN
+        newId = `EVENT${count+1}`;
       }
-      
+      // Construir el payload sin el campo 'fecha', solo 'fechaEvento'
+      const { fecha, imagen, ...rest } = eventFormData;
+      // Ajustar fecha para evitar desfase por zona horaria
+      let fechaEvento = undefined;
+      if (fecha) {
+        // yyyy-mm-dd a yyyy-mm-ddT00:00:00 (hora local)
+        fechaEvento = new Date(fecha + 'T00:00:00');
+        // Corregir si sigue habiendo desfase (opcional):
+        // fechaEvento = new Date(fechaEvento.getTime() + Math.abs(fechaEvento.getTimezoneOffset())*60000);
+      }
+      const payload = {
+        ...rest,
+        _id: newId,
+        fechaEvento,
+        imagen: typeof imagen === 'string' ? imagen : '',
+      };
+      if (isEditMode) {
+        await axios.put(`http://localhost:3000/adminBackend/events/${eventFormData._id}`, payload);
+      } else {
+        await axios.post('http://localhost:3000/adminBackend/events', payload);
+      }
+      await fetchEvents();
       handleCloseEventForm();
     } catch (error) {
       console.error('Error saving event:', error);
     }
   };
 
-  const handleCancelEvent = async (id) => {
+{/*  const handleCancelEvent = async (id) => {
     try {
-      // await axios.put(`/api/events/${id}`, { estado: 'cancelado' });
-      
-      // Simular actualización local
-      const updatedEvents = events.map(event => 
-        event._id === id ? { ...event, estado: 'cancelado' } : event
-      );
-      setEvents(updatedEvents);
-      setFilteredEvents(
-        filter ? updatedEvents.filter(event => event.estado === filter) : updatedEvents
-      );
+      await axios.put(`http://localhost:3000/adminBackend/events/${id}`, { estado: 'cancelado' });
+      await fetchEvents();
     } catch (error) {
       console.error('Error canceling event:', error);
     }
-  };
+  }; */}
 
   const handleDelete = async (id) => {
     try {
-      // await axios.delete(`/api/events/${id}`);
-      
-      // Simular eliminación local
-      const updatedEvents = events.filter(event => event._id !== id);
-      setEvents(updatedEvents);
-      setFilteredEvents(
-        filter ? updatedEvents.filter(event => event.estado === filter) : updatedEvents
-      );
+      await axios.delete(`http://localhost:3000/adminBackend/events/${id}`);
+      await fetchEvents();
     } catch (error) {
       console.error('Error deleting event:', error);
     }
@@ -718,11 +653,18 @@ const handleOpenEventForm = (event = null) => {
                   </Typography>
                   {eventFormData.fecha && (
                     <Typography variant="caption" sx={{ opacity: 0.8 }}>
-                       {new Date(eventFormData.fecha).toLocaleDateString('en-GB', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                      })}
+                      {(() => {
+                        // Forzar preview a mostrar la fecha local correcta
+                        const fechaStr = eventFormData.fecha;
+                        const fechaPreview = new Date(fechaStr + 'T00:00:00');
+                        return !isNaN(fechaPreview)
+                          ? fechaPreview.toLocaleDateString('en-GB', {
+                              year: 'numeric',
+                              month: 'long',
+                              day: 'numeric'
+                            })
+                          : '';
+                      })()}
                     </Typography>
                   )}
                 </Box>

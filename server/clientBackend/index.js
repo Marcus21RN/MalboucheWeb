@@ -8,7 +8,7 @@ import emailRoutes from './routes/email.js';
 
 const router = express.Router();
 
-router.use('/events', eventRoutes); 
+router.use('/events', eventRoutes);
 router.use('/reservations', reservationRoutes);
 router.use('/menu', menuRoutes);
 router.use('/destacados-home', obtenerDestacadosHome);

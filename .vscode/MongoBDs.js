@@ -133,7 +133,7 @@ db.createCollection("evento", {
   validator: {
     $jsonSchema: {
       bsonType: "object",
-      required: ["_id", "nombre", "descripcion", "fecha", "horaInicio", "horaFinal", "estado"],
+      required: ["_id", "nombre", "descripcion", "fechaCreacion", "fechaEvento", "horaInicio", "horaFinal", "estado"],
       properties: {
         _id: {
           bsonType: "string",
@@ -147,7 +147,11 @@ db.createCollection("evento", {
           bsonType: "string",
           description: "Descripción del evento"
         },
-        fecha: {
+        fechaCreacion: {
+          bsonType: "date",
+          description: "Fecha en que se creó el evento"
+        },
+        fechaEvento: {
           bsonType: "date",
           description: "Fecha en que se llevará a cabo el evento"
         },
@@ -161,7 +165,7 @@ db.createCollection("evento", {
         },
         estado: {
           bsonType: "string",
-          enum: ["pendiente", "cancelada", "finalizada"],
+          enum: ["activo", "cancelado", "pendiente"],
           description: "Estado del evento"
         },
         imagen: {
@@ -731,65 +735,6 @@ db.promocion.insertMany([
     imagen: null
   }
 ])
-
-
-// COLECCIÓN: IMÁGENES
-// Esta colección almacena imágenes de eventos, promociones y otros aspectos visuales del sistema.
-db.createCollection("imagenes", {
-  validator: {
-    $jsonSchema: {
-      bsonType: "object",
-      required: ["_id", "imageUrl", "uploadedAt"],
-      properties: {
-        _id: {
-            bsonType: "number",
-            description: "Número entero único para identificar la imagen"
-        },
-        imageUrl: {
-          bsonType: "string",
-          description: "Debe ser un string (URL de la imagen)"
-        },
-        title: {
-          bsonType: "string",
-          description: "Debe ser un string (título de la imagen)"
-        },
-        description: {
-          bsonType: "string",
-          description: "Debe ser un string (descripción de la imagen)"
-        },
-        uploadedAt: {
-          bsonType: "date",
-          description: "Debe ser una fecha (fecha de subida)"
-        }
-      }
-    }
-  }
-});
-
-// INSERTS DE IMAGENES
-db.imagenes.insertMany([
-  {
-    _id: 1,
-    imageUrl: "https://example.com/image1.jpg",
-    title: "Evento 1",
-    description: "Descripción del evento 1",
-    uploadedAt: ISODate("2025-07-01T00:00:00Z")
-  },
-  {
-    _id: 2,
-    imageUrl: "https://example.com/image2.jpg",
-    title: "Evento 2",
-    description: "Descripción del evento 2",
-    uploadedAt: ISODate("2025-07-02T00:00:00Z")
-  },
-  {
-    _id: 3,
-    imageUrl: "https://example.com/image3.jpg",
-    title: "Evento 3",
-    description: "Descripción del evento 3",
-    uploadedAt: ISODate("2025-07-03T00:00:00Z")
-  }
-]);
 
 // COLECCIONES PARA IoT
 // Estas colecciones almacenan información sobre los dispositivos IoT y sus estados

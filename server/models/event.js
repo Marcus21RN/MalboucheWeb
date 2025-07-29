@@ -13,7 +13,12 @@ const eventSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  fecha: {
+  fechaCreacion: {
+    type: Date,
+    default: Date.now,
+    required: true,
+  },
+  fechaEvento: {
     type: Date,
     required: true,
   },
@@ -25,9 +30,14 @@ const eventSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  imagen: {
+    type: String,
+    default: '',
+  },
   estado: {
     type: String,
-    enum: ['pendiente', 'cancelada', 'finalizada'],
+    enum: ['activo', 'cancelado', 'pendiente'],
+    default: 'activo',
     required: true,
   },
 }, {

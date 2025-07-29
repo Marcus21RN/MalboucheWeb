@@ -4,6 +4,7 @@ import { Parallax } from 'react-scroll-parallax';
 import { IoIosArrowUp } from "react-icons/io";
 import { IoCloseSharp } from "react-icons/io5";
 import { FaFilter } from "react-icons/fa";
+import axios from 'axios';
 
 export default function EventsPage() {
   const [eventos, setEventos] = useState([]);
@@ -16,21 +17,23 @@ export default function EventsPage() {
   useEffect(() => {
     const obtenerEventos = async () => {
       try {
-        const res = await fetch("http://localhost:3000/clientBackend/events");
-        const data = await res.json();
-        setEventosOriginales(data);
-        ordenarEventos(data, ordenFecha);
+        const res = await axios.get("http://localhost:3000/clientBackend/events");
+        const data = res.data;
+        // Only set active events (defensive, backend already filters)
+        const activos = data.filter(ev => ev.estado === 'activo');
+        setEventosOriginales(activos);
+        ordenarEventos(activos, ordenFecha);
       } catch (error) {
         console.error("Error al obtener los eventos:", error);
       }
     };
     obtenerEventos();
-  }, []);
+  }, [ordenFecha]);
 
   const ordenarEventos = (eventos, orden) => {
     const eventosOrdenados = [...eventos].sort((a, b) => {
-      const fechaA = new Date(a.fecha).getTime();
-      const fechaB = new Date(b.fecha).getTime();
+      const fechaA = new Date(a.fechaEvento).getTime();
+      const fechaB = new Date(b.fechaEvento).getTime();
       return orden === 'asc' ? fechaA - fechaB : fechaB - fechaA;
     });
     setEventos(eventosOrdenados);
@@ -44,14 +47,11 @@ export default function EventsPage() {
 
   const formatDate = (dateString) => {
     if (!dateString) return { day: '--', month: '---', year: '----' };
-    
     const date = new Date(dateString);
     const adjustedDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
-    
     const day = adjustedDate.getDate();
     const month = adjustedDate.toLocaleString('default', { month: 'short' }).toUpperCase();
     const year = adjustedDate.getFullYear();
-    
     return { day, month, year };
   };
 
@@ -116,8 +116,7 @@ export default function EventsPage() {
       {/* LISTA DE EVENTOS */}
       <div className="px-4 py-10 max-w-7xl mx-auto space-y-6">
         {eventos.map((evento) => {
-          const { day, month, year } = formatDate(evento.fecha);
-          
+          const { day, month, year } = formatDate(evento.fechaEvento);
           return (
             <div
               key={evento._id}
@@ -186,9 +185,9 @@ export default function EventsPage() {
             <div className="flex flex-col md:flex-row gap-8">
               <div className="md:w-1/3 mt-2">
                 <div className="bg-[#b76ba3] text-black p-4 text-center rounded">
-                  <div className="text-5xl font-bold">{formatDate(eventoSeleccionado.fecha).day}</div>
+                  <div className="text-5xl font-bold">{formatDate(eventoSeleccionado.fechaEvento).day}</div>
                   <div className="text-xl uppercase tracking-widest">
-                    {formatDate(eventoSeleccionado.fecha).month}
+                    {formatDate(eventoSeleccionado.fechaEvento).month}
                   </div>
                   <div className="text-sm mt-2">
                     {eventoSeleccionado.horaInicio} - {eventoSeleccionado.horaFinal}
