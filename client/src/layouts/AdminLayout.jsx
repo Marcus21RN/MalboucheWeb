@@ -1,10 +1,24 @@
 import React, { useState } from "react";
+import { jwtDecode } from "jwt-decode";
 import { Outlet } from "react-router-dom";
 import AdminSidebar from "../pages/adminPages/components/sidebar";
 import LogoutButton from "../pages/adminPages/components/logout.jsx";
 
 const AdminLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
+
+  // Obtener nombre de usuario desde el token
+  let userName = "Admin";
+  try {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const decoded = jwtDecode(token);
+      userName = decoded.nombre || "Admin";
+    }
+  // eslint-disable-next-line no-unused-vars
+  } catch (e) {
+    // Si hay error, dejar el valor por defecto
+  }
 
   return (
     <div className="flex min-h-screen">
@@ -17,7 +31,9 @@ const AdminLayout = () => {
       >
         {/* Topbar */}
         <div className="w-full bg-white shadow-md h-16 flex items-center justify-between px-6">
-          <h2 className="text-lg font-semibold text-[#660152]">Welcome, Admin</h2>
+          <h2 className="text-lg font-semibold text-[#660152]">
+            Welcome, {userName}
+          </h2>
           {/* Aquí puedes poner avatar, logout, etc. */}
           <LogoutButton />
         </div>

@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+/* eslint-disable no-unused-vars */
+import React, { useState, useEffect } from "react";
 import {
   Box, Typography, Table, TableBody, TableCell,
   TableContainer, TableHead, TableRow, Paper, Button,
@@ -13,53 +14,19 @@ import {
   FilterAlt, People, Schedule, Email, Phone, Receipt
 } from "@mui/icons-material";
 
-// Simulación de datos iniciales
-const mockProductos = [
-  { _id: "ceria", nombre: "Corona", precio: 30, descripcion: "Cerveza clara", categoria: "Bebidas", estado: "activo" },
-  { _id: "cerra", nombre: "Victoria", precio: 28, descripcion: "Cerveza oscura", categoria: "Bebidas", estado: "activo" },
-  { _id: "micca", nombre: "Michelada", precio: 50, descripcion: "Cerveza con limón y sal", categoria: "Cócteles", estado: "activo" },
-  { _id: "hamb1", nombre: "Hamburguesa Clásica", precio: 80, descripcion: "Carne, queso, lechuga y tomate", categoria: "Alimentos", estado: "activo" },
-  { _id: "papas", nombre: "Papas fritas", precio: 35, descripcion: "Porción grande con salsa", categoria: "Snacks", estado: "activo" },
-  { _id: "marga", nombre: "Margarita", precio: 65, descripcion: "Tequila, triple sec y limón", categoria: "Cócteles", estado: "activo" },
-];
-
-const initialMenus = [
-  {
-    _id: "MENU001",
-    nombre: "Menú de Cervezas",
-    descripcion: "Variedad de cervezas nacionales e importadas dhbawjdawh ushwwdjgwhdg aGS Hdqush hgsh S.",
-    tipoMenu: "Bebidas",
-    estado: "activo",
-    productos: [
-      { IDProducto: "ceria" },
-      { IDProducto: "cerra" },
-    ],
-  },
-  {
-    _id: "MENU002",
-    nombre: "Menú de Cócteles",
-    descripcion: "Los mejores cócteles de la casa.",
-    tipoMenu: "Cócteles",
-    estado: "activo",
-    productos: [
-      { IDProducto: "micca" },
-      { IDProducto: "marga" },
-    ],
-  },
-];
+import axios from "axios";
 
 const categoriasProductos = [
-  { value: "Bebidas", label: "Bebidas", icon: <LocalBar /> },
-  { value: "Cócteles", label: "Cócteles", icon: <WineBar /> },
-  { value: "Alimentos", label: "Alimentos", icon: <Restaurant /> },
-  { value: "Snacks", label: "Snacks", icon: <Fastfood /> },
+  { value: "bebidas", label: "Bebidas", icon: <LocalBar /> },
+  { value: "cocteles", label: "Cócteles", icon: <WineBar /> },
+  { value: "alimentos", label: "Alimentos", icon: <Restaurant /> },
+  { value: "snacks", label: "Snacks", icon: <Fastfood /> },
 ];
 
 const MenuAdmin = () => {
-  const [menus, setMenus] = useState(initialMenus);
-  const [productos, setProductos] = useState(mockProductos);
-  const [selectedMenu, setSelectedMenu] = useState(initialMenus[0]);
-  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [menus, setMenus] = useState([]);
+  const [productos, setProductos] = useState([]);
+  const [selectedMenu, setSelectedMenu] = useState(null);
   const [openMenuForm, setOpenMenuForm] = useState(false);
   const [openProductForm, setOpenProductForm] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -137,28 +104,24 @@ const MenuAdmin = () => {
     }));
   };
 
-  const handleSaveMenu = () => {
+  // CRUD Menús
+  const handleSaveMenu = async () => {
     const newMenu = {
       ...menuFormData,
       tipoMenu: selectedCategory || "",
       productos: menuFormData.productos.map(id => ({ IDProducto: id })),
     };
-
-    if (isEditMode) {
-      setMenus(prev => prev.map(m => (m._id === newMenu._id ? newMenu : m)));
-      // Actualizar también el menú seleccionado si es el que estamos editando
-      if (selectedMenu && selectedMenu._id === newMenu._id) {
-        setSelectedMenu(newMenu);
+    try {
+      if (isEditMode) {
+        await axios.put(`http://localhost:3000/adminBackend/menus/${newMenu._id}`, newMenu);
+      } else {
+        await axios.post("http://localhost:3000/adminBackend/menus", newMenu);
       }
-    } else {
-      setMenus(prev => [...prev, newMenu]);
-      // Seleccionar el nuevo menú si es el primero que se crea
-      if (menus.length === 0) {
-        setSelectedMenu(newMenu);
-      }
+      await fetchMenus();
+      handleCloseMenuForm();
+    } catch (err) {
+      alert("Error al guardar menú");
     }
-
-    handleCloseMenuForm();
   };
 
   // Manejo de productos
@@ -187,35 +150,74 @@ const MenuAdmin = () => {
 
   const handleProductChange = (e) => {
     const { name, value } = e.target;
-    setProductFormData(prev => ({ ...prev, [name]: value }));
+    // Si el campo es categoria, guardar en minúsculas
+    setProductFormData(prev => ({
+      ...prev,
+      [name]: name === "categoria" ? value.toLowerCase() : value
+    }));
   };
 
-  const handleSaveProduct = () => {
-    if (isEditMode) {
-      setProductos(prev => prev.map(p => (p._id === productFormData._id ? productFormData : p)));
-    } else {
-      setProductos(prev => [...prev, productFormData]);
+  // CRUD Productos
+  const handleSaveProduct = async () => {
+    try {
+      if (isEditMode) {
+        await axios.put(`http://localhost:3000/adminBackend/productos/${productFormData._id}`, productFormData);
+      } else {
+        await axios.post("http://localhost:3000/adminBackend/productos", productFormData);
+      }
+      await fetchProductos();
+      await fetchMenus(); // Para reflejar cambios en menús
+      handleCloseProductForm();
+    } catch (err) {
+      alert("Error al guardar producto");
     }
-    handleCloseProductForm();
   };
 
-  const handleDeleteProduct = (id) => {
+  const handleDeleteProduct = async (id) => {
     const enUso = menus.some(menu => 
       menu.productos.some(prod => prod.IDProducto === id)
     );
-    
     if (enUso) {
-      alert("Este producto está en uso en uno o más menús. No se puede eliminar.");
+      alert("Este producto está en uso en uno o más menús. No se puede eliminar manualmente.");
       return;
     }
-    
-    setProductos(prev => prev.filter(p => p._id !== id));
+    try {
+      await axios.delete(`http://localhost:3000/adminBackend/productos/${id}`);
+      await fetchProductos();
+      await fetchMenus();
+    } catch (err) {
+      alert("Error al eliminar producto");
+    }
   };
 
   // Filtrar productos por categoría seleccionada
   const productsByCategory = selectedCategory 
     ? productos.filter(p => p.categoria === selectedCategory)
     : productos;
+
+  useEffect(() => {
+    fetchProductos();
+    fetchMenus();
+  }, []);
+
+  const fetchProductos = async () => {
+    try {
+      const res = await axios.get("http://localhost:3000/adminBackend/productos");
+      setProductos(res.data);
+    } catch {
+      console.error("Error al cargar productos");
+    }
+  };
+
+  const fetchMenus = async () => {
+    try {
+      const res = await axios.get("http://localhost:3000/adminBackend/menus");
+      setMenus(res.data);
+      if (res.data.length > 0) setSelectedMenu(res.data[0]);
+    } catch {
+      console.error("Error al cargar menús");
+    }
+  };
 
   return (
     <Box sx={{ padding: 3 }}>
@@ -594,7 +596,7 @@ const MenuAdmin = () => {
                 </>
               )}
 
-              {menuFormData.productos.length > 0 && (
+              {Array.isArray(menuFormData.productos) && menuFormData.productos.length > 0 && (
                 <Box sx={{ mt: 3 }}>
                   <Typography variant="subtitle1" gutterBottom>
                     Productos seleccionados ({menuFormData.productos.length}):

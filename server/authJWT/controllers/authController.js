@@ -21,15 +21,16 @@ export const Login = async (req, res) => {
     if (!validPassword) {
       return res.status(400).json({ msg: 'Credenciales inválidas' });
     }
-    const token = generarToken({ id: user._id, rol: rol._id });
+
+    const token = generarToken({ id: user._id, rol: rol._id, nombre: user.nombre });
 
     res.json({
       token,
       user: {
-        id: user._nombre,
+        id: user._id,
         nombre: user.nombre,
         correo: user.correo,
-        rol: rol.nombre
+        rol: rol._id
       }
     });
   } catch (error) {

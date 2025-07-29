@@ -267,11 +267,11 @@ db.createCollection("reservacion", {
           bsonType: "date",
           description: "Fecha cuando se llevará a cabo la reservación"
         },
-	      horaInicio: {
+        horaInicio: {
           bsonType: "string",
           description: "Hora de la reservación"
         },
-	      cantidadPersonas: {
+        cantidadPersonas: {
           bsonType: "number",
           description: "Número de personas que asistirán"
         },
@@ -380,7 +380,7 @@ db.createCollection("producto", {
   validator: {
     $jsonSchema: {
       bsonType: "object",
-      required: ["_id", "nombre", "precio", "descripcion"],
+      required: ["_id", "nombre", "precio", "descripcion", "estado", "categoria"],
       properties: {
         _id: {
           bsonType: "string",
@@ -394,13 +394,27 @@ db.createCollection("producto", {
           bsonType: ["double","int"],
           description: "Precio del producto"
         },
-	      descripcion: {
+        descripcion: {
           bsonType: "string",
           description: "Descripción del producto"
         },
+        estado: {
+        bsonType: 'string',
+        'enum': [
+          'activo',
+          'inactivo'
+        ],
+        description: 'Estado del producto (activo/inactivo)'
+        },
         categoria: {
-          bsonType: "string",
-          description: "Categoría del producto (ej. Cócteles, Licores, Bebidas, Botanas)"
+        bsonType: 'string',
+        'enum': [
+          'bebidas',
+          'cocteles',
+          'alimentos',
+          'snacks'
+        ],
+        description: 'Categoria del producto (bebidas, cócteles, alimentos o snacks)'
         }
       }
     }
@@ -409,44 +423,44 @@ db.createCollection("producto", {
 
 // INSERTS DE PRODUCTO
 db.producto.insertMany([
-  { _id: "maito", nombre: "Mai Tai Mojito", precio: 95.00, descripcion: "Cóctel tropical con ron, menta y cítricos.", categoria: "Cócteles" },
-  { _id: "negto", nombre: "Negroni Tradito", precio: 90.00, descripcion: "Cóctel italiano con gin, vermut y Campari.", categoria: "Cócteles" },
-  { _id: "teqha", nombre: "Tequila Poncha", precio: 110.00, descripcion: "Mezcla potente con tequila, frutas y especias.", categoria: "Cócteles" },
-  { _id: "daisa", nombre: "Daiquiri Rosa", precio: 85.00, descripcion: "Cóctel con ron blanco y toque de fresa.", categoria: "Cócteles" },
-  { _id: "mojde", nombre: "Mojito Verde", precio: 90.00, descripcion: "Mojito con extra de menta fresca y limón.", categoria: "Cócteles" },
-  { _id: "whiva", nombre: "Whiskey Reserva", precio: 145.00, descripcion: "Whiskey añejado con notas de madera y vainilla.", categoria: "Licores" },
-  { _id: "rumco", nombre: "Ron Clásico", precio: 85.00, descripcion: "Ron oscuro tradicional, ideal para mezclas.", categoria: "Licores" },
-  { _id: "tongo", nombre: "Tonic Amargo", precio: 42.75, descripcion: "Agua tónica con sabor amargo y burbujeante.", categoria: "Bebidas" },
-  { _id: "blory", nombre: "Bloody Mary", precio: 100.00, descripcion: "Cóctel clásico con vodka, jugo de tomate y especias.", categoria: "Cócteles" },
-  { _id: "ginum", nombre: "Ginebra Premium", precio: 120.00, descripcion: "Ginebra con botánicos selectos, ideal para coctelería.", categoria: "Licores" },
-  { _id: "caial", nombre: "Caipirinha Natural", precio: 85.00, descripcion: "Cóctel brasileño con cachaça, lima y azúcar.", categoria: "Cócteles" },
-  { _id: "ceria", nombre: "Cerveza Rubia", precio: 48.50, descripcion: "Cerveza clara ligera con final refrescante.", categoria: "Bebidas" },
-  { _id: "cerra", nombre: "Cerveza Ligera", precio: 45.25, descripcion: "Cerveza baja en alcohol, sabor suave y fresco.", categoria: "Bebidas" },
-  { _id: "micca", nombre: "Michelada Clásica", precio: 60.45, descripcion: "Cerveza con limón, sal y salsas picantes.", categoria: "Bebidas" },
-  { _id: "cerne", nombre: "Cerveza Negra", precio: 55.10, descripcion: "Cerveza oscura con notas tostadas y cuerpo robusto.", categoria: "Bebidas" },
-  { _id: "certo", nombre: "Cerveza Trigo", precio: 50.30, descripcion: "Cerveza de trigo con sabor frutal y ligero.", categoria: "Bebidas" },
-  { _id: "cerpa", nombre: "Cerveza IPA", precio: 65.55, descripcion: "India Pale Ale, amarga y aromática.", categoria: "Bebidas" },
-  { _id: "nacso", nombre: "Nachos con Queso", precio: 75.00, descripcion: "Totopos con queso fundido, jalapeños y salsa.", categoria: "Botanas" },
-  { _id: "alibq", nombre: "Alitas BBQ", precio: 95.00, descripcion: "Alitas de pollo bañadas en salsa barbacoa.", categoria: "Botanas" },
-  { _id: "papas", nombre: "Papas Fritas", precio: 50.00, descripcion: "Papas cortadas en bastones, fritas y crujientes.", categoria: "Botanas" },
-  { _id: "quedo", nombre: "Queso Asado", precio: 85.00, descripcion: "Queso fundido con chiles y especias.", categoria: "Botanas" },
-  { _id: "guale", nombre: "Guacamole", precio: 65.00, descripcion: "Aguacate machacado con jitomate, cebolla y limón.", categoria: "Botanas" },
-  { _id: "taczo", nombre: "Tacos de Chorizo", precio: 80.00, descripcion: "Tacos pequeños con chorizo, cebolla y cilantro.", categoria: "Botanas" },
-  { _id: "papes", nombre: "Papas con Wedges", precio: 60.60, descripcion: "Papas cortadas en gajos, sazonadas y fritas.", categoria: "Botanas" },
-  { _id: "cafno", nombre: "Café Americano", precio: 35.25, descripcion: "Café negro suave, ideal para acompañar postres.", categoria: "Bebidas" },
-  { _id: "capno", nombre: "Capuchino", precio: 45.75, descripcion: "Café espresso con leche espumosa.", categoria: "Bebidas" },
-  { _id: "teado", nombre: "Té Helado", precio: 30.00, descripcion: "Té frío con limón y un toque de azúcar.", categoria: "Bebidas" },
-  { _id: "limal", nombre: "Limonada Natural", precio: 25.00, descripcion: "Agua fresca con limón, hielo y azúcar.", categoria: "Bebidas" },
-  { _id: "gindo", nombre: "Gintonic Rosado", precio: 110.00, descripcion: "Ginebra con tónica rosa y frutos rojos.", categoria: "Cócteles" },
-  { _id: "ronna", nombre: "Ron Piña", precio: 95.00, descripcion: "Cóctel dulce con ron y jugo de piña.", categoria: "Cócteles" },
-  { _id: "teqta", nombre: "Tequila Margarita", precio: 105.00, descripcion: "Tequila con triple sec y jugo de limón.", categoria: "Cócteles" },
-  { _id: "cerut", nombre: "Cerveza Stout", precio: 70.00, descripcion: "Cerveza oscura, cremosa y con sabor intenso.", categoria: "Bebidas" },
-  { _id: "cerss", nombre: "Cerveza Weiss", precio: 60.00, descripcion: "Cerveza de trigo con notas a banana y clavo.", categoria: "Bebidas" },
-  { _id: "palso", nombre: "Palitos de Queso", precio: 80.00, descripcion: "Palitos crujientes de queso empanizados.", categoria: "Botanas" },
-  { _id: "paple", nombre: "Papas con Chile", precio: 65.00, descripcion: "Papas fritas con chile y especias picantes.", categoria: "Botanas" },
-  { _id: "taclo", nombre: "Tacos de Pollo", precio: 75.00, descripcion: "Tacos pequeños de pollo con salsa especial.", categoria: "Botanas" },
-  { _id: "cafhe", nombre: "Café con Leche", precio: 40.00, descripcion: "Café suave mezclado con leche caliente.", categoria: "Bebidas" },
-  { _id: "jugal", nombre: "Jugo Natural", precio: 30.00, descripcion: "Jugo fresco de naranja natural sin azúcar.", categoria: "Bebidas" }
+  { _id: "maito", nombre: "Mai Tai Mojito", precio: 95.00, descripcion: "Cóctel tropical con ron, menta y cítricos.", estado: "activo", categoria: "cocteles" },
+  { _id: "negto", nombre: "Negroni Tradito", precio: 90.00, descripcion: "Cóctel italiano con gin, vermut y Campari.", estado: "activo", categoria: "cocteles" },
+  { _id: "teqha", nombre: "Tequila Poncha", precio: 110.00, descripcion: "Mezcla potente con tequila, frutas y especias.", estado: "activo", categoria: "cocteles" },
+  { _id: "daisa", nombre: "Daiquiri Rosa", precio: 85.00, descripcion: "Cóctel con ron blanco y toque de fresa.", estado: "activo", categoria: "cocteles" },
+  { _id: "mojde", nombre: "Mojito Verde", precio: 90.00, descripcion: "Mojito con extra de menta fresca y limón.", estado: "activo", categoria: "cocteles" },
+  { _id: "whiva", nombre: "Whiskey Reserva", precio: 145.00, descripcion: "Whiskey añejado con notas de madera y vainilla.", estado: "activo", categoria: "bebidas" },
+  { _id: "rumco", nombre: "Ron Clásico", precio: 85.00, descripcion: "Ron oscuro tradicional, ideal para mezclas.", estado: "activo", categoria: "bebidas" },
+  { _id: "tongo", nombre: "Tonic Amargo", precio: 42.75, descripcion: "Agua tónica con sabor amargo y burbujeante.", estado: "activo", categoria: "bebidas" },
+  { _id: "blory", nombre: "Bloody Mary", precio: 100.00, descripcion: "Cóctel clásico con vodka, jugo de tomate y especias.", estado: "activo", categoria: "cocteles" },
+  { _id: "ginum", nombre: "Ginebra Premium", precio: 120.00, descripcion: "Ginebra con botánicos selectos, ideal para coctelería.", estado: "activo", categoria: "bebidas" },
+  { _id: "caial", nombre: "Caipirinha Natural", precio: 85.00, descripcion: "Cóctel brasileño con cachaça, lima y azúcar.", estado: "activo", categoria: "cocteles" },
+  { _id: "ceria", nombre: "Cerveza Rubia", precio: 48.50, descripcion: "Cerveza clara ligera con final refrescante.", estado: "activo", categoria: "bebidas" },
+  { _id: "cerra", nombre: "Cerveza Ligera", precio: 45.25, descripcion: "Cerveza baja en alcohol, sabor suave y fresco.", estado: "activo", categoria: "bebidas" },
+  { _id: "micca", nombre: "Michelada Clásica", precio: 60.45, descripcion: "Cerveza con limón, sal y salsas picantes.", estado: "activo", categoria: "bebidas" },
+  { _id: "cerne", nombre: "Cerveza Negra", precio: 55.10, descripcion: "Cerveza oscura con notas tostadas y cuerpo robusto.", estado: "activo", categoria: "bebidas" },
+  { _id: "certo", nombre: "Cerveza Trigo", precio: 50.30, descripcion: "Cerveza de trigo con sabor frutal y ligero.", estado: "activo", categoria: "bebidas" },
+  { _id: "cerpa", nombre: "Cerveza IPA", precio: 65.55, descripcion: "India Pale Ale, amarga y aromática.", estado: "activo", categoria: "bebidas" },
+  { _id: "nacso", nombre: "Nachos con Queso", precio: 75.00, descripcion: "Totopos con queso fundido, jalapeños y salsa.", estado: "activo", categoria: "snacks" },
+  { _id: "alibq", nombre: "Alitas BBQ", precio: 95.00, descripcion: "Alitas de pollo bañadas en salsa barbacoa.", estado: "activo", categoria: "alimentos" },
+  { _id: "papas", nombre: "Papas Fritas", precio: 50.00, descripcion: "Papas cortadas en bastones, fritas y crujientes.", estado: "activo", categoria: "snacks" },
+  { _id: "quedo", nombre: "Queso Asado", precio: 85.00, descripcion: "Queso fundido con chiles y especias.", estado: "activo", categoria: "snacks" },
+  { _id: "guale", nombre: "Guacamole", precio: 65.00, descripcion: "Aguacate machacado con jitomate, cebolla y limón.", estado: "activo", categoria: "snacks" },
+  { _id: "taczo", nombre: "Tacos de Chorizo", precio: 80.00, descripcion: "Tacos pequeños con chorizo, cebolla y cilantro.", estado: "activo", categoria: "alimentos" },
+  { _id: "papes", nombre: "Papas con Wedges", precio: 60.60, descripcion: "Papas cortadas en gajos, sazonadas y fritas.", estado: "activo", categoria: "snacks" },
+  { _id: "cafno", nombre: "Café Americano", precio: 35.25, descripcion: "Café negro suave, ideal para acompañar postres.", estado: "activo", categoria: "bebidas" },
+  { _id: "capno", nombre: "Capuchino", precio: 45.75, descripcion: "Café espresso con leche espumosa.", estado: "activo", categoria: "bebidas" },
+  { _id: "teado", nombre: "Té Helado", precio: 30.00, descripcion: "Té frío con limón y un toque de azúcar.", estado: "activo", categoria: "bebidas" },
+  { _id: "limal", nombre: "Limonada Natural", precio: 25.00, descripcion: "Agua fresca con limón, hielo y azúcar.", estado: "activo", categoria: "bebidas" },
+  { _id: "gindo", nombre: "Gintonic Rosado", precio: 110.00, descripcion: "Ginebra con tónica rosa y frutos rojos.", estado: "activo", categoria: "cocteles" },
+  { _id: "ronna", nombre: "Ron Piña", precio: 95.00, descripcion: "Cóctel dulce con ron y jugo de piña.", estado: "activo", categoria: "cocteles" },
+  { _id: "teqta", nombre: "Tequila Margarita", precio: 105.00, descripcion: "Tequila con triple sec y jugo de limón.", estado: "activo", categoria: "cocteles" },
+  { _id: "cerut", nombre: "Cerveza Stout", precio: 70.00, descripcion: "Cerveza oscura, cremosa y con sabor intenso.", estado: "activo", categoria: "bebidas" },
+  { _id: "cerss", nombre: "Cerveza Weiss", precio: 60.00, descripcion: "Cerveza de trigo con notas a banana y clavo.", estado: "activo", categoria: "bebidas" },
+  { _id: "palso", nombre: "Palitos de Queso", precio: 80.00, descripcion: "Palitos crujientes de queso empanizados.", estado: "activo", categoria: "snacks" },
+  { _id: "paple", nombre: "Papas con Chile", precio: 65.00, descripcion: "Papas fritas con chile y especias picantes.", estado: "activo", categoria: "snacks" },
+  { _id: "taclo", nombre: "Tacos de Pollo", precio: 75.00, descripcion: "Tacos pequeños de pollo con salsa especial.", estado: "activo", categoria: "alimentos" },
+  { _id: "cafhe", nombre: "Café con Leche", precio: 40.00, descripcion: "Café suave mezclado con leche caliente.", estado: "activo", categoria: "bebidas" },
+  { _id: "jugal", nombre: "Jugo Natural", precio: 30.00, descripcion: "Jugo fresco de naranja natural sin azúcar.", estado: "activo", categoria: "bebidas" }
 ])
 
 
@@ -638,11 +652,11 @@ db.createCollection("promocion", {
           bsonType: "string",
           description: "Descripción de la promoción"
         },
-	      fechaInicio: {
+        fechaInicio: {
           bsonType: "date",
           description: "Fecha cuando iniciará la promoción"
         },
-	      fechaFin: {
+        fechaFin: {
           bsonType: "date",
           description: "Fecha de cuando finalizará la promoción"
         },
