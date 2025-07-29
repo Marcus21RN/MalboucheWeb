@@ -13,23 +13,27 @@ export const Login = async (req, res) => {
     }
 
     const rol = await Rol.findById(user.IDRol);
-    if (!rol) return res.status(403).json({ msg: 'Rol no válido' });
+    if (!rol) {
+      return res.status(403).json({ msg: 'Rol no válido' });
+    }
 
     const validPassword = await bcrypt.compare(password, user.password);
-    if (!validPassword) return res.status(400).json({ msg: 'Credenciales inválidas' });
-
-    const token = generarToken({ id: user._id, rol: rol.nombre });
+    if (!validPassword) {
+      return res.status(400).json({ msg: 'Credenciales inválidas' });
+    }
+    const token = generarToken({ id: user._id, rol: rol._id });
 
     res.json({
       token,
       user: {
-        id: user._id,
+        id: user._nombre,
         nombre: user.nombre,
         correo: user.correo,
         rol: rol.nombre
       }
     });
   } catch (error) {
+    console.log('Error en Login:', error);
     res.status(500).json({ msg: 'Error interno', error });
   }
 };

@@ -39,9 +39,6 @@ export default function LoginPage() {
     }
   };
 
-
-{/*  // Si el usuario ya está autenticado, redirigirlo a la página correspondiente
-    
   // Redirigir a la página de inicio si ya está autenticado
   React.useEffect(() => {
     const token = localStorage.getItem('token');
@@ -54,7 +51,6 @@ export default function LoginPage() {
       }
     }
   }, [navigate]); 
-  */}
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-100 via-purple-100 to-white font-sans">

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
 import AdminSidebar from "../pages/adminPages/components/sidebar";
+import LogoutButton from "../pages/adminPages/components/logout.jsx";
 
 const AdminLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -18,6 +19,7 @@ const AdminLayout = () => {
         <div className="w-full bg-white shadow-md h-16 flex items-center justify-between px-6">
           <h2 className="text-lg font-semibold text-[#660152]">Welcome, Admin</h2>
           {/* Aquí puedes poner avatar, logout, etc. */}
+          <LogoutButton />
         </div>
 
         {/* Contenido */}
