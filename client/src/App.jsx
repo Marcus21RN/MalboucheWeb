@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Outlet  } from 'react-router-dom';
 import { ParallaxProvider } from 'react-scroll-parallax';
+import { useVoiceflow } from './hooks/useVoiceflow';
 
 // Componentes importados de LOGIN
 import LoginPage from './pages/loginPage.jsx';
@@ -49,6 +50,7 @@ function UserLayout(){
 }
 
 function App() {
+  useVoiceflow();
   return (
     <ParallaxProvider>
       <Router>
