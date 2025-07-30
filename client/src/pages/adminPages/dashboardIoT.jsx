@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useEffect, useState } from "react";
 import {
-  LineChart,
-  Line,
-  BarChart,
   Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  Legend,
+  BarChart,
   CartesianGrid,
+  LabelList,
+  Legend,
+  Line,
+  LineChart,
   ResponsiveContainer,
-  LabelList
+  Tooltip,
+  XAxis,
+  YAxis
 } from "recharts";
 
 const DashboardIoT = () => {
@@ -27,13 +27,13 @@ const DashboardIoT = () => {
     Promise.all([
       axios.get("http://localhost:3000/adminBackend/iot/dht11"),
       axios.get("http://localhost:3000/adminBackend/iot/ultrasonico"),
-      axios.get("http://localhost:3000/adminBackend/iot/mlx90615")
+      axios.get("http://localhost:3000/adminBackend/iot/mlx90614")
     ])
       .then(([dhtRes, ultraRes, mlxRes]) => {
         // Logs para depuración
         console.log("DHT11:", dhtRes.data);
         console.log("Ultrasonico:", ultraRes.data);
-        console.log("MLX90615:", mlxRes.data);
+        console.log("MLX90614:", mlxRes.data);
 
         setDHTData(Array.isArray(dhtRes.data) ? dhtRes.data : []);
         setUltraData(Array.isArray(ultraRes.data) ? ultraRes.data : []);
@@ -214,8 +214,8 @@ const DashboardIoT = () => {
 <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md border border-gray-200">
   <section className="mb-12">
     <div className="mb-4">
-      <h2 className="text-xl font-bold text-center text-gray-800">MLX90615</h2>
-      <p className="text-sm text-center text-gray-600">Gráfica de registros de sensor de infrarrojo mlx90615</p>
+      <h2 className="text-xl font-bold text-center text-gray-800">MLX90614</h2>
+      <p className="text-sm text-center text-gray-600">Gráfica de registros de sensor de infrarrojo mlx90614</p>
     </div>
     <ResponsiveContainer width="100%" height={400}>
       <BarChart
