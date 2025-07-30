@@ -935,8 +935,8 @@ db["iot-hc-sr04_Lecturas"].insertMany([
   }
 ])
 
-// ESQUEMA PARA EL SENSOR DE TEMPERATURA INFRARROJO (MLX90615)
-db.createCollection("iot-mlx90615_Lecturas", {
+// ESQUEMA PARA EL SENSOR DE TEMPERATURA INFRARROJO (MLX90614)
+db.createCollection("iot-mlx90614_Lecturas", {
   validator: {
     $jsonSchema: {
       bsonType: "object",
@@ -963,64 +963,64 @@ db.createCollection("iot-mlx90615_Lecturas", {
   }
 })
 
-// INSERTS PARA EL SENSOR MLX90615
-db["iot-mlx90615_Lecturas"].insertMany([
+// INSERTS PARA EL SENSOR MLX90614
+db["iot-mlx90614_Lecturas"].insertMany([
   {
-    _id: "MLX90615-001",
+    _id: "MLX90614-001",
     temperaturaC: 25.0,
     fecha: ISODate("2025-07-01T00:00:00Z"),
     hora: "10:00"
   },
   {
-    _id: "MLX90615-002",
+    _id: "MLX90614-002",
     temperaturaC: 26.5,
     fecha: ISODate("2025-07-01T00:00:00Z"),
     hora: "11:00"
   },
   {
-    _id: "MLX90615-003",
+    _id: "MLX90614-003",
     temperaturaC: 24.0,
     fecha: ISODate("2025-07-01T00:00:00Z"),
     hora: "12:00"
   },
   {
-    _id: "MLX90615-004",
+    _id: "MLX90614-004",
     temperaturaC: 27.0,
     fecha: ISODate("2025-07-01T00:00:00Z"),
     hora: "13:00"
   },
   {
-    _id: "MLX90615-005",
+    _id: "MLX90614-005",
     temperaturaC: 28.0,
     fecha: ISODate("2025-07-01T00:00:00Z"),
     hora: "14:00"
   },
   {
-    _id: "MLX90615-006",
+    _id: "MLX90614-006",
     temperaturaC: 29.0,
     fecha: ISODate("2025-07-01T00:00:00Z"),
     hora: "15:00"
   },
   {
-    _id: "MLX90615-007",
+    _id: "MLX90614-007",
     temperaturaC: 30.0,
     fecha: ISODate("2025-07-01T00:00:00Z"),
     hora: "16:00"
   },
   {
-    _id: "MLX90615-008",
+    _id: "MLX90614-008",
     temperaturaC: 31.0,
     fecha: ISODate("2025-07-01T00:00:00Z"),
     hora: "17:00"
   },
   {
-    _id: "MLX90615-009",
+    _id: "MLX90614-009",
     temperaturaC: 32.0,
     fecha: ISODate("2025-07-01T00:00:00Z"),
     hora: "18:00"
   },
   {
-    _id: "MLX90615-010",
+    _id: "MLX90614-010",
     temperaturaC: 33.0,
     fecha: ISODate("2025-07-01T00:00:00Z"),
     hora: "19:00"
