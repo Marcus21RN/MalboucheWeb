@@ -1,13 +1,13 @@
 import express from "express";
-const router = express.Router();
 import {
   obtenerLecturasDHT11,
-  obtenerLecturasUltrasonico,
-  obtenerLecturasMLX90615
+  obtenerLecturasMLX90614,
+  obtenerLecturasUltrasonico
 } from "../controllers/iot.js";
+const router = express.Router();
 
 router.get("/dht11", obtenerLecturasDHT11);
 router.get("/ultrasonico", obtenerLecturasUltrasonico);
-router.get("/mlx90615", obtenerLecturasMLX90615);
+router.get("/mlx90614", obtenerLecturasMLX90614);
 
 export default router;

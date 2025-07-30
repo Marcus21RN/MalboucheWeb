@@ -1,6 +1,6 @@
 import DHT11 from '../../models/dht11.js';
+import MLX90614 from "../../models/mlx90614.js";
 import Ultrasonico from "../../models/ultrasonico.js";
-import MLX90615 from "../../models/mlx90615.js";
 
 export const obtenerLecturasDHT11 = async (req, res) => {
   try {
@@ -20,17 +20,17 @@ export const obtenerLecturasUltrasonico = async (req, res) => {
   }
 };
 
-export const obtenerLecturasMLX90615 = async (req, res) => {
+export const obtenerLecturasMLX90614 = async (req, res) => {
   try {
-    const lecturas = await MLX90615.find({}).sort({ hora: -1 }).limit(10);
+    const lecturas = await MLX90614.find({}).sort({ hora: -1 }).limit(10);
     res.json(lecturas);
   } catch (error) {
-    res.status(500).json({ error: "Error al obtener lecturas MLX90615" });
+    res.status(500).json({ error: "Error al obtener lecturas MLX90614" });
   }
 };
 
 export default {
   obtenerLecturasDHT11,
   obtenerLecturasUltrasonico,
-  obtenerLecturasMLX90615
+  obtenerLecturasMLX90614
 };
