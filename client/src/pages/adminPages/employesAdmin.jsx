@@ -33,8 +33,8 @@ import {
   TablePagination
 } from "@mui/material";
 import {
-  Edit as EditIcon,
-  Delete as DeleteIcon,
+  EditOutlined as EditIcon,
+  DeleteOutline as DeleteIcon,
   Add as AddIcon,
   Close as CloseIcon,
   Person as PersonIcon,
@@ -240,7 +240,7 @@ export default function EmployesAdmin() {
   };
 
   const getAvatarColor = (name) => {
-    const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FECA57', '#DDA0DD'];
+    const colors = ['#273179', '#216601', '#660154', '#660121', '#f7b330', '#460166'];
     const index = name.charCodeAt(0) % colors.length;
     return colors[index];
   };
@@ -277,11 +277,11 @@ export default function EmployesAdmin() {
             label="Search by name, email or ID"
             variant="outlined"
             size="small"
-            sx={{ width: 250 }}
+            sx={{ width: 250, backgroundColor: 'white' }}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <FormControl size="small" sx={{ width: 180 }}>
+          <FormControl size="small" sx={{ width: 180, backgroundColor: 'white' }}>
             <InputLabel>Filter by Status</InputLabel>
             <Select
               value={filterEstado}
@@ -434,6 +434,7 @@ export default function EmployesAdmin() {
                       />
                     </TableCell>
                     <TableCell>
+                      
                       <Box sx={{ display: 'flex', gap: 1 }}>
                         <Tooltip title="Update employee">
                           <IconButton
@@ -489,22 +490,13 @@ export default function EmployesAdmin() {
 
       {/* Dialog original para crear/editar */}
       <Dialog open={openDialog} onClose={resetForm} fullWidth maxWidth="sm">
-        <DialogTitle sx={{ color: "#660152" }}>
+        <DialogTitle sx={{ color: "#660152", fontWeight: "bold" }}>
           {modoEdicion ? "Update Employee" : "New Employee"}
         </DialogTitle>
         <form onSubmit={handleSubmitWithConfirmation}>
           <DialogContent>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-              <TextField 
-                label="ID" 
-                name="_id" 
-                value={formData._id} 
-                onChange={handleChange} 
-                required 
-                disabled={modoEdicion} 
-                type="number" 
-                fullWidth 
-              />
+              <Box sx={{ display: "flex", gap: 2 }}>
               <TextField 
                 label="Name" 
                 name="nombre" 
@@ -528,6 +520,9 @@ export default function EmployesAdmin() {
                 onChange={handleChange} 
                 fullWidth 
               />
+              </Box>
+
+
               <TextField 
                 label="Email" 
                 type="email" 
@@ -537,16 +532,8 @@ export default function EmployesAdmin() {
                 required 
                 fullWidth 
               />
-              <TextField 
-                label="Password" 
-                type="password" 
-                name="password" 
-                value={formData.password} 
-                onChange={handleChange} 
-                required={!modoEdicion} 
-                fullWidth 
-              />
-              <FormControl fullWidth>
+              <Box sx={{ display: "flex", gap: 2 }}>
+<FormControl fullWidth>
                 <InputLabel>Status</InputLabel>
                 <Select name="estado" value={formData.estado} onChange={handleChange} label="Status">
                   <MenuItem value="activo">Active</MenuItem>
@@ -560,9 +547,12 @@ export default function EmployesAdmin() {
                   <MenuItem value="EMPLE">Employee</MenuItem>
                 </Select>
               </FormControl>
+              </Box>
+              
             </Box>
           </DialogContent>
           <DialogActions>
+            
             <Button onClick={resetForm} startIcon={<CancelIcon />} color="inherit">
               Cancel
             </Button>
@@ -575,7 +565,7 @@ export default function EmployesAdmin() {
                 '&:hover': { backgroundColor: "#520040" } 
               }}
             >
-              {modoEdicion ? "Actualizar" : "Guardar"}
+              {modoEdicion ? "Update" : "Save"}
             </Button>
           </DialogActions>
         </form>
