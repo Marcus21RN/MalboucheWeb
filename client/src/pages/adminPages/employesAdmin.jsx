@@ -1,5 +1,17 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
+import axios from "axios";
+// Configurar interceptor global para enviar el token JWT en cada petición
+axios.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers["Authorization"] = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 import {
   Box,
   Button,
@@ -65,6 +77,8 @@ export default function EmployesAdmin() {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openSaveDialog, setOpenSaveDialog] = useState(false);
   const [empleadoToDelete, setEmpleadoToDelete] = useState(null);
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState(false);
 
   // Funciones originales mantenidas
   const handleDeleteClick = (id) => {
@@ -74,13 +88,9 @@ export default function EmployesAdmin() {
 
   const handleConfirmDelete = async () => {
     try {
-      const res = await fetch(`http://localhost:3000/adminBackend/empleados/${empleadoToDelete}`, { 
-        method: "DELETE" 
-      });
-      if (res.ok) {
-        fetchEmpleados();
-        showSnackbar("Empleado eliminado", "success");
-      }
+      await axios.delete(`http://localhost:3000/adminBackend/empleados/${empleadoToDelete}`);
+      fetchEmpleados();
+      showSnackbar("Empleado eliminado", "success");
     } catch (error) {
       showSnackbar("Error al eliminar empleado", "error");
     } finally {
@@ -91,46 +101,43 @@ export default function EmployesAdmin() {
 
   const handleSubmitWithConfirmation = async (e) => {
     e.preventDefault();
-    
     if (!formData.nombre || !formData.primerApellido || !formData.correo) {
       showSnackbar("Por favor complete los campos requeridos", "error");
       return;
     }
-    
-    if (!modoEdicion && !formData.password) {
-      showSnackbar("La contraseña es requerida para nuevos empleados", "error");
-      return;
-    }
-
+    setConfirmPassword("");
+    setConfirmPasswordError(false);
     setOpenSaveDialog(true);
   };
 
   const handleConfirmSave = async () => {
+    if (!confirmPassword) {
+      setConfirmPasswordError(true);
+      showSnackbar("La contraseña de confirmación es requerida", "error");
+      return;
+    }
+
     const url = modoEdicion
       ? `http://localhost:3000/adminBackend/empleados/${formData._id}`
       : "http://localhost:3000/adminBackend/empleados";
-    const method = modoEdicion ? "PUT" : "POST";
+
+    // Enviar la contraseña de confirmación al backend
+    const payload = { ...formData, confirmPassword };
 
     try {
-      const res = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      if (res.ok) {
-        fetchEmpleados();
-        resetForm();
-        showSnackbar(
-          modoEdicion ? "Empleado actualizado" : "Empleado registrado", 
-          "success"
-        );
+      if (modoEdicion) {
+        await axios.put(url, payload);
+        showSnackbar("Empleado actualizado", "success");
       } else {
-        const error = await res.json();
-        showSnackbar("Error: " + error.error, "error");
+        await axios.post(url, payload);
+        showSnackbar("Empleado registrado", "success");
       }
+      fetchEmpleados();
+      resetForm();
     } catch (error) {
-      showSnackbar("Error en la operación", "error");
+      const msg = error.response?.data?.error || "Error en la operación";
+      setConfirmPasswordError(true);
+      showSnackbar("Error: " + msg, "error");
     } finally {
       setOpenSaveDialog(false);
     }
@@ -169,9 +176,8 @@ export default function EmployesAdmin() {
 
   const fetchEmpleados = async () => {
     try {
-      const res = await fetch("http://localhost:3000/adminBackend/empleados");
-      const data = await res.json();
-      setEmpleados(data);
+      const res = await axios.get("http://localhost:3000/adminBackend/empleados");
+      setEmpleados(res.data);
     } catch (error) {
       showSnackbar("Error al cargar empleados", "error");
     }
@@ -616,34 +622,47 @@ export default function EmployesAdmin() {
         <DialogContent>
           <Typography>
             {modoEdicion
-              ? "Aare you sure you want to update this employee's data?"
-              : "Are you sure you want to register this new employee?"}
+              ? "¿Estás seguro de que deseas actualizar la información de este empleado?"
+              : "¿Estás seguro de que deseas registrar este nuevo empleado?"}
           </Typography>
           {!modoEdicion && (
             <Typography variant="body2" sx={{ mt: 2, fontStyle: "italic" }}>
-              An email will be sent to the employee with their access credentials.
+              Se enviará un correo al empleado con sus credenciales de acceso.
             </Typography>
           )}
+          <form onSubmit={e => { e.preventDefault(); handleConfirmSave(); }}>
+            <TextField
+              label="Contraseña de confirmación"
+              type="password"
+              value={confirmPassword}
+              onChange={e => { setConfirmPassword(e.target.value); setConfirmPasswordError(false); }}
+              error={confirmPasswordError}
+              helperText={confirmPasswordError ? "Contraseña incorrecta" : ""}
+              fullWidth
+              sx={{ mt: 2 }}
+              autoFocus
+            />
+            <DialogActions>
+              <Button 
+                onClick={() => setOpenSaveDialog(false)}
+                sx={{ color: "#660152" }}
+              >
+                Cancelar
+              </Button>
+              <Button
+                type="submit"
+                variant="contained"
+                sx={{ 
+                  backgroundColor: "#660152",
+                  '&:hover': { backgroundColor: "#520040" }
+                }}
+                startIcon={<SaveIcon />}
+              >
+                {modoEdicion ? "Confirmar Actualización" : "Confirmar Registro"}
+              </Button>
+            </DialogActions>
+          </form>
         </DialogContent>
-        <DialogActions>
-          <Button 
-            onClick={() => setOpenSaveDialog(false)}
-            sx={{ color: "#660152" }}
-          >
-            Cancel
-          </Button>
-          <Button
-            onClick={handleConfirmSave}
-            variant="contained"
-            sx={{ 
-              backgroundColor: "#660152",
-              '&:hover': { backgroundColor: "#520040" }
-            }}
-            startIcon={<SaveIcon />}
-          >
-            {modoEdicion ? "Confirmar Actualización" : "Confirmar Registro"}
-          </Button>
-        </DialogActions>
       </Dialog>
 
       <Snackbar 
