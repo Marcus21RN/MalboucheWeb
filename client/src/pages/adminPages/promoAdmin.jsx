@@ -36,49 +36,11 @@ import {
 } from "@mui/icons-material";
 import { motion } from 'framer-motion';
 
-// Datos simulados basados en el ejemplo proporcionado
-const mockPromos = [
-  {
-    _id: "PROMO001",
-    nombre: "Martes Cervezas a Mitad de Precio",
-    descripcion: "Todas las cervezas nacionales e importadas a 50% de descuento cada martes.",
-    fechaInicio: "2025-07-01",
-    fechaFin: "2025-12-31",
-    estado: "activo",
-    imagen: "https://images.unsplash.com/photo-1608270586620-248524c67de9?w=400"
-  },
-  {
-    _id: "PROMO002",
-    nombre: "Cumpleañeros Entran Gratis",
-    descripcion: "Si es tu cumpleaños, la entrada es gratis todo el día.",
-    fechaInicio: "2025-01-01",
-    fechaFin: "2026-01-01",
-    estado: "activo",
-    imagen: null
-  },
-  {
-    _id: "PROMO003",
-    nombre: "Happy Hour Cocktails",
-    descripcion: "2x1 en todos los cocktails de lunes a viernes de 6PM a 8PM.",
-    fechaInicio: "2025-06-01",
-    fechaFin: "2025-08-31",
-    estado: "activo",
-    imagen: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=400"
-  },
-  {
-    _id: "PROMO004",
-    nombre: "Descuento Estudiantes",
-    descripcion: "20% de descuento para estudiantes con credencial vigente.",
-    fechaInicio: "2025-03-01",
-    fechaFin: "2025-05-31",
-    estado: "inactivo",
-    imagen: null
-  }
-];
+import axios from 'axios';
 
 const PromoAdmin = () => {
-  const [promos, setPromos] = useState(mockPromos);
-  const [filteredPromos, setFilteredPromos] = useState(mockPromos);
+  const [promos, setPromos] = useState([]);
+  const [filteredPromos, setFilteredPromos] = useState([]);
   const [filter, setFilter] = useState('');
   const [openPromoForm, setOpenPromoForm] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -87,10 +49,10 @@ const PromoAdmin = () => {
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
   const [imagePreview, setImagePreview] = useState(null);
   const [imageError, setImageError] = useState(false);
+  const [localImageUrl, setLocalImageUrl] = useState(null);
 
   // Estado para el formulario
   const [promoFormData, setPromoFormData] = useState({
-    _id: "",
     nombre: "",
     descripcion: "",
     fechaInicio: "",
@@ -105,18 +67,13 @@ const PromoAdmin = () => {
 
   const fetchPromos = async () => {
     try {
-      // const res = await fetch("http://localhost:3000/adminBackend/promos");
-      // const data = await res.json();
-      // setPromos(data);
-      // setFilteredPromos(data);
-      
-      // Usar datos simulados
-      setPromos(mockPromos);
-      setFilteredPromos(mockPromos);
+      const res = await axios.get("http://localhost:3000/adminBackend/promos");
+      setPromos(res.data);
+      setFilteredPromos(res.data);
     } catch (error) {
       console.error('Error fetching promos:', error);
-      setPromos(mockPromos);
-      setFilteredPromos(mockPromos);
+      setPromos([]);
+      setFilteredPromos([]);
     }
   };
 
@@ -129,23 +86,35 @@ const PromoAdmin = () => {
   };
 
   // Funciones para el modal
+  const formatDateInput = (dateString) => {
+    if (!dateString) return "";
+    const d = new Date(dateString);
+    // Ajustar a zona local para evitar desfase
+    const offset = d.getTimezoneOffset();
+    const localDate = new Date(d.getTime() - offset * 60000);
+    return localDate.toISOString().slice(0, 10);
+  };
+
+  const [editingPromoId, setEditingPromoId] = useState(null);
+
   const handleOpenPromoForm = (promo = null) => {
     if (promo) {
       setIsEditMode(true);
+      setEditingPromoId(promo._id);
       setPromoFormData({
-        _id: promo._id,
         nombre: promo.nombre,
         descripcion: promo.descripcion,
-        fechaInicio: promo.fechaInicio,
-        fechaFin: promo.fechaFin,
+        fechaInicio: formatDateInput(promo.fechaInicio),
+        fechaFin: formatDateInput(promo.fechaFin),
         estado: promo.estado,
         imagen: promo.imagen || ""
       });
       setImagePreview(promo.imagen);
+      setLocalImageUrl(null);
     } else {
       setIsEditMode(false);
+      setEditingPromoId(null);
       setPromoFormData({
-        _id: "",
         nombre: "",
         descripcion: "",
         fechaInicio: "",
@@ -154,6 +123,7 @@ const PromoAdmin = () => {
         imagen: ""
       });
       setImagePreview(null);
+      setLocalImageUrl(null);
     }
     setImageError(false);
     setOpenPromoForm(true);
@@ -162,10 +132,10 @@ const PromoAdmin = () => {
   const handleClosePromoForm = () => {
     setOpenPromoForm(false);
     setIsEditMode(false);
+    setEditingPromoId(null);
     setImagePreview(null);
     setImageError(false);
     setPromoFormData({
-      _id: "",
       nombre: "",
       descripcion: "",
       fechaInicio: "",
@@ -205,32 +175,14 @@ const PromoAdmin = () => {
 
   const handleSavePromo = async () => {
     try {
-      if (isEditMode) {
-        // Actualizar promo existente
-        const updatedPromos = promos.map(promo => 
-          promo._id === promoFormData._id ? promoFormData : promo
-        );
-        setPromos(updatedPromos);
-        setFilteredPromos(
-          filter ? updatedPromos.filter(promo => promo.estado === filter) : updatedPromos
-        );
+      if (isEditMode && editingPromoId) {
+        await axios.put(`http://localhost:3000/adminBackend/promos/${editingPromoId}`, promoFormData);
+        showSnackbar("Promoción actualizada exitosamente", "success");
       } else {
-        // Crear nueva promo
-        const newPromo = {
-          ...promoFormData,
-          _id: `PROMO${String(promos.length + 1).padStart(3, '0')}`
-        };
-        const updatedPromos = [...promos, newPromo];
-        setPromos(updatedPromos);
-        setFilteredPromos(
-          filter ? updatedPromos.filter(promo => promo.estado === filter) : updatedPromos
-        );
+        await axios.post("http://localhost:3000/adminBackend/promos", promoFormData);
+        showSnackbar("Promoción creada exitosamente", "success");
       }
-      
-      showSnackbar(
-        isEditMode ? "Promoción actualizada exitosamente" : "Promoción creada exitosamente",
-        "success"
-      );
+      fetchPromos();
       handleClosePromoForm();
     } catch (error) {
       console.error('Error saving promo:', error);
@@ -240,16 +192,9 @@ const PromoAdmin = () => {
 
   const handleDelete = async (id) => {
     try {
-      // await fetch(`http://localhost:3000/adminBackend/promos/${id}`, { method: "DELETE" });
-      
-      // Simular eliminación local
-      const updatedPromos = promos.filter(promo => promo._id !== id);
-      setPromos(updatedPromos);
-      setFilteredPromos(
-        filter ? updatedPromos.filter(promo => promo.estado === filter) : updatedPromos
-      );
-      
+      await axios.delete(`http://localhost:3000/adminBackend/promos/${id}`);
       showSnackbar("Promoción eliminada exitosamente", "success");
+      fetchPromos();
     } catch (error) {
       console.error('Error deleting promo:', error);
       showSnackbar("Error al eliminar promoción", "error");
@@ -531,17 +476,7 @@ const PromoAdmin = () => {
             <Grid item xs={12} md={imagePreview ? 8 : 12}>
               <Grid container spacing={2}>
                 {/* Primera fila: ID y Nombre */}
-                <Grid item xs={12} md={6}>
-                  <TextField 
-                    fullWidth 
-                    name="_id" 
-                    label="ID de promoción" 
-                    value={promoFormData._id} 
-                    onChange={handlePromoChange} 
-                    required
-                    disabled={isEditMode}
-                  />
-                </Grid>
+            {/* El campo ID se elimina del formulario, se genera automáticamente en el backend */}
                 <Grid item xs={12} md={6}>
                   <TextField 
                     fullWidth 
@@ -595,16 +530,50 @@ const PromoAdmin = () => {
                   </TextField>
                 </Grid>
                 <Grid item xs={12} md={6}>
-                  <TextField 
-                    fullWidth 
-                    name="imagen" 
-                    label="URL de imagen" 
-                    value={promoFormData.imagen} 
-                    onChange={handlePromoChange} 
-                    placeholder="https://ejemplo.com/imagen.jpg"
-                    error={imageError}
-                    helperText={imageError ? "URL de imagen no válida" : "Ingresa una URL válida de imagen"}
-                  />
+                  <Button
+                    variant="outlined"
+                    component="label"
+                    fullWidth
+                    startIcon={<ImageIcon />}
+                    sx={{ mb: 1 }}
+                  >
+                    {promoFormData.imagen ? 'Cambiar imagen' : 'Seleccionar imagen'}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      hidden
+                      onChange={async (e) => {
+                        const file = e.target.files[0];
+                        if (!file) return;
+                        // Preview local instantáneo
+                        const localUrl = URL.createObjectURL(file);
+                        setLocalImageUrl(localUrl);
+                        setImagePreview(localUrl);
+                        setImageError(false);
+                        // Subida a Cloudinary
+                        const formData = new FormData();
+                        formData.append('file', file);
+                        try {
+                          const res = await axios.post('http://localhost:3000/adminBackend/upload/image', formData, {
+                            headers: { 'Content-Type': 'multipart/form-data' }
+                          });
+                          setPromoFormData(prev => ({ ...prev, imagen: res.data.url }));
+                          setImagePreview(res.data.url);
+                          setLocalImageUrl(null);
+                          setImageError(false);
+                          showSnackbar('Imagen subida correctamente', 'success');
+                          // Liberar memoria del preview local
+                          URL.revokeObjectURL(localUrl);
+                        // eslint-disable-next-line no-unused-vars
+                        } catch (err) {
+                          setImageError(true);
+                          setLocalImageUrl(null);
+                          showSnackbar('Error al subir la imagen', 'error');
+                        }
+                      }}
+                    />
+                  </Button>
+                  {/* Se removió la visualización de la URL de la imagen */}
                 </Grid>
 
                 {/* Cuarta fila: Descripción */}
@@ -624,7 +593,7 @@ const PromoAdmin = () => {
             </Grid>
 
             {/* Columna derecha - Vista previa de imagen */}
-            {imagePreview && (
+            {(imagePreview || localImageUrl) && (
               <Grid item xs={12} md={4}>
                 <Box sx={{ position: 'sticky', top: 0 }}>
                   <Typography variant="subtitle1" gutterBottom fontWeight="medium">
@@ -633,7 +602,7 @@ const PromoAdmin = () => {
                   <Card elevation={3}>
                     <Box sx={{ position: 'relative', overflow: 'hidden' }}>
                       <img
-                        src={imagePreview}
+                        src={localImageUrl || imagePreview}
                         alt="Vista previa de promoción"
                         onLoad={handleImageLoad}
                         onError={handleImageError}

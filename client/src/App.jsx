@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Outlet  } from 'react-router-dom';
 import { ParallaxProvider } from 'react-scroll-parallax';
-import { useVoiceflow } from './hooks/useVoiceflow';
+{/*  import { useVoiceflow } from './hooks/useVoiceflow'; */} // COMENTADO PARA EVITAR DESPERDICIOS DE CRÉDITOS
 
 // Componentes importados de LOGIN
 import LoginPage from './pages/loginPage.jsx';
@@ -34,6 +34,7 @@ import AdminLayout from "./layouts/AdminLayout";
 function ClientLayout(){
   return(
     <>
+   {/* {useVoiceflow()}  // COMENTADO PARA EVITAR DESPERDICIOS DE CRÉDITOS */} 
     <Navbar />
     <Outlet />
     <Footer />
@@ -50,13 +51,13 @@ function UserLayout(){
 }
 
 function App() {
-  useVoiceflow();
   return (
     <ParallaxProvider>
       <Router>
         <Routes>
 
           {/* Rutas para clientes */}
+
           <Route element={<ClientLayout />}>
             <Route path="/" element={<HomePage />} />
             <Route path="/menu" element={<MenuPage />} />
