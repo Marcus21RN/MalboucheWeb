@@ -19,12 +19,12 @@ export default function LoginPage() {
         password: password,
       });
 
-      const token = res.data.token;
-    
+      const { token, user } = res.data;
       localStorage.setItem('token', token);
-
+      if (user) {
+        localStorage.setItem('userAuth', JSON.stringify(user));
+      }
       const decoded = jwtDecode(token);
-
       if (decoded.rol === 'ADMIN') {
         navigate('/admin/home');
       } else if (decoded.rol === 'EMPLE') {

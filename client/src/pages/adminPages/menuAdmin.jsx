@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 import {
   Box, Typography, Table, TableBody, TableCell,
@@ -35,7 +36,10 @@ const MenuAdmin = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [activeFormTab, setActiveFormTab] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
+  // selectedCategory: solo para filtros globales de búsqueda
   const [selectedCategory, setSelectedCategory] = useState(null);
+  // menuFormCategory: solo para el modal de crear/editar menú
+  const [menuFormCategory, setMenuFormCategory] = useState("");
   const [filterEstado, setFilterEstado] = useState("");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -167,18 +171,17 @@ const MenuAdmin = () => {
         ...menu,
         productos: menu.productos.map(p => p.IDProducto),
       });
-      setSelectedCategory(menu.tipoMenu);
+      setMenuFormCategory(menu.tipoMenu);
     } else {
       setIsEditMode(false);
       setMenuFormData({
-        _id: `MENU${menus.length + 1}`.padStart(7, "0"),
         nombre: "",
         descripcion: "",
         tipoMenu: "",
         estado: "activo",
         productos: [],
       });
-      setSelectedCategory(null);
+      setMenuFormCategory("");
     }
     setOpenMenuForm(true);
     setActiveFormTab(0);
@@ -187,7 +190,7 @@ const MenuAdmin = () => {
   const handleCloseMenuForm = () => {
     setOpenMenuForm(false);
     setMenuFormData({});
-    setSelectedCategory(null);
+    setMenuFormCategory("");
     setProductSearchTerm(""); // Limpiar búsqueda de productos
   };
 
@@ -207,21 +210,23 @@ const MenuAdmin = () => {
 
   // CRUD Menús
   const handleSaveMenu = () => {
-  const action = isEditMode ? 'Update' : 'Create';
-  const title = isEditMode ? 'Confirm Update' : 'Confirm Creation';
-  const message = isEditMode 
-    ? `Are you sure you want to update the menu "${menuFormData.nombre}"?`
-    : `Are you sure you want to create the menu "${menuFormData.nombre}"?`;
+    const action = isEditMode ? 'Update' : 'Create';
+    const title = isEditMode ? 'Confirm Update' : 'Confirm Creation';
+    const message = isEditMode 
+      ? `Are you sure you want to update the menu "${menuFormData.nombre}"?`
+      : `Are you sure you want to create the menu "${menuFormData.nombre}"?`;
 
     showConfirmDialog(title, message, async () => {
       const newMenu = {
-        ...menuFormData,
-        tipoMenu: selectedCategory || "",
+        nombre: menuFormData.nombre,
+        descripcion: menuFormData.descripcion,
+        tipoMenu: menuFormCategory || "",
+        estado: menuFormData.estado,
         productos: menuFormData.productos.map(id => ({ IDProducto: id })),
       };
       try {
         if (isEditMode) {
-          await axios.put(`http://localhost:3000/adminBackend/menus/${newMenu._id}`, newMenu);
+          await axios.put(`http://localhost:3000/adminBackend/menus/${selectedMenu._id}`, newMenu);
         } else {
           await axios.post("http://localhost:3000/adminBackend/menus", newMenu);
         }
@@ -1059,16 +1064,6 @@ const MenuAdmin = () => {
                 <Box sx={{ display: "flex", gap: 1}}>
                   <TextField 
                     fullWidth 
-                    name="_id" 
-                    label="ID del menú" 
-                    value={menuFormData._id} 
-                    onChange={handleMenuChange} 
-                    disabled={isEditMode}
-                    required
-                    sx={{ flex: 1 }}
-                  />
-                  <TextField 
-                    fullWidth 
                     name="nombre" 
                     label="Menu Name" 
                     value={menuFormData.nombre} 
@@ -1079,6 +1074,34 @@ const MenuAdmin = () => {
                   <TextField 
                     fullWidth 
                     select 
+                    name="tipoMenu" 
+                    label="Menu Type" 
+                    value={menuFormCategory || ""}
+                    onChange={e => {
+                      setMenuFormCategory(e.target.value);
+                      setMenuFormData(prev => ({ ...prev, tipoMenu: e.target.value, productos: [] }));
+                    }}
+                    required
+                    sx={{ flex: 1 }}
+                  >
+                    <MenuItem value="">
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <FilterAlt />
+                        Select Type
+                      </Box>
+                    </MenuItem>
+                    {categoriasProductos.map((cat) => (
+                      <MenuItem key={cat.value} value={cat.value}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          {cat.icon}
+                          {cat.label}
+                        </Box>
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                  <TextField 
+                    fullWidth 
+                    select 
                     name="estado" 
                     label="Status" 
                     value={menuFormData.estado} 
@@ -1086,14 +1109,14 @@ const MenuAdmin = () => {
                     required
                     sx={{ flex: 1 }}
                   >
-                  <MenuItem value="activo">Active</MenuItem>
-                  <MenuItem value="inactivo">Inactive</MenuItem>
-                </TextField>
+                    <MenuItem value="activo">Active</MenuItem>
+                    <MenuItem value="inactivo">Inactive</MenuItem>
+                  </TextField>
                 </Box>
               </Grid>
               <Grid item xs={12} md={6}>
                 <Box sx={{ width: '100%' }}>
-                 
+                  {/* Espacio para futuras extensiones */}
                 </Box>
               </Grid>
               <Box sx={{ width: '100%' }}>
@@ -1122,19 +1145,26 @@ const MenuAdmin = () => {
               <Grid item key={cat.value}>
                 <Chip
                   label={cat.label}
-                  onClick={() => setSelectedCategory(cat.value)}
-                  color={selectedCategory === cat.value ? "primary" : "default"}
-                  variant={selectedCategory === cat.value ? "filled" : "outlined"}
                   icon={cat.icon}
+                  color={menuFormCategory === cat.value ? "primary" : "default"}
+                  variant={menuFormCategory === cat.value ? "filled" : "outlined"}
+                  clickable={menuFormCategory === cat.value}
+                  onClick={menuFormCategory === cat.value ? undefined : () => {}}
+                  disabled={menuFormCategory !== cat.value}
+                  sx={{
+                    opacity: menuFormCategory === cat.value ? 1 : 0.5,
+                    fontWeight: menuFormCategory === cat.value ? 'bold' : 'normal',
+                    pointerEvents: menuFormCategory === cat.value ? 'auto' : 'none',
+                  }}
                 />
               </Grid>
             ))}
           </Grid>
 
-          {selectedCategory && (
+          {menuFormCategory && (
             <>
               <Typography variant="subtitle1" gutterBottom sx={{ mb: 2 }}>
-                Products available in <strong>{selectedCategory}</strong>:
+                Products available in <strong>{menuFormCategory}</strong>:
               </Typography>
 
               {/* Buscador de productos */}
@@ -1155,17 +1185,16 @@ const MenuAdmin = () => {
                     ),
                   }}
                 />
-                
                 {/* Contador de productos encontrados */}
                 <Typography variant="caption" color="text.secondary">
-                  {productsByCategory.filter(p => p.estado === "activo").length} products found
+                  {productos.filter(p => p.categoria === menuFormCategory && p.estado === "activo" && (p.nombre?.toLowerCase().includes(productSearchTerm.toLowerCase()) || p.descripcion?.toLowerCase().includes(productSearchTerm.toLowerCase()))).length} products found
                 </Typography>
               </Box>
 
               <Box sx={{ maxHeight: 250, overflowY: 'auto', mb: 2 }}>
                 <FormGroup>
-                  {productsByCategory
-                    .filter(p => p.estado === "activo")
+                  {productos
+                    .filter(p => p.categoria === menuFormCategory && p.estado === "activo" && (p.nombre?.toLowerCase().includes(productSearchTerm.toLowerCase()) || p.descripcion?.toLowerCase().includes(productSearchTerm.toLowerCase())))
                     .map(prod => (
                       <FormControlLabel
                         key={prod._id}
@@ -1179,15 +1208,14 @@ const MenuAdmin = () => {
                       />
                     ))}
                 </FormGroup>
-                
                 {/* Mensaje cuando no hay productos */}
-                {productsByCategory.filter(p => p.estado === "activo").length === 0 && (
+                {productos.filter(p => p.categoria === menuFormCategory && p.estado === "activo" && (p.nombre?.toLowerCase().includes(productSearchTerm.toLowerCase()) || p.descripcion?.toLowerCase().includes(productSearchTerm.toLowerCase()))).length === 0 && (
                   <Box sx={{ textAlign: 'center', py: 3 }}>
                     <Restaurant sx={{ fontSize: 40, color: 'grey.400', mb: 1 }} />
                     <Typography variant="body2" color="text.secondary">
                       {productSearchTerm 
                         ? `No results found for "${productSearchTerm}"`
-                        : `No active products found in the "${selectedCategory}" category`
+                        : `No active products found in the "${menuFormCategory}" category`
                       }
                     </Typography>
                   </Box>

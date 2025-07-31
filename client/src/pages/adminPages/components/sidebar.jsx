@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 import {
   List,
   ListItem,
@@ -13,6 +15,7 @@ import {
   Box,
   Avatar,
   Chip,
+  Dialog,
 } from "@mui/material";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
@@ -35,21 +38,81 @@ import {
 } from "@mui/icons-material";
 
 const Sidebar = ({ collapsed, setCollapsed }) => {
+  // Configurar interceptor para token solo una vez
+  useEffect(() => {
+    const interceptor = axios.interceptors.request.use(
+      (config) => {
+        const token = localStorage.getItem("token");
+        if (token) {
+          config.headers["Authorization"] = `Bearer ${token}`;
+        }
+        return config;
+      },
+      (error) => Promise.reject(error)
+    );
+    // Cleanup para evitar múltiples interceptores
+    return () => axios.interceptors.request.eject(interceptor);
+  }, []);
   const navigate = useNavigate();
   const location = useLocation();
   const [activeItem, setActiveItem] = useState(location.pathname);
   const [profileExpanded, setProfileExpanded] = useState(false);
 
-  // Información del usuario logueado (puedes obtenerla del contexto, localStorage, etc.)
-  const [userInfo] = useState({
-    _id: "ADMIN001",
-    nombre: "Diana",
-    primerApellido: "Rodríguez",
-    segundoApellido: "García",
-    correo: "diana.admin@malbouche.com",
-    IDRol: "ADMIN",
-    estado: "activo"
+  // Información del usuario logueado desde localStorage
+  const [userInfo, setUserInfo] = useState({
+    _id: "",
+    nombre: "",
+    primerApellido: "",
+    segundoApellido: "",
+    correo: "",
+    IDRol: "",
+    estado: ""
   });
+
+  useEffect(() => {
+    // 1. Intentar obtener userAuth de localStorage
+    const userData = localStorage.getItem('userAuth');
+    if (userData) {
+      try {
+        const parsed = JSON.parse(userData);
+        setUserInfo(parsed);
+        return;
+      } catch {
+        // Si hay error, continuar para intentar con el token
+      }
+    }
+    // 2. Si no hay userAuth, intentar obtener correo del token y consultar backend
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        const correo = decoded.correo || decoded.email || decoded.user || decoded.username;
+        if (correo) {
+          axios.get(`http://localhost:3000/authJWT/auth/userinfo?correo=${encodeURIComponent(correo)}`)
+            .then(res => {
+              // Si la respuesta tiene id pero no _id, mapea id a _id
+              const userData = res.data;
+              if (userData.id && !userData._id) {
+                userData._id = userData.id;
+              }
+              setUserInfo(userData);
+              localStorage.setItem('userAuth', JSON.stringify(userData));
+            })
+            .catch(() => {});
+        }
+      } catch {
+        // Si hay error, no hacer nada
+      }
+    }
+  }, []);
+
+  // Modal para cambiar contraseña
+  const [openPasswordModal, setOpenPasswordModal] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [passwordLoading, setPasswordLoading] = useState(false);
+  const [passwordError, setPasswordError] = useState("");
+  const [passwordSuccess, setPasswordSuccess] = useState("");
 
   const menuItems = [
     { text: "Dashboard", icon: <DashboardIcon />, path: "/admin/home" },
@@ -238,7 +301,7 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
                     fontWeight: 'bold'
                   }}
                 >
-                  {userInfo.nombre.charAt(0)}{userInfo.primerApellido.charAt(0)}
+                  {(userInfo.nombre ? userInfo.nombre.charAt(0) : "U")}{(userInfo.primerApellido ? userInfo.primerApellido.charAt(0) : "")}
                 </Avatar>
               </ListItemIcon>
               {!collapsed && (
@@ -290,7 +353,7 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
                   mr: 2
                 }}
               >
-                {userInfo.nombre.charAt(0)}{userInfo.primerApellido.charAt(0)}
+                {(userInfo.nombre ? userInfo.nombre.charAt(0) : "U")}{(userInfo.primerApellido ? userInfo.primerApellido.charAt(0) : "")}
               </Avatar>
               <Box>
                 <Typography 
@@ -368,7 +431,7 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
                   }}
                 />
                 <Chip
-                  label={userInfo.estado.toUpperCase()}
+                  label={userInfo.estado?.toUpperCase()}
                   size="small"
                   color={getStatusColor(userInfo.estado)}
                   sx={{
@@ -378,7 +441,99 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
                   }}
                 />
               </Box>
+
+              {/* Cambiar contraseña */}
+              <Box sx={{ mt: 2, display: 'flex', justifyContent: 'center' }}>
+                <Chip
+                  label="Cambiar contraseña"
+                  color="primary"
+                  variant="outlined"
+                  onClick={() => setOpenPasswordModal(true)}
+                  sx={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 'bold', cursor: 'pointer' }}
+                />
+              </Box>
             </Box>
+      {/* Modal Cambiar Contraseña */}
+      <Dialog open={openPasswordModal} onClose={() => {
+        setOpenPasswordModal(false);
+        setCurrentPassword("");
+        setNewPassword("");
+        setPasswordError("");
+        setPasswordSuccess("");
+      }}>
+        <Box sx={{ p: 3, minWidth: 350 }}>
+          <Typography variant="h6" fontWeight="bold" color="#660152" mb={2}>
+            Cambiar contraseña
+          </Typography>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <input
+              type="password"
+              placeholder="Contraseña actual"
+              value={currentPassword}
+              onChange={e => setCurrentPassword(e.target.value)}
+              style={{ padding: 10, borderRadius: 6, border: '1px solid #ccc', fontSize: 16 }}
+            />
+            <input
+              type="password"
+              placeholder="Nueva contraseña"
+              value={newPassword}
+              onChange={e => setNewPassword(e.target.value)}
+              style={{ padding: 10, borderRadius: 6, border: '1px solid #ccc', fontSize: 16 }}
+            />
+            {passwordError && <Typography color="error">{passwordError}</Typography>}
+            {passwordSuccess && <Typography color="success.main">{passwordSuccess}</Typography>}
+            <Box sx={{ display: 'flex', gap: 2, mt: 1, justifyContent: 'flex-end' }}>
+              <button
+                onClick={() => {
+                  setOpenPasswordModal(false);
+                  setCurrentPassword("");
+                  setNewPassword("");
+                  setPasswordError("");
+                  setPasswordSuccess("");
+                }}
+                style={{ padding: '8px 18px', borderRadius: 6, border: '1px solid #660152', background: 'white', color: '#660152', fontWeight: 'bold', cursor: 'pointer' }}
+                disabled={passwordLoading}
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={async () => {
+                  setPasswordError("");
+                  setPasswordSuccess("");
+                  if (!currentPassword || !newPassword) {
+                    setPasswordError("Completa ambos campos.");
+                    return;
+                  }
+                  setPasswordLoading(true);
+                  try {
+                    // PUT al backend para cambiar contraseña
+                    await axios.put(
+                      `http://localhost:3000/adminBackend/empleados/${userInfo._id}`,
+                      {
+                        password: newPassword,
+                        confirmPassword: currentPassword
+                      }
+                    );
+                    setPasswordSuccess("Contraseña cambiada exitosamente.");
+                    setCurrentPassword("");
+                    setNewPassword("");
+                  } catch (err) {
+                    setPasswordError(
+                      err?.response?.data?.error || "Error al cambiar la contraseña."
+                    );
+                  } finally {
+                    setPasswordLoading(false);
+                  }
+                }}
+                style={{ padding: '8px 18px', borderRadius: 6, border: 'none', background: '#660152', color: 'white', fontWeight: 'bold', cursor: 'pointer' }}
+                disabled={passwordLoading}
+              >
+                Guardar
+              </button>
+            </Box>
+          </Box>
+        </Box>
+      </Dialog>
           </Box>
         </Collapse>
       </div>

@@ -48,7 +48,11 @@ export const createMenu = async (req, res) => {
     if (productosExist.length !== productosIds.length) {
       return res.status(400).json({ message: 'Uno o más productos no existen' });
     }
-    const nuevoMenu = new Menu(req.body);
+    // Generar el _id automáticamente como MENU{count+1}
+    const count = await Menu.countDocuments();
+    const nextId = `MENU${count + 1}`;
+    const menuData = { ...req.body, _id: nextId };
+    const nuevoMenu = new Menu(menuData);
     await nuevoMenu.save();
     res.status(201).json(nuevoMenu);
   } catch (error) {

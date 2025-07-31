@@ -3,7 +3,11 @@ import mongoose from "mongoose";
 const MenuSchema = new mongoose.Schema({
   _id: String,
   nombre: String,
-  tipoMenu: String,
+  descripcion: String,
+  tipoMenu: {
+    type: String,
+    enum: ["bebidas", "cocteles", "alimentos", "snacks"]
+  },
   estado: {
     type: String,
     enum: ["activo", "inactivo"]
