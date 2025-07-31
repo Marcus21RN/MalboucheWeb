@@ -11,6 +11,7 @@ import menuRoutes from './routes/menu.js';
 import eventRoutes from './routes/event.js';
 import promocionRoutes from './routes/promocion.js';
 import uploadRoutes from './routes/upload.js';
+import emailRoutes from './routes/email.js';
 
 
 
@@ -21,6 +22,7 @@ router.use('/menus', menuRoutes);
 router.use('/events', eventRoutes);
 router.use('/promos', promocionRoutes);
 router.use('/upload', uploadRoutes);
+router.use('/email', emailRoutes);
 
 
 export default router;
