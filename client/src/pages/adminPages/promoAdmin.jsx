@@ -27,8 +27,9 @@ import {
   Alert
 } from "@mui/material";
 import {
-  Edit as EditIcon,
-  Delete as DeleteIcon,
+  Cancel as CancelIcon,
+  EditOutlined as EditIcon,
+  DeleteOutline as DeleteIcon,
   Add as AddIcon,
   Close as CloseIcon,
   LocalOffer as PromoIcon,
@@ -244,35 +245,34 @@ const PromoAdmin = () => {
         </Box>
         <Box sx={{ display: 'flex', flexDirection: "row", alignItems: 'center', justifyContent: 'space-between'}}>
             <Box sx={{  display: 'flex', flexDirection: 'row', gap: 2,  }}>
-
-                <FormControl size="small" sx={{ width: 250, backgroundColor: 'white' }}>
-                    <InputLabel id="filter-label">Filtrar por estado</InputLabel>
-                        <Select
-                            labelId="filter-label"
-                            id="filter"
-                            value={filter}
-                            label="Filtrar por estado"
-                            onChange={handleFilterChange}
-                            size="small"
-                        >
-                            <MenuItem value="">Todas las promociones</MenuItem>
-                            <MenuItem value="activo">Activas</MenuItem>
-                            <MenuItem value="inactivo">Inactivas</MenuItem>
-                        </Select>
+              <Button 
+                variant="contained" 
+                startIcon={<AddIcon />}
+                onClick={() => handleOpenPromoForm()}
+                sx={{ 
+                  backgroundColor: "#660152", 
+                  '&:hover': { backgroundColor: "#520040" },
+                  alignSelf: 'flex-start'
+                }}
+              >
+                Crear Promoción
+              </Button>  
+              <FormControl size="small" sx={{ width: 250, backgroundColor: 'white' }}>
+                <InputLabel id="filter-label">Filtrar por estado</InputLabel>
+                  <Select
+                    labelId="filter-label"
+                    id="filter"
+                    value={filter}
+                    label="Filtrar por estado"
+                    onChange={handleFilterChange}
+                    size="small"
+                  >
+                    <MenuItem value="">Todas las promociones</MenuItem>
+                    <MenuItem value="activo">Activas</MenuItem>
+                    <MenuItem value="inactivo">Inactivas</MenuItem>
+                  </Select>
                 </FormControl>
 
-                <Button 
-                    variant="contained" 
-                    startIcon={<AddIcon />}
-                    onClick={() => handleOpenPromoForm()}
-                    sx={{ 
-                        backgroundColor: "#660152", 
-                        '&:hover': { backgroundColor: "#520040" },
-                        alignSelf: 'flex-start'
-                    }}
-                    >
-                    Crear Promoción
-                </Button>  
             </Box>
 
       {/* Estadísticas rápidas */}
@@ -476,67 +476,69 @@ const PromoAdmin = () => {
             <Grid item xs={12} md={imagePreview ? 8 : 12}>
               <Grid container spacing={2}>
                 {/* Primera fila: ID y Nombre */}
-            {/* El campo ID se elimina del formulario, se genera automáticamente en el backend */}
-                <Grid item xs={12} md={6}>
-                  <TextField 
-                    fullWidth 
-                    name="nombre" 
-                    label="Nombre de promoción" 
-                    value={promoFormData.nombre} 
-                    onChange={handlePromoChange} 
-                    required
-                  />
-                </Grid>
-
+                {/* El campo ID se elimina del formulario, se genera automáticamente en el backend */}
+                <Box sx={{ width: '100%' }}>
+                  <Grid item xs={12} md={6}>
+                    <TextField 
+                      fullWidth 
+                      name="nombre" 
+                      label="Nombre de promoción" 
+                      value={promoFormData.nombre} 
+                      onChange={handlePromoChange} 
+                      required
+                    />
+                  </Grid>
+                </Box>
                 {/* Segunda fila: Fechas */}
-                <Grid item xs={12} md={6}>
-                  <TextField 
-                    fullWidth 
-                    name="fechaInicio" 
-                    label="Fecha de inicio" 
-                    type="date"
-                    value={promoFormData.fechaInicio} 
-                    onChange={handlePromoChange} 
-                    InputLabelProps={{ shrink: true }}
-                    required
-                  />
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <TextField 
-                    fullWidth 
-                    name="fechaFin" 
-                    label="Fecha de fin" 
-                    type="date"
-                    value={promoFormData.fechaFin} 
-                    onChange={handlePromoChange} 
-                    InputLabelProps={{ shrink: true }}
-                    required
-                  />
-                </Grid>
+                  <Box sx={{display: 'flex', flexDirection: 'row', gap: 2, width: '100%'}}>
+                    <Box sx={{ display: 'flex', gap: 2, width: '100%' }}>
+                       <TextField 
+                      fullWidth 
+                      name="fechaInicio" 
+                      label="Fecha de inicio" 
+                      type="date"
+                      value={promoFormData.fechaInicio} 
+                      onChange={handlePromoChange} 
+                      InputLabelProps={{ shrink: true }}
+                      required
+                      
+                    />
+                    <TextField 
+                      fullWidth 
+                      name="fechaFin" 
+                      label="Fecha de fin" 
+                      type="date"
+                      value={promoFormData.fechaFin} 
+                      onChange={handlePromoChange} 
+                      InputLabelProps={{ shrink: true }}
+                      required
+                    />
+                    </Box>
+                  </Box>
+                
 
                 {/* Tercera fila: Estado y URL de imagen */}
-                <Grid item xs={12} md={6}>
-                  <TextField 
-                    fullWidth 
-                    select 
-                    name="estado" 
-                    label="Estado" 
-                    value={promoFormData.estado} 
-                    onChange={handlePromoChange}
-                    required
-                  >
-                    <MenuItem value="activo">Activo</MenuItem>
-                    <MenuItem value="inactivo">Inactivo</MenuItem>
-                  </TextField>
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <Button
-                    variant="outlined"
-                    component="label"
-                    fullWidth
-                    startIcon={<ImageIcon />}
-                    sx={{ mb: 1 }}
-                  >
+                <Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', gap: 2 }}>
+                  <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2, width: '100%' }}>
+                    <TextField 
+                      fullWidth 
+                      select 
+                      name="estado" 
+                      label="Estado" 
+                      value={promoFormData.estado} 
+                      onChange={handlePromoChange}
+                      required
+                    >
+                      <MenuItem value="activo">Activo</MenuItem>
+                      <MenuItem value="inactivo">Inactivo</MenuItem>
+                    </TextField>
+                    <Button
+                      variant="outlined"
+                      component="label"
+                      fullWidth
+                      startIcon={<ImageIcon />}
+                      sx={{ border: '1px solid #c4c4c4', backgroundColor: '#f5f5f5', color: '#660152', '&:hover': { backgroundColor: '#e0e0e0' } }}
+                    >
                     {promoFormData.imagen ? 'Cambiar imagen' : 'Seleccionar imagen'}
                     <input
                       type="file"
@@ -572,23 +574,26 @@ const PromoAdmin = () => {
                         }
                       }}
                     />
-                  </Button>
-                  {/* Se removió la visualización de la URL de la imagen */}
-                </Grid>
-
+                    </Button>
+                  </Box>
+                </Box>
+                
                 {/* Cuarta fila: Descripción */}
-                <Grid item xs={12}>
-                  <TextField 
-                    fullWidth 
-                    name="descripcion" 
-                    label="Descripción" 
-                    multiline 
-                    rows={3} 
-                    value={promoFormData.descripcion} 
-                    onChange={handlePromoChange} 
-                    required
-                  />
-                </Grid>
+                <Box sx={{ width: '100%' }}>
+                  <Grid item xs={12}>
+                    <TextField 
+                      fullWidth 
+                      name="descripcion" 
+                      label="Descripción" 
+                      multiline 
+                      rows={3} 
+                      value={promoFormData.descripcion} 
+                      onChange={handlePromoChange} 
+                      required
+                    />
+                  </Grid>
+                </Box>
+
               </Grid>
             </Grid>
 
@@ -608,7 +613,7 @@ const PromoAdmin = () => {
                         onError={handleImageError}
                         style={{
                           width: '100%',
-                          height: '200px',
+                          height: '300px',
                           objectFit: 'cover',
                           display: 'block'
                         }}
@@ -654,8 +659,8 @@ const PromoAdmin = () => {
                   <ImageIcon sx={{ fontSize: 48, color: '#ccc', mb: 1 }} />
                   <Typography variant="body1" color="text.secondary">
                     {imageError ? 
-                      "⚠️ No se pudo cargar la imagen. Verifica la URL." :
-                      "🖼️ Ingresa una URL válida para ver la vista previa"
+                      "No se pudo cargar la imagen. Verifica la URL." :
+                      "Ingresa una URL válida para ver la vista previa"
                     }
                   </Typography>
                   <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
@@ -666,9 +671,9 @@ const PromoAdmin = () => {
             )}
           </Grid>
 
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 4 }}>
+          <Box sx={{ display: 'flex', justifyContent:'flex-end', gap: 1, mt: 4 }}>
             <Button 
-              variant="outlined" 
+              startIcon={<CancelIcon color="error" />} color="inherit" sx={{ border: '1px solid #660152', backgroundColor: 'transparent', '&:hover': { backgroundColor: '#f5f5f5' } }} 
               onClick={handleClosePromoForm}
             >
               Cancelar
