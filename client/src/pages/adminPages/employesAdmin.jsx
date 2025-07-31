@@ -110,6 +110,8 @@ export default function EmployesAdmin() {
     setOpenSaveDialog(true);
   };
 
+  // ...existing code...
+
   const handleConfirmSave = async () => {
     if (!confirmPassword) {
       setConfirmPasswordError(true);
@@ -121,8 +123,14 @@ export default function EmployesAdmin() {
       ? `http://localhost:3000/adminBackend/empleados/${formData._id}`
       : "http://localhost:3000/adminBackend/empleados";
 
+    // Generar la contraseña solo si es registro nuevo
+    let passwordGenerada = formData.password;
+    if (!modoEdicion) {
+      passwordGenerada = `${formData.nombre}${formData.primerApellido.charAt(0)}123`;
+    }
+
     // Enviar la contraseña de confirmación al backend
-    const payload = { ...formData, confirmPassword };
+    const payload = { ...formData, password: passwordGenerada, confirmPassword };
 
     try {
       if (modoEdicion) {
@@ -131,6 +139,16 @@ export default function EmployesAdmin() {
       } else {
         await axios.post(url, payload);
         showSnackbar("Empleado registrado", "success");
+
+        // --- AQUÍ SE ENVÍA EL CORREO DE BIENVENIDA ---
+        await axios.post("http://localhost:3000/adminBackend/email/bienvenida-empleado", {
+          toEmail: formData.correo,
+          nombre: formData.nombre,
+          primerApellido: formData.primerApellido,
+          password: passwordGenerada,
+          IDRol: formData.IDRol
+        });
+        // --- FIN ENVÍO CORREO ---
       }
       fetchEmpleados();
       resetForm();
