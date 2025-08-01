@@ -36,6 +36,7 @@ import {
   Email as EmailIcon,
   Badge as BadgeIcon,
 } from "@mui/icons-material";
+import logo from "../../../assets/imagenes/logui.png";
 
 const Sidebar = ({ collapsed, setCollapsed }) => {
   // Configurar interceptor para token solo una vez
@@ -150,11 +151,11 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
   const getRoleLabel = (role) => {
     switch (role) {
       case "ADMIN":
-        return "Administrador";
+        return "Administrator";
       case "EMPLE":
-        return "Empleado";
+        return "Employee";
       default:
-        return "Usuario";
+        return "User";
     }
   };
 
@@ -172,10 +173,11 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
       <div className="flex items-center justify-between p-5 text-xl font-bold">
         {!collapsed && (
           <div className="flex items-center">
-            <span className="bg-[#660152] w-8 h-8 rounded-md mr-3"></span>
-            <Typography 
-              variant="h6" 
-              sx={{ 
+            <img src={logo} alt="Logo" className="w-12 h-12 rounded-md mr-2" />
+
+            <Typography
+              variant="h6"
+              sx={{
                 fontFamily: 'Montserrat, sans-serif',
                 fontWeight: 'bold',
                 color: '#660152'
@@ -189,6 +191,8 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
           {collapsed ? <MenuOpenIcon /> : <MenuCollapseIcon />}
         </IconButton>
       </div>
+      {/* Divider */}
+      <Divider sx={{ backgroundColor: "#f5f5f5", width: "90%", margin: "0 auto" }} />
 
       {/* Menú Principal */}
       <List className="mt-2 flex-1">
@@ -264,21 +268,20 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
       </List>
 
       {/* Sección de Profile */}
-      <div className="border-t border-gray-200">
-        <Tooltip title={collapsed ? "Profile" : ""} placement="right">
-          <ListItem disablePadding>
+      <div className="">
+        <Tooltip title={collapsed ? "Profile" : ""} placement="right" >
+          <ListItem disablePadding >
             <ListItemButton
               onClick={handleProfileClick}
               className="!py-3 !px-6"
               selected={activeItem === "/admin/profile"}
               sx={{
                 backgroundColor:
-                  activeItem === "/admin/profile" ? "#660152" : "inherit",
-                borderRadius: "10px",
+                  activeItem === "/admin/profile" ? "rgba(102, 1, 82, 0.8)" : "rgba(247, 210, 240, 0.3)",
                 "&:hover": {
                   backgroundColor:
                     activeItem === "/admin/profile"
-                      ? "#660152"
+                      ? "rgba(102, 1, 82, 0.8)"
                       : "rgba(247, 210, 240, 0.3)",
                 },
               }}
@@ -311,7 +314,7 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
                     primaryTypographyProps={{
                       sx: {
                         color:
-                          activeItem === "/admin/profile" ? "white" : "#6b7280",
+                          activeItem === "/admin/profile" ? "#660152" : "#6b7280",
                         fontWeight:
                           activeItem === "/admin/profile"
                             ? "medium"
@@ -323,7 +326,7 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
                   <IconButton
                     size="small"
                     sx={{
-                      color: activeItem === "/admin/profile" ? "white" : "#6b7280",
+                      color: activeItem === "/admin/profile" ? "#660152" : "#6b7280",
                     }}
                   >
                     {profileExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
@@ -408,7 +411,7 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
                     fontSize: '0.75rem'
                   }}
                 >
-                  ID: {userInfo._id}
+                  ID: {userInfo._id || userInfo.id || "Not available"}
                 </Typography>
               </Box>
 
@@ -431,7 +434,7 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
                   }}
                 />
                 <Chip
-                  label={userInfo.estado?.toUpperCase()}
+                  label={userInfo.estado === "activo" ? "Active" : userInfo.estado === "inactivo" ? "Inactive" : (userInfo.estado || "Unknown").toUpperCase()}
                   size="small"
                   color={getStatusColor(userInfo.estado)}
                   sx={{
@@ -445,95 +448,95 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
               {/* Cambiar contraseña */}
               <Box sx={{ mt: 2, display: 'flex', justifyContent: 'center' }}>
                 <Chip
-                  label="Cambiar contraseña"
-                  color="primary"
+                  label="Change Password"
+                  
                   variant="outlined"
                   onClick={() => setOpenPasswordModal(true)}
-                  sx={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 'bold', cursor: 'pointer' }}
+                  sx={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 'bold', cursor: 'pointer', borderColor: '#660152', color: '#660152', '&:hover': { backgroundColor: 'rgba(102, 1, 82, 0.1)' } }}
                 />
               </Box>
             </Box>
-      {/* Modal Cambiar Contraseña */}
-      <Dialog open={openPasswordModal} onClose={() => {
-        setOpenPasswordModal(false);
-        setCurrentPassword("");
-        setNewPassword("");
-        setPasswordError("");
-        setPasswordSuccess("");
-      }}>
-        <Box sx={{ p: 3, minWidth: 350 }}>
-          <Typography variant="h6" fontWeight="bold" color="#660152" mb={2}>
-            Cambiar contraseña
-          </Typography>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            <input
-              type="password"
-              placeholder="Contraseña actual"
-              value={currentPassword}
-              onChange={e => setCurrentPassword(e.target.value)}
-              style={{ padding: 10, borderRadius: 6, border: '1px solid #ccc', fontSize: 16 }}
-            />
-            <input
-              type="password"
-              placeholder="Nueva contraseña"
-              value={newPassword}
-              onChange={e => setNewPassword(e.target.value)}
-              style={{ padding: 10, borderRadius: 6, border: '1px solid #ccc', fontSize: 16 }}
-            />
-            {passwordError && <Typography color="error">{passwordError}</Typography>}
-            {passwordSuccess && <Typography color="success.main">{passwordSuccess}</Typography>}
-            <Box sx={{ display: 'flex', gap: 2, mt: 1, justifyContent: 'flex-end' }}>
-              <button
-                onClick={() => {
-                  setOpenPasswordModal(false);
-                  setCurrentPassword("");
-                  setNewPassword("");
-                  setPasswordError("");
-                  setPasswordSuccess("");
-                }}
-                style={{ padding: '8px 18px', borderRadius: 6, border: '1px solid #660152', background: 'white', color: '#660152', fontWeight: 'bold', cursor: 'pointer' }}
-                disabled={passwordLoading}
-              >
-                Cancelar
-              </button>
-              <button
-                onClick={async () => {
-                  setPasswordError("");
-                  setPasswordSuccess("");
-                  if (!currentPassword || !newPassword) {
-                    setPasswordError("Completa ambos campos.");
-                    return;
-                  }
-                  setPasswordLoading(true);
-                  try {
-                    // PUT al backend para cambiar contraseña
-                    await axios.put(
-                      `http://localhost:3000/adminBackend/empleados/${userInfo._id}`,
-                      {
-                        password: newPassword,
-                        confirmPassword: currentPassword
-                      }
-                    );
-                    setPasswordSuccess("Contraseña cambiada exitosamente.");
-                    setCurrentPassword("");
-                    setNewPassword("");
-                  } catch (err) {
-                    setPasswordError(
-                      err?.response?.data?.error || "Error al cambiar la contraseña."
-                    );
-                  } finally {
-                    setPasswordLoading(false);
-                  }
-                }}
-                style={{ padding: '8px 18px', borderRadius: 6, border: 'none', background: '#660152', color: 'white', fontWeight: 'bold', cursor: 'pointer' }}
-                disabled={passwordLoading}
-              >
-                Guardar
-              </button>
-            </Box>
-          </Box>
-        </Box>
-      </Dialog>
+            {/* Modal Cambiar Contraseña */}
+            <Dialog open={openPasswordModal} onClose={() => {
+              setOpenPasswordModal(false);
+              setCurrentPassword("");
+              setNewPassword("");
+              setPasswordError("");
+              setPasswordSuccess("");
+            }}>
+              <Box sx={{ p: 3, minWidth: 350 }}>
+                <Typography variant="h6" fontWeight="bold" color="#660152" mb={2}>
+                  Change Password
+                </Typography>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  <input
+                    type="password"
+                    placeholder="Current Password"
+                    value={currentPassword}
+                    onChange={e => setCurrentPassword(e.target.value)}
+                    style={{ padding: 10, borderRadius: 6, border: '1px solid #ccc', fontSize: 16 }}
+                  />
+                  <input
+                    type="password"
+                    placeholder="New Password"
+                    value={newPassword}
+                    onChange={e => setNewPassword(e.target.value)}
+                    style={{ padding: 10, borderRadius: 6, border: '1px solid #ccc', fontSize: 16 }}
+                  />
+                  {passwordError && <Typography color="error">{passwordError}</Typography>}
+                  {passwordSuccess && <Typography color="success.main">{passwordSuccess}</Typography>}
+                  <Box sx={{ display: 'flex', gap: 2, mt: 1, justifyContent: 'flex-end' }}>
+                    <button
+                      onClick={() => {
+                        setOpenPasswordModal(false);
+                        setCurrentPassword("");
+                        setNewPassword("");
+                        setPasswordError("");
+                        setPasswordSuccess("");
+                      }}
+                      style={{ padding: '8px 18px', borderRadius: 6, border: '1px solid #660152', background: 'white', color: '#660152', fontWeight: 'bold', cursor: 'pointer' }}
+                      disabled={passwordLoading}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={async () => {
+                        setPasswordError("");
+                        setPasswordSuccess("");
+                        if (!currentPassword || !newPassword) {
+                          setPasswordError("Completa ambos campos.");
+                          return;
+                        }
+                        setPasswordLoading(true);
+                        try {
+                          // PUT al backend para cambiar contraseña
+                          await axios.put(
+                            `http://localhost:3000/adminBackend/empleados/${userInfo._id}`,
+                            {
+                              password: newPassword,
+                              confirmPassword: currentPassword
+                            }
+                          );
+                          setPasswordSuccess("Password changed successfully.");
+                          setCurrentPassword("");
+                          setNewPassword("");
+                        } catch (err) {
+                          setPasswordError(
+                            err?.response?.data?.error || "Error changing password."
+                          );
+                        } finally {
+                          setPasswordLoading(false);
+                        }
+                      }}
+                      style={{ padding: '8px 18px', borderRadius: 6, border: 'none', background: '#660152', color: 'white', fontWeight: 'bold', cursor: 'pointer' }}
+                      disabled={passwordLoading}
+                    >
+                      Save
+                    </button>
+                  </Box>
+                </Box>
+              </Box>
+            </Dialog>
           </Box>
         </Collapse>
       </div>
