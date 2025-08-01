@@ -70,8 +70,8 @@ export default function Navbar() {
                 className={`
                   transition duration-200 px-2 py-1
                   ${link.special 
-                    ? "px-4 py-2 mx-4 border-white font-[oswald] border-2 text-white font-normal tracking-widest hover:bg-[#660154] hover:border-[#660154] hover:text-[#000000]" 
-                    : "hover:text-[#b76ba3] font-[montserrat] text-white font-semibold text-lg tracking-widest"
+                    ? "px-4 py-2 mx-4 border-white font-[oswald] border-2 text-white font-normal tracking-widest hover:bg-[#fff] hover:border-[#fff] hover:text-[#660154]" 
+                    : "hover:text-[#b76ba3] font-[montserrat] text-amber-50 font-semibold text-lg tracking-widest"
                   }
                 `}
               >

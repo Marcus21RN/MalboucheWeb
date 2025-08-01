@@ -96,7 +96,7 @@ useEffect(() => {
       <div className="min-h-screen bg-[#000000] ">
 
       {/* === BANNER PRINCIPAL === */}
-        <div className="relative w-full h-[570px] overflow-hidden">
+        <div className="relative w-full h-[570px] overflow-hidden opacity-70">
           {/* Imagen Parallax */}
           <Parallax speed={-20}>
             <img
@@ -117,7 +117,7 @@ useEffect(() => {
             </div>
             <button
               onClick={() => handleNavigation("/reservations")}
-              className="px-8 py-3 text-white font-['montserrat'] border-1 hover:border-[#b76ba3] transition-colors duration-300 transform hover:scale-105"
+              className="px-8 py-3 text-white font-['montserrat'] border-1 hover:border-[#b76ba3] transition-colors duration-300 transform hover:scale-105 cursor-pointer"
             >
               BOOK NOW
             </button>
@@ -208,7 +208,7 @@ useEffect(() => {
 
               <button 
                 onClick={() => handleNavigation("/events")}
-                className="px-8 py-3  text-white font-['montserrat'] border-1 hover:border-[#b76ba3] font-normal  transition-colors duration-300 transform hover:scale-105"
+                className="px-8 py-3 cursor-pointer text-white font-['montserrat'] border-1 hover:border-[#b76ba3] font-normal  transition-colors duration-300 transform hover:scale-105"
               >
                 GO TO EVENTS
               </button>
@@ -219,7 +219,7 @@ useEffect(() => {
         {/* === SEGUNDO BANNER === */}
         <div className="relative w-full h-[630px] overflow-hidden">
           {/* Imagen Parallax */}
-          <Parallax speed={-20}>
+          <Parallax speed={-40}>
             <img
               src={banner2}
               alt="Bar Banner"
@@ -230,8 +230,8 @@ useEffect(() => {
           {/* Contenido encima del fondo */}
           <div className="absolute inset-0 z-10 flex flex-col justify-center items-center text-center  h-full px-4">
             <div className="mb-8">
-            
-                <h1 className="font-['oswald'] font-semibold text-5xl text-white drop-shadow-md">
+
+                <h1 className="font-['oswald'] font-semibold text-5xl text-stone-100 drop-shadow-md">
                   <span className="block mt-4">"</span>
                   <span className="block">I HAD AN AMAZING TIME AT THIS BAR! THE ATMOSPHERE WAS GREAT,</span>
                   <span className="block mt-4">THE DRINKS WERE TOP-NOTCH, AND THE FOOD WAS DELICIOUS.</span>  
@@ -245,46 +245,65 @@ useEffect(() => {
         </div>
 
       {/* === SECCIÓN DE MENUS === */}
-        <section className="py-16 px-6 bg-[#000000] text-white font-['montserrat'] min-h-screen">
-          <h2 className="text-xl text-center font-light mb-4 text-[#b76ba3]">
-            OUR MENU
-          </h2>
-          <p className="text-center text-white mb-12 font-['oswald'] font-bold text-5xl md:text-6xl">
-            GREAT FOOD. AMAZING DRINKS.
-          </p>
+<section className="py-16 px-6 bg-[#000000] text-white font-['montserrat'] min-h-screen">
+  <h2 className="text-xl text-center font-light mb-4 text-[#b76ba3] tracking-widest">
+    OUR MENU
+  </h2>
+  <p className="text-center text-white mb-12 font-['oswald'] font-bold text-5xl md:text-6xl">
+    GREAT FOOD<span className="text-[#b76ba3]">.</span> AMAZING DRINKS<span className="text-[#b76ba3]">.</span>
+  </p>
 
-          {menuData.length === 0 ? (
-            <p className="text-center text-white">Cargando menú...</p>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-6xl mx-auto">
-              {menuData.map((cat, index) => (
-                <div key={index} className="bg-[#000000] text-white shadow-lg border border-[#b76ba3] rounded-sm overflow-hidden hover:shadow-xl transition-shadow duration-300">
-                  <img src={cat.imagen} alt={cat.categoria} className="w-full h-64 object-cover" />
-                  <div className="p-6">
-                    <h3 className="text-2xl font-bold uppercase text-[#b34789] mb-4">{cat.categoria}</h3>
-                    {cat.items.map((item, i) => (
-                      <div key={i} className="mb-6 border-b-2  border-[#660152] pb-4">
-                        <p className="font-semibold text-lg">
-                          {item.nombre} <span className="text-[#b34789]">${item.precio.toFixed(2)}</span>
-                        </p>
-                        <p className="text-sm text-white 700">{item.descripcion}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))}
-              </div>
-            )}
-            <div className="text-center mt-12">
-                <button 
-                  onClick={() => handleNavigation("/menu")}
-                  className="px-10 py-5  text-white font-['montserrat'] border-1 hover:border-[#b76ba3] font-normal  transition-colors duration-300 transform hover:scale-105"
-                >
-                  SEE FULL MENU
-              </button>
+  {menuData.length === 0 ? (
+    <p className="text-center text-white">Loading menu...</p>
+  ) : (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-6xl mx-auto">
+      {menuData.map((cat, index) => (
+        <div
+          key={index}
+          className=" text-white shadow-xl border border-[#b76ba3] rounded-sm overflow-hidden hover:shadow-2xl transition-shadow duration-300 group"
+        >
+          <div className="relative">
+            <img
+              src={cat.imagen}
+              alt={cat.categoria}
+              className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+              loading="lazy"
+            />
+            <div className="absolute top-4 left-4 bg-[#b76ba3] bg-opacity-80 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest shadow">
+              {cat.categoria}
             </div>
-        
-          </section>
+          </div>
+          <div className="p-8">
+            {cat.items.map((item, i) => (
+              <div
+                key={i}
+                className="mb-8 pb-4 border-b border-[#b76ba3]/40 last:border-b-0 last:mb-0 last:pb-0"
+              >
+                <div className="flex justify-between items-center mb-1">
+                  <span className="font-semibold text-lg font-['oswald'] tracking-wide">
+                    {item.nombre}
+                  </span>
+                  <span className="text-[#fff] font-bold text-lg ml-4">
+                    ${item.precio.toFixed(2)}
+                  </span>
+                </div>
+                <p className="text-sm text-[#f5f5f5] italic">{item.descripcion}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  )}
+  <div className="text-center mt-12">
+    <button
+      onClick={() => handleNavigation("/menu")}
+      className="px-8 py-4 cursor-pointer text-white font-['montserrat'] border-1 border-[#fff] font-normal transition-colors duration-300 transform hover:scale-105 hover:bg-[#ffff] hover:text-[#35002a] shadow-lg"
+    >
+      SEE FULL MENU
+    </button>
+  </div>
+</section>
           {/* === SECCIÓN DE PROMOCIONES === */}
           <section className="py-8 px-6 bg-gradient-to-b from-[#1e00188a] to-[#3e0132] text-white font-['oswald'] h-[450px]">
             <h2 className="text-5xl text-center font-bold mb-10 drop-shadow-md">
@@ -303,7 +322,7 @@ useEffect(() => {
                   <div className="justify-center items-center flex mb-4">
                     <button
                     onClick={() => abrirModal(promo)}
-                    className="text-[#b76ba3] flex items-center justify-centergap-2 px-4 py-2 hover:text-white transition font-bold font-['montserrat']"
+                    className="text-[#b76ba3] flex items-center justify-center gap-2 px-4 py-2 hover:text-white transition font-bold font-['montserrat'] cursor-pointer"
                   >
                     LEARN MORE
                     <IoIosArrowForward className="text-xl justify-center" />
@@ -317,35 +336,61 @@ useEffect(() => {
 
         {/* Modal */}
         {modalAbierto && promocionSeleccionada && (
-          <div className="fixed inset-0 z-50 bg-[rgba(23,26,30,0.8)] flex justify-center items-center">
-            <div className="bg-[#35002a] text-white font-['montserrat'] p-6 rounded-md max-w-md w-full relative shadow-2xl">
+          <div
+            className="fixed inset-0 z-50 flex justify-center items-center bg-opacity-90 bg-rgba(0, 0, 0, 1) transition-all duration-300"
+            onClick={cerrarModal}
+            style={{ backdropFilter: "blur(2px)" }}
+          >
+            <div
+              className="relative bg-gradient-to-br from-[#35002a] via-[#4d1a3d] to-[#660152] text-white font-['montserrat'] p-8 rounded-2xl max-w-lg w-full shadow-2xl border-2 border-[#b76ba3] animate-fadeIn"
+              onClick={e => e.stopPropagation()}
+              style={{ animation: "fadeIn 0.3s" }}
+            >
               <button
                 onClick={cerrarModal}
-                className="absolute top-1 right-2 text-white text-4xl hover:text-[#f5f5f5]"
+                className="absolute top-1 right-1 text-white text-3xl hover:text-[#660152] transition-colors cursor-pointer"
+                aria-label="Close"
               >
-                &times;
+                <IoCloseSharp />
               </button>
               <img
                 src={promocionSeleccionada.imagen}
                 alt={promocionSeleccionada.nombre}
-                className="w-full h-150 object-cover rounded mb-4"
+                className="w-full h-56 object-cover rounded-lg mb-5 border border-[#b76ba3] shadow"
               />
-              <h3 className="text-2xl font-bold mb-2">{promocionSeleccionada.nombre}</h3>
-              <p className="text-sm">{promocionSeleccionada.descripcion}</p>
+              <h3 className="text-3xl font-bold mb-2 text-[#fff] uppercase tracking-wide drop-shadow font-['oswald'] text-left">
+                {promocionSeleccionada.nombre}
+              </h3>
+              <p className="text-base mb-4 text-[#f5f5f5]">{promocionSeleccionada.descripcion}</p>
               {promocionSeleccionada.fechaInicio && promocionSeleccionada.fechaFin && (
-                <p className="text-sm mt-2">
-                  Inicio promoción: {new Date(promocionSeleccionada.fechaInicio).toLocaleDateString()} <br />
-                  Fin promoción: {new Date(promocionSeleccionada.fechaFin).toLocaleDateString()}
-                </p>
+                <div className="flex justify-between items-center text-sm mt-4 bg-[#b76ba3]/20 rounded p-3 font-['montserrat']">
+                  <span>
+                    <span className="font-semibold text-gray-900 ">Starts:</span>{" "}
+                    {new Date(promocionSeleccionada.fechaInicio).toLocaleDateString()}
+                  </span>
+                  <span className="font-semibold text-gray-900">-----</span>
+                  <span>
+                    <span className="font-semibold text-gray-900">Ends:</span>{" "}
+                    {new Date(promocionSeleccionada.fechaFin).toLocaleDateString()}
+                  </span>
+                </div>
               )}
+
             </div>
+            {/* Animación fadeIn */}
+            <style>{`
+              @keyframes fadeIn {
+                from { opacity: 0; transform: scale(0.95);}
+                to { opacity: 1; transform: scale(1);}
+              }
+            `}</style>
           </div>
         )}
       </section>
       {/* BOTÓN DE VOLVER AL PRINCIPIO */}
       <button
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        className="fixed bottom-4 right-4 bg-[#660152c9] text-white p-3 rounded-full shadow-lg hover:bg-white hover:text-[#b76ba3] transition"
+        className="fixed bottom-4 cursor-pointer right-4 bg-[#660152c9] text-white p-3 rounded-full shadow-lg hover:bg-white hover:text-[#b76ba3] transition"
       >
         <IoIosArrowUp size={24} />
       </button>

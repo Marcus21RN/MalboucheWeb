@@ -15,9 +15,9 @@ export default function MenuPage() {
   const [showFilter, setShowFilter] = useState(false);
   
   const bannerImages = {
-  bebidas: 'https://images.unsplash.com/photo-1620219365994-f443a86ea626?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-  alimentos: 'https://images.unsplash.com/photo-1548025396-689d647d00c5?q=80&w=2067&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-  snacks: 'https://images.unsplash.com/photo-1565060299172-42f7895549f0?q=80&w=1173&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+  bebidas: 'https://animalgourmet.com/wp-content/uploads/2018/05/christin-hume-370431-unsplash-e1527803357279.jpg',
+  alimentos: 'https://cdn.businessinsider.es/sites/navi.axelspringer.es/public/media/image/2023/02/camarera-llevando-comida-mesa-2958558.jpg?tf=3840x',
+  snacks: 'https://mistersnacks.com/wp-content/uploads/2019/01/Micro-Brews-and-their-Perfect-Snack-Match-scaled.jpeg',
   cocteles: 'https://images.unsplash.com/photo-1566417713940-fe7c737a9ef2?q=80&w=2029&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
   // etc.
   };
@@ -65,7 +65,7 @@ export default function MenuPage() {
       {/* === BANNER PRINCIPAL === */}
       <div className="relative w-full h-[500px] overflow-hidden">
         {/* Imagen Parallax */}
-        <Parallax speed={-40}>
+        <Parallax speed={-20}>
           <img
             src={'https://media.istockphoto.com/id/1225058372/photo/close-up-of-barman-finishes-preparation-of-alcoholic-cocktail-pouring-drink-in-multicolored.jpg?s=2048x2048&w=is&k=20&c=SJ-V-XuAKAa4ZMhs6NQR7Y7FTcGUg8kHkozqScA-bO4='}
             alt="Bar Banner"
