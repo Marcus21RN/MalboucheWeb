@@ -26,7 +26,7 @@ router.post("/bienvenida-empleado", async (req, res) => {
             nombre,
             primerApellido,
             password,
-            tipoUsuario, // <-- Aquí se envía el tipo de usuario
+            tipoUsuario, 
           },
           routing: { method: "single", channels: ["email"] },
         },
@@ -34,12 +34,12 @@ router.post("/bienvenida-empleado", async (req, res) => {
     });
 
     if (!response.ok) {
-      return res.status(500).json({ error: "No se pudo enviar el correo" });
+      return res.status(500).json({ error: "could not send email" });
     }
 
     res.json({ ok: true });
   } catch (err) {
-    res.status(500).json({ error: "Error enviando correo" });
+    res.status(500).json({ error: "could not send email" });
   }
 });
 
