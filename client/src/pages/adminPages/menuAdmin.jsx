@@ -1,5 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 import {
   Box, Typography, Table, TableBody, TableCell,
   TableContainer, TableHead, TableRow, Paper, Button,
@@ -18,10 +20,11 @@ import {
 import { motion } from 'framer-motion';
 import axios from "axios";
 
+// Product categories for menu/product management UI
 const categoriasProductos = [
-  { value: "bebidas", label: "Bebidas", icon: <LocalBar />, color: "#460166" },
-  { value: "cocteles", label: "Cócteles", icon: <WineBar />, color: "#660121" },
-  { value: "alimentos", label: "Alimentos", icon: <Restaurant />, color: "#016646" },
+  { value: "bebidas", label: "Drinks", icon: <LocalBar />, color: "#460166" },
+  { value: "cocteles", label: "Cocktails", icon: <WineBar />, color: "#660121" },
+  { value: "alimentos", label: "Food", icon: <Restaurant />, color: "#016646" },
   { value: "snacks", label: "Snacks", icon: <Fastfood />, color: "#f7b330" },
 ];
 
@@ -36,9 +39,9 @@ const MenuAdmin = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [activeFormTab, setActiveFormTab] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
-  // selectedCategory: solo para filtros globales de búsqueda
+  // selectedCategory: only for global search filters
   const [selectedCategory, setSelectedCategory] = useState(null);
-  // menuFormCategory: solo para el modal de crear/editar menú
+  // menuFormCategory: only for create/edit menu modal
   const [menuFormCategory, setMenuFormCategory] = useState("");
   const [filterEstado, setFilterEstado] = useState("");
   const [page, setPage] = useState(0);
@@ -53,7 +56,7 @@ const MenuAdmin = () => {
     type: 'delete' // 'delete', 'save', 'edit'
   });
 
-  // Estados para formularios
+  // Form states
   const [menuFormData, setMenuFormData] = useState({
     _id: "",
     nombre: "",
@@ -72,7 +75,7 @@ const MenuAdmin = () => {
     estado: "activo",
   });
 
-  // Funciones de utilidad
+  // Utility functions
   const getStatusColor = (status) => {
     switch (status) {
       case 'activo':
@@ -94,7 +97,7 @@ const MenuAdmin = () => {
     return cat ? cat.color : "#660152";
   };
 
-  // Obtener productos por IDs para los menús - CON VERIFICACIONES DE SEGURIDAD
+  // Get products by IDs for menus - with safety checks
   const getProductosByIDs = (ids) => {
     if (!Array.isArray(ids) || !Array.isArray(productos)) {
       return [];
@@ -103,7 +106,7 @@ const MenuAdmin = () => {
   };
 
 
-  // Función helper para mostrar confirmaciones
+  // Helper function to show confirmation dialogs
   const showConfirmDialog = (title, message, onConfirm, type = 'delete') => {
     setConfirmDialog({
       open: true,
@@ -131,7 +134,7 @@ const MenuAdmin = () => {
     handleCloseConfirmDialog();
   };
 
-  // Filtros con verificaciones de seguridad
+  // Filters with safety checks
   const filteredMenus = Array.isArray(menus) ? menus.filter((menu) => {
     const matchesSearch = menu.nombre?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       menu.descripcion?.toLowerCase().includes(searchTerm.toLowerCase());
@@ -148,11 +151,11 @@ const MenuAdmin = () => {
     return matchesSearch && matchesCategory && matchesEstado;
   }) : [];
 
-  // Paginación
+  // Pagination
   const paginatedMenus = filteredMenus.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
   const paginatedProducts = filteredProducts.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
-  // Manejo de detalles del menú
+  // Menu details handling
   const handleOpenMenuDetails = (menu) => {
     setSelectedMenu(menu);
     setOpenMenuDetails(true);
@@ -163,15 +166,18 @@ const MenuAdmin = () => {
     setSelectedMenu(null);
   };
 
-  // Manejo de menús
+  // Menu management
   const handleOpenMenuForm = (menu = null) => {
     if (menu) {
       setIsEditMode(true);
       setMenuFormData({
         ...menu,
-        productos: menu.productos.map(p => p.IDProducto),
+        productos: Array.isArray(menu.productos)
+          ? menu.productos.filter(Boolean).map(p => p.IDProducto)
+          : [],
       });
       setMenuFormCategory(menu.tipoMenu);
+      setSelectedMenu(menu); // Asegura que selectedMenu se establece al editar
     } else {
       setIsEditMode(false);
       setMenuFormData({
@@ -182,6 +188,7 @@ const MenuAdmin = () => {
         productos: [],
       });
       setMenuFormCategory("");
+      setSelectedMenu(null); // Limpia selectedMenu al crear
     }
     setOpenMenuForm(true);
     setActiveFormTab(0);
@@ -208,7 +215,7 @@ const MenuAdmin = () => {
     }));
   };
 
-  // CRUD Menús
+  // CRUD Menus
   const handleSaveMenu = () => {
     const action = isEditMode ? 'Update' : 'Create';
     const title = isEditMode ? 'Confirm Update' : 'Confirm Creation';
@@ -217,28 +224,46 @@ const MenuAdmin = () => {
       : `Are you sure you want to create the menu "${menuFormData.nombre}"?`;
 
     showConfirmDialog(title, message, async () => {
+      // Chequeo de null para selectedMenu en modo edición
+      if (isEditMode && (!selectedMenu || !selectedMenu._id)) {
+        showSnackbar('No menu selected for update. Please close and reopen the edit form.', 'error');
+        return;
+      }
+      // Filtrar productos para que solo se incluyan los que existen en la lista de productos válidos y no sean nulos/undefined
+      const productosValidos = Array.isArray(menuFormData.productos)
+        ? menuFormData.productos.filter(id => id != null && id !== '' && productos.some(p => p && p._id === (typeof id === 'string' ? id : id.IDProducto)))
+        : [];
+      const productosFormateados = productosValidos
+        .filter(Boolean)
+        .map(p => typeof p === 'string' ? { IDProducto: p } : p);
       const newMenu = {
         nombre: menuFormData.nombre,
         descripcion: menuFormData.descripcion,
         tipoMenu: menuFormCategory || "",
         estado: menuFormData.estado,
-        productos: menuFormData.productos.map(id => ({ IDProducto: id })),
+        productos: productosFormateados,
       };
       try {
         if (isEditMode) {
           await axios.put(`http://localhost:3000/adminBackend/menus/${selectedMenu._id}`, newMenu);
+          showSnackbar('Menu updated successfully!', 'success');
         } else {
           await axios.post("http://localhost:3000/adminBackend/menus", newMenu);
+          showSnackbar('Menu created successfully!', 'success');
         }
         await fetchMenus();
         handleCloseMenuForm();
       } catch (err) {
-        alert(`Error al ${action} menú`);
+        let msg = isEditMode ? 'Failed to update menu.' : 'Failed to create menu.';
+        if (err.response && err.response.data && err.response.data.message) {
+          msg += ` ${err.response.data.message}`;
+        }
+        showSnackbar(msg, 'error');
       }
     }, 'save');
   };
 
-  // Manejo de productos
+  // Product management
   const handleOpenProductForm = (product = null) => {
     if (product) {
       setIsEditMode(true);
@@ -270,7 +295,7 @@ const MenuAdmin = () => {
     }));
   };
 
-  // CRUD Productos
+  // CRUD Products
   const handleSaveProduct = () => {
     const action = isEditMode ? 'Update' : 'Create';
     const title = isEditMode ? 'Confirm Update' : 'Confirm Creation';
@@ -282,66 +307,89 @@ const MenuAdmin = () => {
       try {
         if (isEditMode) {
           await axios.put(`http://localhost:3000/adminBackend/productos/${productFormData._id}`, productFormData);
+          showSnackbar('Product updated successfully!', 'success');
         } else {
-          await axios.post("http://localhost:3000/adminBackend/productos", productFormData);
+          const { _id, ...productDataSinId } = productFormData;
+          await axios.post("http://localhost:3000/adminBackend/productos", productDataSinId);
+          showSnackbar('Product created successfully!', 'success');
         }
         await fetchProductos();
         await fetchMenus();
         handleCloseProductForm();
       } catch (err) {
-        alert(`Error al ${action} producto`);
+        let msg = isEditMode ? 'Failed to update product.' : 'Failed to create product.';
+        if (err.response && err.response.data && err.response.data.message) {
+          msg += ` ${err.response.data.message}`;
+        }
+        showSnackbar(msg, 'error');
       }
     }, 'save');
   };
 
-  const handleDeleteProduct = (id) => {
-  const enUso = Array.isArray(menus) && menus.some(menu => 
-    Array.isArray(menu.productos) && menu.productos.some(prod => prod.IDProducto === id)
-    );
-    
-    if (enUso) {
-      alert("This product is in use in one or more menus. It cannot be deleted.");
-      return;
-    }
-
+  const handleToggleProductStatus = async (id) => {
     const producto = productos.find(p => p._id === id);
-    const productName = producto ? producto.nombre : 'this product';
-
+    if (!producto) return;
+    const isActive = producto.estado === 'activo';
+    const dialogType = isActive ? 'deactivate' : 'activate';
     showConfirmDialog(
-      'Confirm Deletion',
-      `Are you sure you want to delete the product "${productName}"? This action cannot be undone.`,
+      `${isActive ? 'Deactivate' : 'Activate'} Product`,
+      `Are you sure you want to ${isActive ? 'deactivate' : 'activate'} the product "${producto.nombre}"?`,
       async () => {
         try {
-          await axios.delete(`http://localhost:3000/adminBackend/productos/${id}`);
+          const updatedProduct = { ...producto, estado: isActive ? 'inactivo' : 'activo' };
+          await axios.put(`http://localhost:3000/adminBackend/productos/${id}`, updatedProduct);
           await fetchProductos();
           await fetchMenus();
+          showSnackbar(`Product ${isActive ? 'deactivated' : 'activated'} successfully!`, 'success');
         } catch (err) {
-          alert("Error deleting product");
+          showSnackbar(`Failed to ${isActive ? 'deactivate' : 'activate'} product.`, 'error');
         }
       },
-      'delete'
+      dialogType
     );
   };
 
-  const handleDeleteMenu = (id) => {
+  const handleToggleMenuStatus = (id) => {
     const menu = menus.find(m => m._id === id);
-    const menuName = menu ? menu.nombre : 'este menú';
-
+    const menuName = menu ? menu.nombre : 'this menu';
+    const isActive = menu && menu.estado === 'activo';
+    const newEstado = isActive ? 'inactivo' : 'activo';
+    const dialogType = isActive ? 'deactivate' : 'activate';
     showConfirmDialog(
-      'Confirm Deletion',
-      `Are you sure you want to delete the menu "${menuName}"? This action cannot be undone.`,
+      `${isActive ? 'Deactivate' : 'Activate'} Menu`,
+      `Are you sure you want to ${isActive ? 'deactivate' : 'activate'} the menu "${menuName}"?`,
       async () => {
         try {
-          await axios.delete(`http://localhost:3000/adminBackend/menus/${id}`);
+          if (!menu) throw new Error('Menu not found');
+          const productosFormateados = Array.isArray(menu.productos)
+            ? menu.productos
+                .filter(p => p && (typeof p === 'string' || p.IDProducto || p._id))
+                .map(p => {
+                  if (typeof p === 'string') return { IDProducto: p };
+                  if (p.IDProducto) return { IDProducto: p.IDProducto };
+                  if (p._id) return { IDProducto: p._id };
+                  return null;
+                })
+                .filter(Boolean)
+            : [];
+          const updatedMenu = {
+            nombre: menu.nombre,
+            descripcion: menu.descripcion,
+            tipoMenu: menu.tipoMenu,
+            estado: newEstado,
+            productos: productosFormateados
+          };
+          await axios.put(`http://localhost:3000/adminBackend/menus/${id}`, updatedMenu);
           await fetchMenus();
+          showSnackbar(`Menu ${isActive ? 'deactivated' : 'activated'} successfully!`, 'success');
         } catch (err) {
-          alert("Error deleting menu");
+          showSnackbar(`Failed to ${isActive ? 'deactivate' : 'activate'} menu.`, 'error');
         }
       },
-      'delete'
+      dialogType
     );
   };
-    // Filtrar productos por categoría seleccionada y término de búsqueda
+  // Filter products by selected category and search term
     const productsByCategory = selectedCategory && Array.isArray(productos)
       ? productos.filter(p => 
           p.categoria === selectedCategory && 
@@ -358,7 +406,19 @@ const MenuAdmin = () => {
     fetchMenus();
   }, []);
 
-  // Reset página cuando cambien los filtros
+  // Reset page when filters change
+
+  // Snackbar state for user notifications
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+
+  // Show a notification to the user
+  const showSnackbar = (message, severity = 'success') => {
+    setSnackbar({ open: true, message, severity });
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbar({ ...snackbar, open: false });
+  };
   useEffect(() => {
     setPage(0);
   }, [searchTerm, filterEstado, selectedCategory, activeTab]);
@@ -387,7 +447,7 @@ const MenuAdmin = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
     >
-      {/* Header */}
+      {/* Header - Main title for menu and product management */}
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
         <MenuIcon sx={{ mr: 2, color: '#660152', fontSize: 40 }} />
         <Typography variant="h4" color="#660152" fontWeight="bold">
@@ -414,12 +474,12 @@ const MenuAdmin = () => {
                     alignSelf: 'flex-start'
                   }}
                 >
-                  Create Menu
+                  Add New Menu
                 </Button>
 
                 <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2 }}>
                   <TextField
-                    label="Search Menus"
+                    label="Search menus by name or description"
                     variant="outlined"
                     size="small"
                     sx={{ width: 250 }}
@@ -449,7 +509,7 @@ const MenuAdmin = () => {
                     <MenuItem value="">
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <FilterAlt />
-                        All Categories
+                        All categories
                       </Box>
                     </MenuItem>
                     {categoriasProductos.map((cat) => (
@@ -576,7 +636,7 @@ const MenuAdmin = () => {
                         </TableCell>
                         <TableCell>
                           <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', justifyContent: 'center' }}>
-                            <Tooltip title="Show Details">
+                            <Tooltip title="View menu details">
                               <IconButton
                                 color="secondary"
                                 onClick={() => handleOpenMenuDetails(menu)}
@@ -585,7 +645,7 @@ const MenuAdmin = () => {
                                 <VisibilityIcon />
                               </IconButton>
                             </Tooltip>
-                            <Tooltip title="Edit Menu">
+                            <Tooltip title="Edit menu">
                               <IconButton
                                 color="primary"
                                 onClick={() => handleOpenMenuForm(menu)}
@@ -594,10 +654,10 @@ const MenuAdmin = () => {
                                 <EditOutlined />
                               </IconButton>
                             </Tooltip>
-                            <Tooltip title="Delete Menu">
+                            <Tooltip title={menu.estado === 'activo' ? 'Deactivate menu' : 'Activate menu'}>
                               <IconButton
-                                color="error"
-                                onClick={() => handleDeleteMenu(menu._id)}
+                                color={menu.estado === 'activo' ? 'error' : 'success'}
+                                onClick={() => handleToggleMenuStatus(menu._id)}
                                 size="small"
                               >
                                 <DeleteOutline />
@@ -660,12 +720,12 @@ const MenuAdmin = () => {
                     alignSelf: 'flex-start'
                   }}
                 >
-                  New Product
+                  Add New Product
                 </Button>
 
               <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2 }}>
                 <TextField
-                  label="Search Products"
+                  label="Search products by name or description"
                   variant="outlined"
                   size="small"
                   value={searchTerm}
@@ -680,7 +740,7 @@ const MenuAdmin = () => {
                   value={filterEstado}
                   onChange={(e) => setFilterEstado(e.target.value)}
                 >
-                  <MenuItem value=""></MenuItem>
+                  <MenuItem value="">All</MenuItem>
                   <MenuItem value="activo">Active</MenuItem>
                   <MenuItem value="inactivo">Inactive</MenuItem>
                 </TextField>
@@ -695,7 +755,7 @@ const MenuAdmin = () => {
                   <MenuItem value="">
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                       <FilterAlt />
-                      All Categories
+                      All categories
                     </Box>
                   </MenuItem>
                   {categoriasProductos.map((cat) => (
@@ -814,7 +874,7 @@ const MenuAdmin = () => {
                         </TableCell>
                         <TableCell>
                           <Box sx={{ display: 'flex', gap: 1 }}>
-                            <Tooltip title="Edit Product">
+                            <Tooltip title="Edit product">
                               <IconButton
                                 color="primary"
                                 onClick={() => handleOpenProductForm(producto)}
@@ -823,10 +883,10 @@ const MenuAdmin = () => {
                                 <EditOutlined />
                               </IconButton>
                             </Tooltip>
-                            <Tooltip title="Delete Product">
+                            <Tooltip title={producto.estado === 'activo' ? 'Deactivate product' : 'Activate product'}>
                               <IconButton
-                                color="error"
-                                onClick={() => handleDeleteProduct(producto._id)}
+                                color={producto.estado === 'activo' ? 'error' : 'success'}
+                                onClick={() => handleToggleProductStatus(producto._id)}
                                 size="small"
                               >
                                 <DeleteOutline />
@@ -838,14 +898,18 @@ const MenuAdmin = () => {
                     ))}
                     {filteredProducts.length === 0 && (
                       <TableRow>
-                        <TableCell colSpan={5} align="center">
+                        <TableCell colSpan={6} align="center">
                           <Box sx={{ py: 6 }}>
                             <Restaurant sx={{ fontSize: 60, color: 'grey.400', mb: 2 }} />
                             <Typography variant="h6" color="text.secondary">
                               No products found
                             </Typography>
                             <Typography variant="body2" color="text.secondary">
-                              {selectedCategory ? `No products found in category "${selectedCategory}"` : 'No products available'}
+                              {selectedCategory 
+                                ? `No products of category "${selectedCategory}" found` 
+                                : filterEstado 
+                                  ? `No products with status "${filterEstado}" found` 
+                                  : 'No products available'}
                             </Typography>
                           </Box>
                         </TableCell>
@@ -1065,10 +1129,12 @@ const MenuAdmin = () => {
                   <TextField 
                     fullWidth 
                     name="nombre" 
-                    label="Menu Name" 
+                    label="Product Name" 
+                    placeholder="Product Name" 
                     value={menuFormData.nombre} 
                     onChange={handleMenuChange} 
                     required
+                    InputLabelProps={{ shrink: true }}
                     sx={{ flex: 1}}
                   />
                   <TextField 
@@ -1076,12 +1142,14 @@ const MenuAdmin = () => {
                     select 
                     name="tipoMenu" 
                     label="Menu Type" 
+                    placeholder="Menu Type" 
                     value={menuFormCategory || ""}
                     onChange={e => {
                       setMenuFormCategory(e.target.value);
                       setMenuFormData(prev => ({ ...prev, tipoMenu: e.target.value, productos: [] }));
                     }}
                     required
+                    InputLabelProps={{ shrink: true }}
                     sx={{ flex: 1 }}
                   >
                     <MenuItem value="">
@@ -1104,9 +1172,11 @@ const MenuAdmin = () => {
                     select 
                     name="estado" 
                     label="Status" 
+                    placeholder="Status" 
                     value={menuFormData.estado} 
                     onChange={handleMenuChange}
                     required
+                    InputLabelProps={{ shrink: true }}
                     sx={{ flex: 1 }}
                   >
                     <MenuItem value="activo">Active</MenuItem>
@@ -1125,10 +1195,12 @@ const MenuAdmin = () => {
                     fullWidth 
                     name="descripcion" 
                     label="Description" 
+                    placeholder="Description" 
                     multiline 
                     rows={3} 
                     value={menuFormData.descripcion} 
                     onChange={handleMenuChange} 
+                    InputLabelProps={{ shrink: true }}
                   />
                 </Grid>
               </Box>
@@ -1195,18 +1267,25 @@ const MenuAdmin = () => {
                 <FormGroup>
                   {productos
                     .filter(p => p.categoria === menuFormCategory && p.estado === "activo" && (p.nombre?.toLowerCase().includes(productSearchTerm.toLowerCase()) || p.descripcion?.toLowerCase().includes(productSearchTerm.toLowerCase())))
-                    .map(prod => (
-                      <FormControlLabel
-                        key={prod._id}
-                        control={
-                          <Checkbox
-                            checked={menuFormData.productos?.includes(prod._id)}
-                            onChange={() => handleProductCheckChange(prod._id)}
-                          />
-                        }
-                        label={`${prod.nombre} - $${prod.precio} - ${prod.descripcion}`}
-                      />
-                    ))}
+                    .map(prod => {
+                      if (!prod || !prod._id) return null;
+                      // Only allow checked if prod._id is in a non-null, non-undefined productos array
+                      const checked = Array.isArray(menuFormData.productos)
+                        ? menuFormData.productos.filter(Boolean).includes(prod._id)
+                        : false;
+                      return (
+                        <FormControlLabel
+                          key={prod._id}
+                          control={
+                            <Checkbox
+                              checked={checked}
+                              onChange={() => handleProductCheckChange(prod._id)}
+                            />
+                          }
+                          label={`${prod.nombre} - $${prod.precio} - ${prod.descripcion}`}
+                        />
+                      );
+                    })}
                 </FormGroup>
                 {/* Mensaje cuando no hay productos */}
                 {productos.filter(p => p.categoria === menuFormCategory && p.estado === "activo" && (p.nombre?.toLowerCase().includes(productSearchTerm.toLowerCase()) || p.descripcion?.toLowerCase().includes(productSearchTerm.toLowerCase()))).length === 0 && (
@@ -1229,7 +1308,9 @@ const MenuAdmin = () => {
                   </Typography>
                   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                     {menuFormData.productos.map(id => {
-                      const prod = productos.find(p => p._id === id);
+                      // Extra null filtering to avoid errors if id is null or product is missing
+                      if (!id) return null;
+                      const prod = productos.find(p => p && p._id === id);
                       return prod ? (
                         <Chip
                           key={id}
@@ -1262,7 +1343,15 @@ const MenuAdmin = () => {
             <Button 
               variant="contained" 
               onClick={activeFormTab === 0 ? () => setActiveFormTab(1) : handleSaveMenu}
-              disabled={activeFormTab === 1 && !selectedCategory}
+              disabled={
+                (activeFormTab === 1 && (
+                  !menuFormData.nombre ||
+                  !menuFormCategory ||
+                  !menuFormData.estado ||
+                  !Array.isArray(menuFormData.productos) ||
+                  menuFormData.productos.length === 0
+                ))
+              }
               sx={{ backgroundColor: "#660152", '&:hover': { backgroundColor: "#520040" } }}
             >
               {activeFormTab === 0 ? 'Next' : isEditMode ? 'Update Menu' : 'Save Menu'}
@@ -1305,28 +1394,19 @@ const MenuAdmin = () => {
 
           {/* Formulario */}
           <Grid container spacing={2} >
-            {/* ID y Nombre */}
+            {/* Nombre */}
             <Grid item xs={12} md={6}> 
-              <Box sx={{ display: "flex", flexDirection: "row", gap: 1 }}> 
-                  <TextField
-                  fullWidth
-                  name="_id"
-                  label="Product ID"
-                  value={productFormData._id}
-                  onChange={handleProductChange}
-                  disabled={isEditMode}
-                  required
-                />
-                <TextField
+              <TextField
                 fullWidth
                 name="nombre"
                 label="Product Name"
+                placeholder="Product Name"
                 value={productFormData.nombre}
                 onChange={handleProductChange}
                 required
+                InputLabelProps={{ shrink: true }}
               />
-              </Box>
-              </Grid>
+            </Grid>
 
             {/* Precio, Categoría y Estado */}
           <Grid item xs={12}>
@@ -1334,6 +1414,7 @@ const MenuAdmin = () => {
           <TextField
             name="precio"
             label="Price"
+            placeholder="Price"
             type="number"
             value={productFormData.precio}
             onChange={handleProductChange}
@@ -1341,6 +1422,7 @@ const MenuAdmin = () => {
               startAdornment: <span>$</span>,
             }}
             required
+            InputLabelProps={{ shrink: true }}
             sx={{ flex: 1, minWidth: 100 }}
           />
 
@@ -1348,9 +1430,11 @@ const MenuAdmin = () => {
             select
             name="categoria"
             label="Category"
+            placeholder="Category"
             value={productFormData.categoria}
             onChange={handleProductChange}
             required
+            InputLabelProps={{ shrink: true }}
             sx={{ flex: 1, minWidth: 100 }}
           >
             {categoriasProductos.map((cat) => (
@@ -1367,9 +1451,11 @@ const MenuAdmin = () => {
             select
             name="estado"
             label="Status"
+            placeholder="Status"
             value={productFormData.estado}
             onChange={handleProductChange}
             required
+            InputLabelProps={{ shrink: true }}
             sx={{ flex: 1, minWidth: 100 }}
           >
             <MenuItem value="activo">Active</MenuItem>
@@ -1385,10 +1471,12 @@ const MenuAdmin = () => {
                   fullWidth
                   name="descripcion"
                   label="Description"
+                  placeholder="Description"
                   multiline
                   rows={3}
                   value={productFormData.descripcion}
                   onChange={handleProductChange}
+                  InputLabelProps={{ shrink: true }}
                 />
               </Grid>
             </Box>
@@ -1438,7 +1526,10 @@ const MenuAdmin = () => {
         <DialogTitle 
           id="confirm-dialog-title"
           sx={{ 
-            color: confirmDialog.type === 'delete' ? 'error.main' : 'primary.main',
+            color:
+              confirmDialog.type === 'activate' ? 'success.main'
+              : confirmDialog.type === 'deactivate' ? 'error.main'
+              : 'primary.main',
             fontWeight: 'bold'
           }}
         >
@@ -1462,24 +1553,48 @@ const MenuAdmin = () => {
               }
             }}
           >
-            Cancelar
+            Cancel
           </Button>
           <Button 
             onClick={handleConfirm}
             variant="contained"
-            color={confirmDialog.type === 'delete' ? 'error' : 'primary'}
             sx={{
               fontWeight: 'bold',
-              ...(confirmDialog.type !== 'delete' && {
-                backgroundColor: "#660152",
-                '&:hover': { backgroundColor: "#520040" }
-              })
+              backgroundColor:
+                confirmDialog.type === 'activate' ? '#2e7d32' // green
+                : confirmDialog.type === 'deactivate' ? '#d32f2f' // red
+                : '#660152',
+              color: 'white',
+              '&:hover': {
+                backgroundColor:
+                  confirmDialog.type === 'activate' ? '#1b5e20'
+                  : confirmDialog.type === 'deactivate' ? '#b71c1c'
+                  : '#520040',
+              },
             }}
           >
-            {confirmDialog.type === 'delete' ? 'Eliminar' : 'Confirmar'}
+            {confirmDialog.type === 'activate' ? 'Activate'
+              : confirmDialog.type === 'deactivate' ? 'Deactivate'
+              : 'Confirm'}
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Snackbar for user notifications */}
+      <Snackbar 
+        open={snackbar.open} 
+        autoHideDuration={5000} 
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      >
+        <Alert 
+          onClose={handleCloseSnackbar} 
+          severity={snackbar.severity} 
+          sx={{ width: '100%' }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Box> 
   );
 };

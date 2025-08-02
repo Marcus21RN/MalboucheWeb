@@ -7,13 +7,12 @@ export const getMenus = async (req, res) => {
     const menus = await Menu.find().lean();
     // Popular productos manualmente
     for (const menu of menus) {
-      menu.productos = await Promise.all(
+      menu.productos = (await Promise.all(
         menu.productos.map(async (p) => {
           const prod = await Producto.findById(p.IDProducto).lean();
           return prod ? { ...p, ...prod } : null;
         })
-      );
-      menu.productos = menu.productos.filter(Boolean);
+      )).filter(Boolean);
     }
     res.json(menus);
   } catch (error) {
@@ -26,13 +25,12 @@ export const getMenuById = async (req, res) => {
   try {
     const menu = await Menu.findById(req.params.id).lean();
     if (!menu) return res.status(404).json({ message: 'Menú no encontrado' });
-    menu.productos = await Promise.all(
+    menu.productos = (await Promise.all(
       menu.productos.map(async (p) => {
         const prod = await Producto.findById(p.IDProducto).lean();
         return prod ? { ...p, ...prod } : null;
       })
-    );
-    menu.productos = menu.productos.filter(Boolean);
+    )).filter(Boolean);
     res.json(menu);
   } catch (error) {
     res.status(500).json({ message: 'Error al obtener menú', error });
@@ -64,13 +62,27 @@ export const createMenu = async (req, res) => {
 export const updateMenu = async (req, res) => {
   try {
     // Validar productos
+    console.log('Productos recibidos en updateMenu:', req.body.productos);
+    if (!Array.isArray(req.body.productos) || req.body.productos.some(p => !p || !p.IDProducto)) {
+      return res.status(400).json({ message: 'El array de productos contiene valores nulos o sin IDProducto' });
+    }
     const productosIds = req.body.productos.map(p => p.IDProducto);
     const productosExist = await Producto.find({ _id: { $in: productosIds } });
+    console.log('Productos encontrados en BD:', productosExist.map(p => p._id));
     if (productosExist.length !== productosIds.length) {
-      return res.status(400).json({ message: 'Uno o más productos no existen' });
+      return res.status(400).json({ message: 'Uno o más productos no existen', productosIds, productosExist: productosExist.map(p => p._id) });
     }
-    const menuActualizado = await Menu.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    let menuActualizado = await Menu.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!menuActualizado) return res.status(404).json({ message: 'Menú no encontrado' });
+    // Popular productos y filtrar nulos antes de responder
+    menuActualizado = menuActualizado.toObject();
+    menuActualizado.productos = (await Promise.all(
+      menuActualizado.productos.map(async (p) => {
+        if (!p || !p.IDProducto) return null;
+        const prod = await Producto.findById(p.IDProducto).lean();
+        return prod ? { ...p, ...prod } : null;
+      })
+    )).filter(Boolean);
     res.json(menuActualizado);
   } catch (error) {
     res.status(400).json({ message: 'Error al actualizar menú', error });

@@ -27,11 +27,16 @@ export const getProductoById = async (req, res) => {
 export const createProducto = async (req, res) => {
   try {
     // Normalizar categoría y estado
-    const data = {
+    let data = {
       ...req.body,
       categoria: req.body.categoria?.toLowerCase(),
       estado: req.body.estado || "activo"
     };
+    // Si no se recibe _id, generarlo automáticamente
+    if (!data._id || data._id === "") {
+      const count = await Producto.countDocuments();
+      data._id = `PROD${count + 1}`;
+    }
     const nuevoProducto = new Producto(data);
     await nuevoProducto.save();
     res.status(201).json(nuevoProducto);
@@ -52,6 +57,11 @@ export const updateProducto = async (req, res) => {
     };
     const productoActualizado = await Producto.findByIdAndUpdate(req.params.id, data, { new: true });
     if (!productoActualizado) return res.status(404).json({ message: 'Producto no encontrado' });
+    // Si el producto fue desactivado, eliminarlo de todos los menús
+    if (productoActualizado.estado === 'inactivo') {
+      const { removeProductFromMenus } = await import('./menu.js');
+      await removeProductFromMenus(productoActualizado._id);
+    }
     // Sincronizar menús (si es necesario)
     await syncMenusOnProductUpdate(productoActualizado);
     res.json(productoActualizado);
