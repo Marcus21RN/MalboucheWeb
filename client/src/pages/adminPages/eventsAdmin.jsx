@@ -24,6 +24,8 @@ import {
   TextField,
   Grid
 } from '@mui/material';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 import {
   Cancel as CancelIcon,
   Delete as DeleteIcon,
@@ -34,7 +36,8 @@ import {
   Celebration,
   Add as AddIcon,
   Edit as EditIcon,
-  Close as CloseIcon
+  Close as CloseIcon,
+  Image as ImageIcon
 } from '@mui/icons-material';
 import { motion } from 'framer-motion';
 import axios from 'axios';
@@ -50,6 +53,18 @@ const EventsAdmin = () => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [imagePreview, setImagePreview] = useState('');
   const [imageError, setImageError] = useState(false);
+  const [localImageUrl, setLocalImageUrl] = useState(null);
+
+  // Snackbar state
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+  // Función para mostrar el snackbar
+  const showSnackbar = (message, severity = 'success') => {
+    setSnackbarMessage(message);
+    setSnackbarSeverity(severity);
+    setOpenSnackbar(true);
+  };
 
   // Estado para el formulario
   const [eventFormData, setEventFormData] = useState({
@@ -152,6 +167,10 @@ const handleOpenEventForm = (event = null) => {
     });
     setImagePreview('');
     setImageError(false);
+    if (localImageUrl) {
+      URL.revokeObjectURL(localImageUrl);
+      setLocalImageUrl(null);
+    }
   };
 
   const handleEventChange = (e) => {
@@ -220,13 +239,16 @@ const handleOpenEventForm = (event = null) => {
       };
       if (isEditMode) {
         await axios.put(`http://localhost:3000/adminBackend/events/${eventFormData._id}`, payload);
+        showSnackbar('Evento actualizado correctamente', 'success');
       } else {
         await axios.post('http://localhost:3000/adminBackend/events', payload);
+        showSnackbar('Evento creado correctamente', 'success');
       }
       await fetchEvents();
       handleCloseEventForm();
     } catch (error) {
       console.error('Error saving event:', error);
+      showSnackbar('Error al guardar el evento', 'error');
     }
   };
 
@@ -243,8 +265,10 @@ const handleOpenEventForm = (event = null) => {
     try {
       await axios.delete(`http://localhost:3000/adminBackend/events/${id}`);
       await fetchEvents();
+      showSnackbar('Evento eliminado correctamente', 'success');
     } catch (error) {
       console.error('Error deleting event:', error);
+      showSnackbar('Error al eliminar el evento', 'error');
     }
   };
 
@@ -513,86 +537,126 @@ const handleOpenEventForm = (event = null) => {
       {/* Columna izquierda - Formulario */}
       <Grid item xs={12} md={imagePreview ? 8 : 12}>
         <Grid container spacing={2}>
-          {/* Primera fila: Nombre y Fecha */}
-          <Grid item xs={12} md={6}>
-            <TextField 
-              fullWidth 
-              name="nombre" 
-              label="Event Name" 
-              value={eventFormData.nombre} 
-              onChange={handleEventChange} 
-              required
-            />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <TextField 
-              fullWidth 
-              name="fecha" 
-              label="Event Date" 
-              type="date"
-              value={eventFormData.fecha} 
-              onChange={handleEventChange} 
-              InputLabelProps={{ shrink: true }}
-              required
-            />
-          </Grid>
+          {/* Primera fila: Nombre */}
+          <Box sx={{ width: '100%' }}>
+            <Grid item xs={12} md={6}>
+              <TextField 
+                fullWidth 
+                name="nombre" 
+                label="Event Name" 
+                value={eventFormData.nombre} 
+                onChange={handleEventChange} 
+                required
+                />
+            </Grid>
+          </Box>
 
-          {/* Segunda fila: Hora inicio y Hora final */}
-          <Grid item xs={12} md={6}>
-            <TextField 
-              fullWidth 
-              name="horaInicio" 
-              label="Start Time" 
-              type="time"
-              value={eventFormData.horaInicio} 
-              onChange={handleEventChange} 
-              InputLabelProps={{ shrink: true }}
-              required
-            />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <TextField 
-              fullWidth 
-              name="horaFinal" 
-              label="End Time" 
-              type="time"
-              value={eventFormData.horaFinal} 
-              onChange={handleEventChange} 
-              InputLabelProps={{ shrink: true }}
-              required
-            />
-          </Grid>
+          {/* Segunda fila: Fechas */}
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: '100%' }}>
+            <Box sx={{ display: 'flex', gap: 2, width: '100%' }}>
+              <TextField 
+                fullWidth 
+                name="fecha" 
+                label="Event Date" 
+                type="date"
+                value={eventFormData.fecha} 
+                onChange={handleEventChange} 
+                InputLabelProps={{ shrink: true }}
+                required
+              />
+              <TextField 
+                fullWidth 
+                name="horaInicio" 
+                label="Start Time" 
+                type="time"
+                value={eventFormData.horaInicio} 
+                onChange={handleEventChange} 
+                InputLabelProps={{ shrink: true }}
+                required
+              />
+              <TextField 
+                fullWidth 
+                name="horaFinal" 
+                label="End Time" 
+                type="time"
+                value={eventFormData.horaFinal} 
+                onChange={handleEventChange} 
+                InputLabelProps={{ shrink: true }}
+                required
+              />
+            </Box>
+          </Box>
 
-          {/* Tercera fila: Estado y URL */}
-          <Grid item xs={12} md={6}>
+          {/* Tercera fila: Estado e imagen */}
+          <Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', gap: 2 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2, width: '100%' }}>
             <TextField 
               fullWidth 
               select 
               name="estado" 
-              label="Event Status" 
+              label="Estado" 
               value={eventFormData.estado} 
               onChange={handleEventChange}
               required
             >
-              <MenuItem value="pendiente">Pending</MenuItem>
-              <MenuItem value="activo">Active</MenuItem>
-              <MenuItem value="cancelado">Cancelled</MenuItem>
+              <MenuItem value="pendiente">Pendiente</MenuItem>
+              <MenuItem value="activo">Activo</MenuItem>
+              <MenuItem value="cancelado">Cancelado</MenuItem>
             </TextField>
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <TextField 
-              fullWidth 
-              name="imagen" 
-              label="URL de imagen" 
-              value={eventFormData.imagen} 
-              onChange={handleEventChange} 
-              placeholder="https://ejemplo.com/imagen.jpg"
-              error={imageError}
-              helperText={imageError ? "Invalid image URL" : "Enter a valid image URL"}
-            />
-          </Grid>
+            <Button
+              variant="outlined"
+              component="label"
+              fullWidth
+              startIcon={<ImageIcon />}
+              sx={{ border: '1px solid #c4c4c4', backgroundColor: '#f5f5f5', color: '#660152', '&:hover': { backgroundColor: '#e0e0e0' } }}
+            >
+              {imagePreview ? 'Cambiar imagen' : 'Subir imagen'}
+              <input
+                type="file"
+                accept="image/*"
+                hidden
+                onChange={async (e) => {
+                  const file = e.target.files[0];
+                  if (!file) return;
+                  // Preview local instantáneo
+                  const localUrl = URL.createObjectURL(file);
+                  setLocalImageUrl(localUrl);
+                  setImagePreview(localUrl);
+                  setImageError(false);
+                  // Subida a backend
+                  const formData = new FormData();
+                  formData.append('file', file);
+                  try {
+                    const res = await axios.post('http://localhost:3000/adminBackend/upload/image', formData, {
+                      headers: { 'Content-Type': 'multipart/form-data' }
+                    });
+                    setEventFormData(prev => ({ ...prev, imagen: res.data.url }));
+                    setImagePreview(res.data.url);
+                    if (localImageUrl) {
+                      URL.revokeObjectURL(localImageUrl);
+                    }
+                    setLocalImageUrl(null);
+                    setImageError(false);
+                    showSnackbar('Imagen subida correctamente', 'success');
+                  } catch {
+                    setImageError(true);
+                    if (localImageUrl) {
+                      URL.revokeObjectURL(localImageUrl);
+                    }
+                    setLocalImageUrl(null);
+                    showSnackbar('Error al subir la imagen', 'error');
+                  }
+                }}
+              />
+            </Button>
+            {imageError && (
+              <Typography color="error" variant="caption">Error al subir la imagen</Typography>
+            )}
+            </Box>
+          </Box>
 
           {/* Cuarta fila: Descripción (ancho completo) */}
+          <Box sx= {{ width: '100%'}}>
           <Grid item xs={12}>
             <TextField 
               fullWidth 
@@ -605,74 +669,58 @@ const handleOpenEventForm = (event = null) => {
               required
             />
           </Grid>
+          </Box>
         </Grid>
       </Grid>
 
-      {/* Columna derecha - Vista previa de imagen */}
-      {imagePreview && (
-        <Grid item xs={12} md={4}>
-          <Box sx={{ position: 'sticky', top: 0 }}>
-            <Typography variant="subtitle1" gutterBottom fontWeight="medium">
-              Preview:
-            </Typography>
-            <Card elevation={3}>
-              <Box sx={{ position: 'relative', overflow: 'hidden' }}>
-                <img
-                  src={imagePreview}
-                  alt="Event preview"
-                  onLoad={handleImageLoad}
-                  onError={handleImageError}
-                  style={{
-                    width: '100%',
-                    height: '200px',
-                    objectFit: 'cover',
-                    display: 'block'
-                  }}
-                />
-                {/* Overlay con información del evento */}
-                <Box sx={{
-                  position: 'absolute',
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  background: 'linear-gradient(transparent, rgba(0,0,0,0.8))',
-                  color: 'white',
-                  p: 2
-                }}>
-                  <Typography variant="h6" fontWeight="bold">
-                    {eventFormData.nombre || "Nombre del evento"}
-                  </Typography>
-                  <Typography variant="body2" sx={{ opacity: 0.9 }}>
-                    {eventFormData.descripcion ? 
-                      (eventFormData.descripcion.length > 60 ? 
-                        eventFormData.descripcion.substring(0, 60) + '...' : 
-                        eventFormData.descripcion
-                      ) : 
-                      "Event description"
-                    }
-                  </Typography>
-                  {eventFormData.fecha && (
-                    <Typography variant="caption" sx={{ opacity: 0.8 }}>
-                      {(() => {
-                        // Forzar preview a mostrar la fecha local correcta
-                        const fechaStr = eventFormData.fecha;
-                        const fechaPreview = new Date(fechaStr + 'T00:00:00');
-                        return !isNaN(fechaPreview)
-                          ? fechaPreview.toLocaleDateString('en-GB', {
-                              year: 'numeric',
-                              month: 'long',
-                              day: 'numeric'
-                            })
-                          : '';
-                      })()}
-                    </Typography>
+      {/* Columna derecha - Vista previa de imagen*/}
+      {(imagePreview || localImageUrl) && (
+                    <Grid item xs={12} md={4}>
+                      <Box sx={{ position: 'sticky', top: 0 }}>
+                        <Typography variant="subtitle1" gutterBottom fontWeight="medium">
+                          Vista previa:
+                        </Typography>
+                        <Card elevation={3}>
+                          <Box sx={{ position: 'relative', overflow: 'hidden' }}>
+                            <img
+                              src={localImageUrl || imagePreview}
+                              alt="Vista previa de promoción"
+                              onLoad={handleImageLoad}
+                              onError={handleImageError}
+                              style={{
+                                width: '100%',
+                                height: '300px',
+                                objectFit: 'cover',
+                                display: 'block'
+                              }}
+                            />
+                            <Box sx={{
+                              position: 'absolute',
+                              bottom: 0,
+                              left: 0,
+                              right: 0,
+                              background: 'linear-gradient(transparent, rgba(0,0,0,0.8))',
+                              color: 'white',
+                              p: 2
+                            }}>
+                              <Typography variant="h6" fontWeight="bold">
+                                {eventFormData.nombre || "Nombre del evento"}
+                              </Typography>
+                              <Typography variant="body2" sx={{ opacity: 0.9 }}>
+                                {eventFormData.descripcion ? 
+                                  (eventFormData.descripcion.length > 60 ? 
+                                    eventFormData.descripcion.substring(0, 60) + '...' : 
+                                    eventFormData.descripcion
+                                  ) : 
+                                  "Descripción del evento"
+                                }
+                              </Typography>
+                            </Box>
+                          </Box>
+                        </Card>
+                      </Box>
+                    </Grid>
                   )}
-                </Box>
-              </Box>
-            </Card>
-          </Box>
-        </Grid>
-      )}
 
       {/* Mensaje cuando no hay imagen */}
       {!imagePreview && eventFormData.imagen && (
@@ -699,25 +747,43 @@ const handleOpenEventForm = (event = null) => {
       )}
     </Grid>
 
-    <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 4 }}>
-      <Button 
-        variant="outlined" 
+    <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mt: 4 }}>
+      <Button
+        variant="outlined"
+        color="error"
         onClick={handleCloseEventForm}
+        sx={{ borderRadius: 2, px: 3, fontWeight: 'bold', borderWidth: 2, borderColor: '#b71c1c' }}
+        startIcon={<CancelIcon />}
       >
-        Cancelar
+        CANCELAR
       </Button>
-      
-      <Button 
-        variant="contained" 
+      <Button
+        variant="contained"
         onClick={handleSaveEvent}
         disabled={!eventFormData.nombre || !eventFormData.descripcion || !eventFormData.fecha}
-        sx={{ backgroundColor: "#660152", '&:hover': { backgroundColor: "#520040" } }}
+        sx={{ backgroundColor: "#660152", '&:hover': { backgroundColor: "#520040" }, borderRadius: 2, px: 3, fontWeight: 'bold' }}
       >
-        {isEditMode ? 'Update Event' : 'Create Event'}
+        {isEditMode ? 'ACTUALIZAR EVENTO' : 'CREAR EVENTO'}
       </Button>
     </Box>
   </Box>
 </Modal>
+
+      <Snackbar 
+        open={openSnackbar} 
+        autoHideDuration={6000} 
+        onClose={() => setOpenSnackbar(false)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      >
+        <Alert 
+          onClose={() => setOpenSnackbar(false)} 
+          severity={snackbarSeverity} 
+          sx={{ width: "100%" }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
+
     </Box>
   );
 };

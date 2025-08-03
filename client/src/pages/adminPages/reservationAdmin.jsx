@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import {
   Box, Typography, Table, TableBody, TableCell, TableContainer, 
   TableHead, TableRow, Paper, TextField, Select, MenuItem, Button, 
@@ -18,116 +19,15 @@ import {
 } from "@mui/icons-material";
 
 const ReservationAdmin = () => {
-  const [reservaciones, setReservaciones] = useState([
-    {
-      _id: "RSV-0015",
-      nombreCliente: "Ricardo",
-      primerApellido: "Castro",
-      segundoApellido: null,
-      correoCliente: "ricardo.castro@hotmail.com",
-      telefono: "555-1234",
-      fecha: "2025-06-15",
-      horaInicio: "19:00",
-      cantidadPersonas: 2,
-      fechaReservacion: "2025-06-01",
-      estado: "confirmada",
-    },
-    {
-      _id: "RSV-0016",
-      nombreCliente: "Jorge",
-      primerApellido: "Castro Aguilar",
-      segundoApellido: null,
-      correoCliente: "jorge.castro@hotmail.com",
-      telefono: "664 555 1234",
-      fecha: "2025-06-15",
-      horaInicio: "19:00",
-      cantidadPersonas: 2,
-      fechaReservacion: "2025-06-01",
-      estado: "confirmada",
-    },
-    {
-      _id: "RSV-0017",
-      nombreCliente: "María",
-      primerApellido: "González",
-      segundoApellido: "López",
-      correoCliente: "maria.gonzalez@gmail.com",
-      telefono: "664 555 5678",
-      fecha: "2025-06-20",
-      horaInicio: "20:30",
-      cantidadPersonas: 4,
-      fechaReservacion: "2025-06-02",
-      estado: "cancelada",
-    },
-    {
-      _id: "RSV-0018",
-      nombreCliente: "Carlos",
-      primerApellido: "Mendoza",
-      segundoApellido: null,
-      correoCliente: "carlos.mendoza@outlook.com",
-      telefono: "664 555 9012",
-      fecha: "2025-06-22",
-      horaInicio: "21:00",
-      cantidadPersonas: 3,
-      fechaReservacion: "2025-06-03",
-      estado: "confirmada",
-    },
-    {
-      _id: "RSV-0019",
-      nombreCliente: "Ana",
-      primerApellido: "Ramírez",
-      segundoApellido: "Flores",
-      correoCliente: "ana.ramirez@yahoo.com",
-      telefono: "664 555 3456",
-      fecha: "2025-06-25",
-      horaInicio: "18:30",
-      cantidadPersonas: 2,
-      fechaReservacion: "2025-06-04",
-      estado: "confirmada",
-    },
-     {
-      _id: "RSV-0019",
-      nombreCliente: "Ana",
-      primerApellido: "Ramírez",
-      segundoApellido: "Flores",
-      correoCliente: "ana.ramirez@yahoo.com",
-      telefono: "664 555 3456",
-      fecha: "2025-06-25",
-      horaInicio: "18:30",
-      cantidadPersonas: 2,
-      fechaReservacion: "2025-06-04",
-      estado: "confirmada",
-    },
-     {
-      _id: "RSV-0019",
-      nombreCliente: "Ana",
-      primerApellido: "Ramírez",
-      segundoApellido: "Flores",
-      correoCliente: "ana.ramirez@yahoo.com",
-      telefono: "664 555 3456",
-      fecha: "2025-06-25",
-      horaInicio: "18:30",
-      cantidadPersonas: 2,
-      fechaReservacion: "2025-06-04",
-      estado: "confirmada",
-    },
-     {
-      _id: "RSV-0019",
-      nombreCliente: "Ana",
-      primerApellido: "Ramírez",
-      segundoApellido: "Flores",
-      correoCliente: "ana.ramirez@yahoo.com",
-      telefono: "664 555 3456",
-      fecha: "2025-06-25",
-      horaInicio: "18:30",
-      cantidadPersonas: 2,
-      fechaReservacion: "2025-06-04",
-      estado: "confirmada",
-    },
-  ]);
+  const [reservaciones, setReservaciones] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   // Estados de filtros y paginación
   const [filtroNombre, setFiltroNombre] = useState("");
   const [filtroEstado, setFiltroEstado] = useState("");
+  // Eliminado filtro de rango de fechas
+  const [filtroDiaSemana, setFiltroDiaSemana] = useState("");
   const [pagina, setPagina] = useState(0);
   const [filasPorPagina, setFilasPorPagina] = useState(5);
 
@@ -138,14 +38,60 @@ const ReservationAdmin = () => {
   const [motivo, setMotivo] = useState("");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
-  // Filtros
-  const filtradas = reservaciones.filter((res) => {
-    const nombreCompleto = `${res.nombreCliente} ${res.primerApellido} ${res.segundoApellido || ""}`.toLowerCase();
-    const coincideNombre = nombreCompleto.includes(filtroNombre.toLowerCase());
-    const coincideId = res._id.toLowerCase().includes(filtroNombre.toLowerCase());
-    const coincideEstado = filtroEstado ? res.estado === filtroEstado : true;
-    
-    return (coincideNombre || coincideId) && coincideEstado;
+
+  // Fetch de reservaciones desde el backend
+  useEffect(() => {
+    const fetchReservations = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        // Si hay filtro de día de la semana
+        if (filtroDiaSemana !== "") {
+          const res = await axios.get("http://localhost:3000/adminBackend/reservations/by-weekday", {
+            params: { weekday: filtroDiaSemana }
+          });
+          setReservaciones(res.data);
+          return;
+        }
+        // Filtros normales
+        const params = {};
+        if (filtroNombre) {
+          params.nombre = filtroNombre;
+          params.folio = filtroNombre;
+        }
+        if (filtroEstado) {
+          params.estado = filtroEstado;
+        }
+        const res = await axios.get("http://localhost:3000/adminBackend/reservations", { params });
+        setReservaciones(res.data);
+      } catch {
+        setError("Error loading reservations");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchReservations();
+  }, [filtroNombre, filtroEstado, filtroDiaSemana]);
+
+  // Asegura que reservaciones siempre sea un array
+  const safeReservaciones = Array.isArray(reservaciones) ? reservaciones : [];
+  // Filtro adicional en frontend para asegurar búsqueda consistente
+  const filtradas = safeReservaciones.filter(res => {
+    // Normaliza campos para búsqueda
+    const folio = (res._id || '').toLowerCase();
+    const nombre = (res.nombreCliente || '').toLowerCase();
+    const primerApell = (res.primerApell || '').toLowerCase();
+    const segundoApell = (res.segundoApell || '').toLowerCase();
+    const filtro = filtroNombre.toLowerCase();
+    // Coincidencia por folio, nombre o apellidos
+    const match =
+      folio.includes(filtro) ||
+      nombre.includes(filtro) ||
+      primerApell.includes(filtro) ||
+      segundoApell.includes(filtro);
+    // Estado ya viene filtrado del backend, pero si quieres forzar aquí:
+    // const matchEstado = filtroEstado ? res.estado === filtroEstado : true;
+    return !filtroNombre || match;
   });
 
   // Funciones de utilidad para estilos
@@ -197,17 +143,27 @@ const ReservationAdmin = () => {
     setOpenDialog(false);
   };
 
-  const handleCancelReservation = () => {
+  // Cancelar reservación vía backend
+  const handleCancelReservation = async () => {
     if (!motivo.trim()) return;
-    
-    const actualizadas = reservaciones.map((r) =>
-      r._id === selected._id
-        ? { ...r, estado: "cancelada", motivoCancelacion: motivo }
-        : r
-    );
-    setReservaciones(actualizadas);
-    setOpenDialog(false);
-    setSnackbarOpen(true);
+    try {
+      await axios.patch(`http://localhost:3000/adminBackend/reservations/${selected._id}/cancel`, { motivo });
+      setSnackbarOpen(true);
+      setOpenDialog(false);
+      // Refrescar lista
+      const params = {};
+      if (filtroNombre) {
+        params.nombre = filtroNombre;
+        params.folio = filtroNombre;
+      }
+      if (filtroEstado) {
+        params.estado = filtroEstado;
+      }
+      const res = await axios.get("http://localhost:3000/adminBackend/reservations", { params });
+      setReservaciones(res.data);
+    } catch {
+      setError("Error cancelling reservation");
+    }
   };
 
   return (
@@ -219,10 +175,10 @@ const ReservationAdmin = () => {
         </Typography>
       </Box>
       <Box sx={{ display: 'flex', flexDirection: "row", alignItems: 'center', justifyContent: 'space-between'}}>
-        
-        <Box sx={{  display: 'flex', flexDirection: 'row', gap: 2,  }}>
-          <FormControl sx={{ maxWidth: 250, minWidth: 250 }}>
-            <InputLabel size="small" sx={{ width: 250, backgroundColor: 'white' }}>Filter by Status</InputLabel>
+        <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2, flexWrap: 'wrap' }}>
+          {/* Filtro por estado */}
+          <FormControl sx={{ maxWidth: 180, minWidth: 180 }}>
+            <InputLabel size="small" sx={{ width: 180, backgroundColor: 'white' }}>Filter by Status</InputLabel>
             <Select
               labelId="filter-label"
               id="filter"
@@ -238,14 +194,42 @@ const ReservationAdmin = () => {
             </Select>
           </FormControl>
 
+          {/* Filtro por nombre o folio */}
           <TextField
             label="Search by Name or Folio"
             variant="outlined"
             size="small"
             value={filtroNombre}
             onChange={(e) => setFiltroNombre(e.target.value)}
-            sx={{ width: 250, backgroundColor: 'white', borderRadius: 1 }}
+            sx={{ width: 220, backgroundColor: 'white', borderRadius: 1 }}
           />
+
+          {/* Eliminado filtro por rango de fechas */}
+
+          {/* Filtro por día de la semana */}
+          <FormControl sx={{ maxWidth: 180, minWidth: 180 }}>
+            <InputLabel size="small" sx={{ width: 180, backgroundColor: 'white' }}>Day of Week</InputLabel>
+            <Select
+              labelId="weekday-label"
+              id="weekday"
+              value={filtroDiaSemana}
+              label="Day of Week"
+              onChange={e => {
+                setFiltroDiaSemana(e.target.value);
+              }}
+              size="small"
+              sx={{ backgroundColor: 'white', borderRadius: 1 }}
+            >
+              <MenuItem value="">All Days</MenuItem>
+              <MenuItem value={0}>Sunday</MenuItem>
+              <MenuItem value={1}>Monday</MenuItem>
+              <MenuItem value={2}>Tuesday</MenuItem>
+              <MenuItem value={3}>Wednesday</MenuItem>
+              <MenuItem value={4}>Thursday</MenuItem>
+              <MenuItem value={5}>Friday</MenuItem>
+              <MenuItem value={6}>Saturday</MenuItem>
+            </Select>
+          </FormControl>
         </Box>
         
         {/* Estadísticas rápidas */}
@@ -253,7 +237,7 @@ const ReservationAdmin = () => {
           <Card sx={{ minWidth: 120 }}>
             <CardContent sx={{ textAlign: 'center', py: 2 }}>
               <Typography variant="h4" color="primary.main" fontWeight="bold">
-                {reservaciones.length}
+                {safeReservaciones.length}
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 Reservation Count
@@ -263,7 +247,7 @@ const ReservationAdmin = () => {
           <Card sx={{ minWidth: 120 }}>
             <CardContent sx={{ textAlign: 'center', py: 2 }}>
               <Typography variant="h4" color="success.main" fontWeight="bold">
-                {reservaciones.filter(r => r.estado === 'confirmada').length}
+                {safeReservaciones.filter(r => r.estado === 'confirmada').length}
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 Confirmed
@@ -273,7 +257,7 @@ const ReservationAdmin = () => {
           <Card sx={{ minWidth: 120 }}>
             <CardContent sx={{ textAlign: 'center', py: 2 }}>
               <Typography variant="h4" color="error.main" fontWeight="bold">
-                {reservaciones.filter(r => r.estado === 'cancelada').length}
+                {safeReservaciones.filter(r => r.estado === 'cancelada').length}
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 Cancelled
@@ -286,6 +270,9 @@ const ReservationAdmin = () => {
 
 
 
+      {error && (
+        <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>
+      )}
       <Card elevation={3}>
         <CardContent sx={{ p: 0 }}>
           <TableContainer component={Paper}>
@@ -302,9 +289,16 @@ const ReservationAdmin = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {filtradas
-                  .slice(pagina * filasPorPagina, pagina * filasPorPagina + filasPorPagina)
-                  .map((res) => (
+                {loading ? (
+                  <TableRow>
+                    <TableCell colSpan={7} align="center">
+                      <Typography variant="body1">Loading reservations...</Typography>
+                    </TableCell>
+                  </TableRow>
+                ) :
+                  filtradas
+                    .slice(pagina * filasPorPagina, pagina * filasPorPagina + filasPorPagina)
+                    .map((res) => (
                     <TableRow 
                       key={res._id}
                       hover
@@ -315,7 +309,7 @@ const ReservationAdmin = () => {
                           {res._id}
                         </Typography>
                         <Typography variant="caption" color="text.secondary">
-                          Created: {res.fechaReservacion}
+                          Created: {res.fechaReservacion ? new Date(res.fechaReservacion).toISOString().slice(0, 10) : ''}
                         </Typography>
                       </TableCell>
                       <TableCell>
@@ -328,15 +322,16 @@ const ReservationAdmin = () => {
                               fontWeight: 'bold'
                             }}
                           >
-                            {res.nombreCliente.charAt(0)}{res.primerApellido.charAt(0)}
+                            {(res.nombreCliente ? res.nombreCliente.charAt(0) : '')}
+                            {(res.primerApell ? res.primerApell.charAt(0) : '')}
                           </Avatar>
                           <Box>
                             <Typography variant="h6" fontWeight="bold">
-                              {`${res.nombreCliente} ${res.primerApellido}`}
+                              {res.nombreCliente || ''} {res.primerApell || ''}
                             </Typography>
-                            {res.segundoApellido && (
-                              <Typography variant="body2" color="text.secondary">
-                                {res.segundoApellido}
+                            {res.segundoApell && (
+                              <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.95rem', fontWeight: 400 }}>
+                                {res.segundoApell}
                               </Typography>
                             )}
                           </Box>
@@ -353,7 +348,7 @@ const ReservationAdmin = () => {
                           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                             <PhoneIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
                             <Typography variant="body2">
-                              {res.telefono}
+                              {res.numTel}
                             </Typography>
                           </Box>
                         </Box>
@@ -426,7 +421,7 @@ const ReservationAdmin = () => {
                       </TableCell>
                     </TableRow>
                   ))}
-                {filtradas.length === 0 && (
+                {!loading && filtradas.length === 0 && (
                   <TableRow>
                     <TableCell colSpan={7} align="center">
                       <Box sx={{ py: 6 }}>
@@ -473,27 +468,78 @@ const ReservationAdmin = () => {
         </DialogTitle>
         <DialogContent>
           {ticketDialog && (
-            <Box sx={{ p: 2 }}>
-              <Typography variant="h6" gutterBottom color="#660152">
+            <Box sx={{ p: 2, background: '#faf7fb', borderRadius: 2 }}>
+              <Typography variant="h6" gutterBottom color="#660152" sx={{ fontWeight: 700, mb: 2 }}>
                 Reservation Details
               </Typography>
-              <Divider sx={{ mb: 2, borderColor: "#660152", borderWidth: 1 }} />
-              
+              <Divider sx={{ mb: 3, borderColor: "#660152", borderWidth: 1 }} />
               <Grid container spacing={2}>
-                <Grid item xs={6}>
-                  <Typography variant="body1"><strong>Folio:</strong> {ticketDialog._id}</Typography>
-                  <Typography variant="body1"><strong>Client:</strong> {ticketDialog.nombreCliente} {ticketDialog.primerApellido}</Typography>
-                  <Typography variant="body1"><strong>Date:</strong> {ticketDialog.fecha}</Typography>
+                <Grid item xs={12} sm={6}>
+                  <Box sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <ReceiptIcon sx={{ color: '#660152' }} />
+                    <Box>
+                      <Typography variant="subtitle2" color="#660152" sx={{ fontWeight: 600 }}>Folio</Typography>
+                      <Typography variant="body1" sx={{ mb: 1 }}>{ticketDialog._id}</Typography>
+                    </Box>
+                  </Box>
+                  <Box sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <PersonIcon sx={{ color: '#660152' }} />
+                    <Box>
+                      <Typography variant="subtitle2" color="#660152" sx={{ fontWeight: 600 }}>Client</Typography>
+                      <Typography variant="body1" sx={{ mb: 1 }}>{ticketDialog.nombreCliente} {ticketDialog.primerApellido}</Typography>
+                    </Box>
+                  </Box>
+                  <Box sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <CalendarIcon sx={{ color: '#660152' }} />
+                    <Box>
+                      <Typography variant="subtitle2" color="#660152" sx={{ fontWeight: 600 }}>Date</Typography>
+                      <Typography variant="body1" sx={{ mb: 1 }}>{ticketDialog.fecha ? new Date(ticketDialog.fecha).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : ''}</Typography>
+                    </Box>
+                  </Box>
+                  <Box sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <EmailIcon sx={{ color: '#660152' }} />
+                    <Box>
+                      <Typography variant="subtitle2" color="#660152" sx={{ fontWeight: 600 }}>Email</Typography>
+                      <Typography variant="body1" sx={{ mb: 1 }}>{ticketDialog.correoCliente}</Typography>
+                    </Box>
+                  </Box>
+                  <Box sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <PhoneIcon sx={{ color: '#660152' }} />
+                    <Box>
+                      <Typography variant="subtitle2" color="#660152" sx={{ fontWeight: 600 }}>Phone</Typography>
+                      <Typography variant="body1" sx={{ mb: 1 }}>{ticketDialog.numTel}</Typography>
+                    </Box>
+                  </Box>
                 </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="body1"><strong>Time:</strong> {ticketDialog.horaInicio}</Typography>
-                  <Typography variant="body1"><strong>People:</strong> {ticketDialog.cantidadPersonas}</Typography>
-                  <Typography variant="body1"><strong>Status:</strong> {ticketDialog.estado}</Typography>
-                </Grid>
-                <Grid item xs={12}>
-                  <Typography variant="body1"><strong>Email:</strong> {ticketDialog.correoCliente}</Typography>
-                  <Typography variant="body1"><strong>Phone:</strong> {ticketDialog.telefono}</Typography>
-                  <Typography variant="body1"><strong>Creation Date:</strong> {ticketDialog.fechaReservacion}</Typography>
+                <Grid item xs={12} sm={6}>
+                  <Box sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <TimeIcon sx={{ color: '#660152' }} />
+                    <Box>
+                      <Typography variant="subtitle2" color="#660152" sx={{ fontWeight: 600 }}>Time</Typography>
+                      <Typography variant="body1" sx={{ mb: 1 }}>{ticketDialog.horaInicio}</Typography>
+                    </Box>
+                  </Box>
+                  <Box sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <PersonIcon sx={{ color: '#660152' }} />
+                    <Box>
+                      <Typography variant="subtitle2" color="#660152" sx={{ fontWeight: 600 }}>People</Typography>
+                      <Typography variant="body1" sx={{ mb: 1 }}>{ticketDialog.cantidadPersonas}</Typography>
+                    </Box>
+                  </Box>
+                  <Box sx={{ mb: 2 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <EventIcon sx={{ color: '#660152', mr: 0.5 }} />
+                      <Typography variant="subtitle2" color="#660152" sx={{ fontWeight: 600 }}>Status</Typography>
+                    </Box>
+                    <Typography variant="body1" sx={{ textTransform: 'capitalize', ml: 4, mt: 0.5 }}>{ticketDialog.estado}</Typography>
+                  </Box>
+                  <Box sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <CalendarIcon sx={{ color: '#660152' }} />
+                    <Box>
+                      <Typography variant="subtitle2" color="#660152" sx={{ fontWeight: 600 }}>Creation Date</Typography>
+                      <Typography variant="body1" sx={{ mb: 1 }}>{ticketDialog.fechaReservacion ? new Date(ticketDialog.fechaReservacion).toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : ''}</Typography>
+                    </Box>
+                  </Box>
                 </Grid>
               </Grid>
             </Box>

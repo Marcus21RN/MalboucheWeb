@@ -4,6 +4,7 @@ const router = express.Router();
 
 
 
+
 import empleadoRoutes from './routes/empleado.js';
 import iotRoutes from './routes/iotRoutes.js';
 import productoRoutes from './routes/producto.js';
@@ -12,6 +13,8 @@ import eventRoutes from './routes/event.js';
 import promocionRoutes from './routes/promocion.js';
 import uploadRoutes from './routes/upload.js';
 import emailRoutes from './routes/email.js';
+import reservationRoutes from './routes/reservation.js';
+
 
 
 
@@ -23,6 +26,7 @@ router.use('/events', eventRoutes);
 router.use('/promos', promocionRoutes);
 router.use('/upload', uploadRoutes);
 router.use('/email', emailRoutes);
+router.use('/reservations', reservationRoutes);
 
 
 export default router;

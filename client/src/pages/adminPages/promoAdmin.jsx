@@ -475,8 +475,7 @@ const PromoAdmin = () => {
             {/* Columna izquierda - Formulario */}
             <Grid item xs={12} md={imagePreview ? 8 : 12}>
               <Grid container spacing={2}>
-                {/* Primera fila: ID y Nombre */}
-                {/* El campo ID se elimina del formulario, se genera automáticamente en el backend */}
+                {/* Primera fila:Nombre */}
                 <Box sx={{ width: '100%' }}>
                   <Grid item xs={12} md={6}>
                     <TextField 
@@ -517,7 +516,7 @@ const PromoAdmin = () => {
                   </Box>
                 
 
-                {/* Tercera fila: Estado y URL de imagen */}
+                {/* Tercera fila: Estado e imagen */}
                 <Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', gap: 2 }}>
                   <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2, width: '100%' }}>
                     <TextField 
