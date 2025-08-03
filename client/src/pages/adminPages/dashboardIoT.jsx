@@ -45,6 +45,9 @@ const DashboardIoT = () => {
   const [dhtData, setDHTData] = useState([]);
   const [ultraData, setUltraData] = useState([]);
   const [mlxData, setMLXData] = useState([]);
+  const [dhtStats, setDhtStats] = useState(null);
+  const [ultraStats, setUltraStats] = useState(null);
+  const [mlxStats, setMlxStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -54,17 +57,18 @@ const DashboardIoT = () => {
     Promise.all([
       axios.get("http://localhost:3000/adminBackend/iot/dht11"),
       axios.get("http://localhost:3000/adminBackend/iot/ultrasonico"),
-      axios.get("http://localhost:3000/adminBackend/iot/mlx90614")
+      axios.get("http://localhost:3000/adminBackend/iot/mlx90614"),
+      axios.get("http://localhost:3000/adminBackend/iot/aggregate/dht11"),
+      axios.get("http://localhost:3000/adminBackend/iot/aggregate/ultrasonico"),
+      axios.get("http://localhost:3000/adminBackend/iot/aggregate/mlx90614")
     ])
-      .then(([dhtRes, ultraRes, mlxRes]) => {
-        // Logs para depuración
-        console.log("DHT11:", dhtRes.data);
-        console.log("Ultrasonico:", ultraRes.data);
-        console.log("MLX90614:", mlxRes.data);
-
+      .then(([dhtRes, ultraRes, mlxRes, dhtStatsRes, ultraStatsRes, mlxStatsRes]) => {
         setDHTData(Array.isArray(dhtRes.data) ? dhtRes.data : []);
         setUltraData(Array.isArray(ultraRes.data) ? ultraRes.data : []);
         setMLXData(Array.isArray(mlxRes.data) ? mlxRes.data : []);
+        setDhtStats(dhtStatsRes.data);
+        setUltraStats(ultraStatsRes.data);
+        setMlxStats(mlxStatsRes.data);
       })
       .catch((err) => {
         setError("Error al cargar los datos de los sensores.");
@@ -73,38 +77,38 @@ const DashboardIoT = () => {
       .finally(() => setLoading(false));
   }, []);
 
-  // Función para calcular estadísticas simuladas
-  const getStatistics = (data, key, sensorType = '') => {
-    // Datos simulados por defecto
-    const simulatedStats = {
-      dht_temp: { avg: 25.8, min: 23.5, max: 27.3, latest: 27.3, trend: 0.2 },
-      dht_hum: { avg: 57.1, min: 50, max: 65, latest: 50, trend: -2.0 },
-      ultra: { avg: 29.7, min: 25.3, max: 33.6, latest: 30.4, trend: -3.2 },
-      mlx: { avg: 30.7, min: 28.5, max: 32.3, latest: 32.3, trend: 0.2 }
-    };
+  // Estadísticas calculadas desde el backend
+  const tempStats = dhtStats ? {
+    avg: dhtStats.temperaturaC.avg,
+    min: dhtStats.temperaturaC.min,
+    max: dhtStats.temperaturaC.max,
+    latest: dhtStats.temperaturaC.latest,
+    trend: null // Puedes calcular el trend si lo necesitas
+  } : { avg: 0, min: 0, max: 0, latest: 0, trend: null };
 
-    if (!data || data.length === 0) {
-      return simulatedStats[sensorType] || { avg: 0, min: 0, max: 0, latest: 0, trend: 0 };
-    }
+  const humidityStats = dhtStats ? {
+    avg: dhtStats.humedad.avg,
+    min: dhtStats.humedad.min,
+    max: dhtStats.humedad.max,
+    latest: dhtStats.humedad.latest,
+    trend: null
+  } : { avg: 0, min: 0, max: 0, latest: 0, trend: null };
 
-    const values = data.map(item => parseFloat(item[key])).filter(val => !isNaN(val));
-    if (values.length === 0) {
-      return simulatedStats[sensorType] || { avg: 0, min: 0, max: 0, latest: 0, trend: 0 };
-    }
+  const distanceStats = ultraStats ? {
+    avg: ultraStats.distanciaCM.avg,
+    min: ultraStats.distanciaCM.min,
+    max: ultraStats.distanciaCM.max,
+    latest: ultraStats.distanciaCM.latest,
+    trend: null
+  } : { avg: 0, min: 0, max: 0, latest: 0, trend: null };
 
-    const avg = values.reduce((sum, val) => sum + val, 0) / values.length;
-    const min = Math.min(...values);
-    const max = Math.max(...values);
-    const latest = values[values.length - 1] || 0;
-    const trend = values.length > 1 ? latest - values[values.length - 2] : 0;
-    return { avg, min, max, latest, trend };
-  };
-
-  // Estadísticas calculadas
-  const tempStats = getStatistics(dhtData, 'temperaturaC', 'dht_temp');
-  const humidityStats = getStatistics(dhtData, 'humedad', 'dht_hum');
-  const distanceStats = getStatistics(ultraData, 'distanciaCM', 'ultra');
-  const mlxTempStats = getStatistics(mlxData, 'temperaturaC', 'mlx');
+  const mlxTempStats = mlxStats ? {
+    avg: mlxStats.temperaturaC.avg,
+    min: mlxStats.temperaturaC.min,
+    max: mlxStats.temperaturaC.max,
+    latest: mlxStats.temperaturaC.latest,
+    trend: null
+  } : { avg: 0, min: 0, max: 0, latest: 0, trend: null };
 
   // Tarjeta de estadística rápida
   const StatCard = ({ title, value, unit, icon, color, trend, subtitle }) => (

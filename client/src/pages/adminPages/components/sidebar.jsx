@@ -76,6 +76,8 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
     if (userData) {
       try {
         const parsed = JSON.parse(userData);
+        // Forzar _id a número si existe
+        if (parsed._id) parsed._id = Number(parsed._id);
         setUserInfo(parsed);
         return;
       } catch {
@@ -96,6 +98,8 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
               if (userData.id && !userData._id) {
                 userData._id = userData.id;
               }
+              // Forzar _id a número si existe
+              if (userData._id) userData._id = Number(userData._id);
               setUserInfo(userData);
               localStorage.setItem('userAuth', JSON.stringify(userData));
             })
@@ -510,6 +514,12 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
                         setPasswordLoading(true);
                         try {
                           // PUT al backend para cambiar contraseña
+                          // Validar que userInfo._id esté presente y sea número
+                          if (!userInfo._id || isNaN(userInfo._id)) {
+                            setPasswordError('No se encontró el ID del usuario. Intenta recargar la página.');
+                            setPasswordLoading(false);
+                            return;
+                          }
                           await axios.put(
                             `http://localhost:3000/adminBackend/empleados/${userInfo._id}`,
                             {
