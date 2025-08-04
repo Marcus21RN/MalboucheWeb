@@ -143,11 +143,11 @@ useEffect(() => {
               <h2 className="text-3xl md:text-4xl font-bold mt-2 mb-6 text-center md:text-left font-['oswald'] text-[#fbf7f4]">
                 WELCOME TO MALBOUCHE BAR
               </h2>
-              <p className="mb-4 text-lg leading-relaxed text-center md:text-left">
-                Somewhere in time, where clocks run backwards, tea never gets cold and sanity is optional, lies the Malbouche Bar.
-                Drawing inspiration from the fantastical world of <em>Alice in Wonderland</em>, our bar offers more than just drinks; it provides a sensory experience where reality is distorted, cocktails tell stories, and the décor comes to life.
-                Here, every drink is a potion, every corner is a rabbit hole and every night is a new chapter of enchanting madness.
-                Do you dare follow the White Rabbit?
+              <p className="mb-4 text-lg leading-relaxed  md:text-left, text-justify">
+                Step into a realm where reality bends—where drinks are more than just cocktails, 
+                they're elixirs of wonder. Every sip tells a story, every corner hides a secret, 
+                and every night unfolds like a page from a surreal dream. The décor shifts and whispers, 
+                inviting you to lose yourself in an atmosphere of playful mystery.
               </p>
             </div>
           </div>
