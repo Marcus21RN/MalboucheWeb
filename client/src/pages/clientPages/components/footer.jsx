@@ -45,8 +45,8 @@ export default function Footer() {
               CONTACT US<span className="text-[#b76ba3]">.</span>
             </h2>
             <ul className="space-y-1 font-['montserrat']">
-              <li>Email: info@malbouche.com</li>
-              <li>Phone: (123) 456-7890</li>
+              <li>Email: malbouche25@gmail.com</li>
+              <li>Phone: +52 123 456 9789</li>
             </ul>
           </div>
 
@@ -55,7 +55,7 @@ export default function Footer() {
             <h2 className="text-lg font-bold tracking-wide font-['oswald'] mb-4 text-[#F9F4EF]">
               LOCATION<span className="text-[#b76ba3]">.</span>
             </h2>
-            <p className="font-['montserrat']">123 Wonderland St, Fantasy City</p>
+            <p className="font-['montserrat']">Carretera Libre<br /> Tijuana-Tecate Km 10 Fracc.<br /> El Refugio, Quintas Campestre,<br /> C.P. 22253 Redondo, B.C.  </p>
           </div>
 
           {/* Redes sociales */}

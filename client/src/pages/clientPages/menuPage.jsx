@@ -190,15 +190,16 @@ export default function MenuPage() {
             <div key={i} className="mb-24">
             {/* Banner solo si aplica */}
             {mostrarBanner && (
-              <div className="relative w-full h-64 mb-6 rounded-md overflow-hidden shadow-lg">
-                <Parallax speed={-20}>
+              <div className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] h-82 mb-15 rounded-none overflow-hidden shadow-lg">
+                <Parallax speed={-30} opacity={[0.7, 1]} scale={[1.1, 1]}>
                   <img
                     src={bannerImages[tipoMenu]}
                     alt={`${tipoMenu} banner`}
-                    className="w-full h-full object-cover brightness-75"
+                    className="w-full h-full object-cover brightness-85"
+                    style={{ minHeight: "100%", minWidth: "100%" }}
                   />
                 </Parallax>
-                <h1 className="absolute inset-0 flex items-center justify-center text-5xl font-bold font-['Oswald'] text-white">
+                <h1 className="absolute inset-0 flex items-center justify-center text-5xl font-bold font-['Oswald'] text-white drop-shadow-lg">
                   {tipoMenu.toUpperCase()}
                 </h1>
               </div>

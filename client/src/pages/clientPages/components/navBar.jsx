@@ -57,21 +57,23 @@ export default function Navbar() {
             onClick={() => handleNavigation("/")}
             className="text-2xl font-bold text-white font-[oswald] tracking-widest hover:cursor-pointer"
           >
+            
             MALBOUCHE
           </button>
         </div>
 
         {/* Menú Desktop */}
-        <ul className="hidden md:flex items-center gap-6 lg:gap-12 font-['montserrat'] font-normal">
+        <ul className="hidden md:flex items-center gap-6 lg:gap-12 fon  t-['montserrat'] font-normal">
           {navLinks.map((link) => (
             <li key={link.to} className="relative group">
               <button
                 onClick={() => handleNavigation(link.to)}
                 className={`
                   transition duration-200 px-2 py-1
+                  drop-shadow-[0_1px_2px_#333131]
                   ${link.special 
                     ? "px-4 py-2 mx-4 border-white font-[oswald] border-2 text-white font-normal tracking-widest hover:bg-[#fff] hover:border-[#fff] hover:text-[#660154]" 
-                    : "hover:text-[#b76ba3] font-[montserrat] text-amber-50 font-semibold text-lg tracking-widest"
+                    : "hover:text-[#b76ba3] font-[montserrat] text-white font-semibold text-lg tracking-widest"
                   }
                 `}
               >
@@ -107,13 +109,14 @@ export default function Navbar() {
         <ul className="flex flex-col items-center py-4 space-y-6">
           {navLinks.map((link) => (
             <li key={link.to} className="w-full text-center">
+              
               <button
                 onClick={() => handleNavigation(link.to)}
                 className={`
                   w-full py-3 px-4 transition duration-200
                   ${link.special 
                     ? "mx-4 border-white font-[oswald] border-2 text-white font-normal tracking-widest hover:bg-[#660154] hover:border-[#660154]" 
-                    : "text-white hover:text-[#b76ba3] font-medium"
+                    : "text-white hover:text-[#b76ba3] font-medium shadow"
                   }
                 `}
               >

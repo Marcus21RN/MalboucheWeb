@@ -297,7 +297,7 @@ export default function ContactPage() {
            <div className="space-y-12">
               {/* Dirección */}
               <div className="flex items-start">
-                <FaMapMarkerAlt className="text-[#660152] text-3xl mt-1 mr-6 flex-shrink-0" />
+                <FaMapMarkerAlt className="text-[#660152] text-3xl mt-1 mr-6 flex-shrink-0" /> 
                 <div>
                   <h3 className="text-xl font-bold text-white font-['oswald'] uppercase tracking-wider mb-4">ADDRESS</h3>
                   <div className="text-gray-300 font-['montserrat'] space-y-2">
