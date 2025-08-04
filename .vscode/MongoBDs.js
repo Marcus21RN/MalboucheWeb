@@ -298,7 +298,7 @@ db.createCollection("reservacion", {
         },
         estado: {
           bsonType: "string",
-          enum: ["pendiente", "cancelada", "finalizada"],
+          enum: ["confirmada", "cancelada", "finalizada"],
           description: "Estado de la reservación"
         },
         motivo: {
@@ -380,7 +380,7 @@ db.reservacion.insertMany([
     horaInicio: "20:00",
     cantidadPersonas: 2,
     fechaReservacion: ISODate("2025-07-01T00:00:00Z"),
-    estado: "pendiente",
+    estado: "confirmada",
     motivo: null
   },
   {
@@ -394,7 +394,7 @@ db.reservacion.insertMany([
     horaInicio: "21:00",
     cantidadPersonas: 6,
     fechaReservacion: ISODate("2025-07-01T00:00:00Z"),
-    estado: "pendiente",
+    estado: "confirmada",
     motivo: null
   }
 ])
