@@ -296,14 +296,14 @@ db.createCollection("reservacion", {
           bsonType: "date",
           description: "Fecha en que se realizó la reservación"
         },
+        motivoCancel: {
+          bsonType: ["string", "null"],
+          description: "Motivo de cancelación (solo si aplica)"
+        },
         estado: {
           bsonType: "string",
           enum: ["confirmada", "cancelada", "finalizada"],
           description: "Estado de la reservación"
-        },
-        motivo: {
-          bsonType: ["string", "null"],
-          description: "Motivo de cancelación (solo si aplica)"
         }
       }
     }

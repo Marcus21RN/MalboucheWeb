@@ -42,6 +42,11 @@ const reservationSchema = new mongoose.Schema({
     default: Date.now, // Por defecto, la fecha de reservación es la fecha actual
     required: true
   },
+  motivoCancel: {
+    // Motivo de cancelación, puede ser null si no aplica
+    type: String,
+    default: null
+  },
   estado: {
     type: String,
     enum: ['confirmada', 'cancelada'],

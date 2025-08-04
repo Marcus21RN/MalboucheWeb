@@ -37,7 +37,7 @@ export const cancelReservation = async (req, res) => {
       return res.status(404).json({ message: 'Reservation not found.' });
     }
     reservation.estado = 'cancelada';
-    if (motivo) reservation.motivoCancelacion = motivo;
+    if (motivo) reservation.motivoCancel = motivo;
     await reservation.save();
     res.status(200).json({ message: 'Reservation cancelled successfully.' });
   } catch (error) {
