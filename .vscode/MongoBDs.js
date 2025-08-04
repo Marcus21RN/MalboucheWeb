@@ -174,12 +174,8 @@ db.createCollection("evento", {
         },
         estado: {
           bsonType: "string",
-          enum: ["activo", "cancelado", "pendiente"],
+          enum: ["activo", "inactivo"],
           description: "Estado del evento"
-        },
-        motivo: {
-          bsonType: ["string", "null"],
-          description: "Motivo de cancelación del evento"
         },
         imagen: {
           bsonType: ["string", "null"],
@@ -200,8 +196,7 @@ db.evento.insertMany([
     fechaEvento: ISODate("2025-06-28T00:00:00Z"),
     horaInicio: "20:00",
     horaFinal: "23:00",
-    estado: "pendiente",
-    motivo: null,
+    estado: "activo",
     imagen: "https://example.com/concierto-jazz.jpg"
   },
   {
@@ -212,8 +207,7 @@ db.evento.insertMany([
     fechaEvento: ISODate("2025-07-05T00:00:00Z"),
     horaInicio: "21:00",
     horaFinal: "00:00",
-    estado: "pendiente",
-    motivo: null,
+    estado: "activo",
     imagen: "https://example.com/noche-salsa.jpg"
   },
   {
@@ -224,8 +218,7 @@ db.evento.insertMany([
     fechaEvento: ISODate("2025-07-12T00:00:00Z"),
     horaInicio: "20:30",
     horaFinal: "23:30",
-    estado: "pendiente",
-    motivo: null,
+    estado: "activo",
     imagen: "https://example.com/tributo-queen.jpg"
   },
   {
@@ -236,8 +229,7 @@ db.evento.insertMany([
     fechaEvento: ISODate("2025-07-19T00:00:00Z"),
     horaInicio: "19:00",
     horaFinal: "22:00",
-    estado: "pendiente",
-    motivo: null,
+    estado: "activo",
     imagen: "https://example.com/noche-karaoke.jpg"
   }
 ])
