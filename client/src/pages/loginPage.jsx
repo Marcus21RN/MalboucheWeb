@@ -79,7 +79,7 @@ export default function LoginPage() {
             </div>
             
             <h2 className="text-3xl font-bold text-[#660152] mb-6 text-center">
-              Welcome Back!
+              Log into your account
             </h2>
 
             <form className="space-y-5" onSubmit={handleLogin}>
