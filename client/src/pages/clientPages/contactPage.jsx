@@ -4,6 +4,7 @@ import { Parallax } from 'react-scroll-parallax';
 import { FaMapMarkerAlt, FaPhone, FaEnvelope, FaClock } from 'react-icons/fa';
 import { IoIosArrowUp } from "react-icons/io";
 
+
 export default function ContactPage() {
   const [formData, setFormData] = useState({
     name: '',
@@ -79,12 +80,50 @@ export default function ContactPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
-    // Aquí iría la llamada a la API para enviar el correo
-    setSnackbar({ open: true, message: 'Thank you for your feedback! We appreciate your comments.', severity: 'success' });
-    setFormData({ name: '', lastName: '', email: '', phone: '', subject: '', message: '' });
-    setErrors({});
-  };
 
+    try {
+      const response = await fetch("http://localhost:3000/clientBackend/feedback/send-feedback", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ 
+          name: formData.name,
+          lastname: formData.lastName,
+          email: formData.email,
+          phone: formData.phone,
+          subject: formData.subject,
+          message: formData.message
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setSnackbar({ 
+          open: true, 
+          message: 'Thank you for your feedback! We appreciate your comments and will get back to you soon.', 
+          severity: 'success' 
+        });
+        // Limpiar formulario
+        setFormData({ name: '', lastName: '', email: '', phone: '', subject: '', message: '' });
+        setErrors({});
+      } else {
+        setSnackbar({ 
+          open: true, 
+          message: 'Failed to send message. Please try again later.', 
+          severity: 'error' 
+        });
+      }
+    } catch (error) {
+      console.error("Error sending message:", error);
+      setSnackbar({ 
+        open: true, 
+        message: 'Server error. Please check your connection and try again.', 
+        severity: 'error' 
+      });
+    }
+  };
   return (
     <div className="min-h-screen bg-black">
       {/* === BANNER PRINCIPAL === */}

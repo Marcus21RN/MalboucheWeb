@@ -30,7 +30,7 @@ const AdminLayout = () => {
         } flex-1 bg-slate-50 min-h-screen`}
       >
         {/* Topbar */}
-        <div className="w-full bg-white shadow-md h-16 flex items-center justify-between px-6">
+        <div className="w-full bg-white h-20 flex items-center justify-between px-6">
           <h2 className="text-lg font-semibold text-[#660152] font-['Montserrat']">
             Welcome, {userName}
           </h2>
