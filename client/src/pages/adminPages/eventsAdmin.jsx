@@ -33,6 +33,7 @@ import {
   MusicNote,
   Restaurant,
   SportsBar,
+  CheckCircle,
   Celebration,
   Add as AddIcon,
   Edit as EditIcon,
@@ -239,16 +240,16 @@ const handleOpenEventForm = (event = null) => {
       };
       if (isEditMode) {
         await axios.put(`http://localhost:3000/adminBackend/events/${eventFormData._id}`, payload);
-        showSnackbar('Evento actualizado correctamente', 'success');
+        showSnackbar('Event updated successfully', 'success');
       } else {
         await axios.post('http://localhost:3000/adminBackend/events', payload);
-        showSnackbar('Evento creado correctamente', 'success');
+        showSnackbar('Event created successfully', 'success');
       }
       await fetchEvents();
       handleCloseEventForm();
     } catch (error) {
       console.error('Error saving event:', error);
-      showSnackbar('Error al guardar el evento', 'error');
+      showSnackbar('Error saving event', 'error');
     }
   };
 
@@ -265,10 +266,10 @@ const handleOpenEventForm = (event = null) => {
     try {
       await axios.delete(`http://localhost:3000/adminBackend/events/${id}`);
       await fetchEvents();
-      showSnackbar('Evento eliminado correctamente', 'success');
+      showSnackbar('Event deleted successfully', 'success');
     } catch (error) {
       console.error('Error deleting event:', error);
-      showSnackbar('Error al eliminar el evento', 'error');
+      showSnackbar('Error deleting event', 'error');
     }
   };
 
@@ -340,7 +341,7 @@ const handleOpenEventForm = (event = null) => {
               alignSelf: 'flex-start'
             }}
                 >
-            Crear Evento
+            Create New Event
           </Button>
         </Box>
 
@@ -441,7 +442,8 @@ const handleOpenEventForm = (event = null) => {
                     </TableCell>
                     <TableCell>
                       <Chip 
-                        label={event.estado.toUpperCase()} 
+                        // Mostrar el estado de event.estado en inglés para consistencia con el filtro de estado, como activo, inactivo y pendiente
+                        label={event.estado === "activo" ? "ACTIVE" : event.estado === "inactivo" ? "INACTIVE" : "PENDING"}
                         color={getStatusColor(event.estado)}
                         size="small"
                         sx={{ 
@@ -543,9 +545,11 @@ const handleOpenEventForm = (event = null) => {
               <TextField 
                 fullWidth 
                 name="nombre" 
-                label="Event Name" 
+                label="Event Name"
+                placeholder='Event Name'
                 value={eventFormData.nombre} 
                 onChange={handleEventChange} 
+                InputLabelProps={{ shrink: true }}
                 required
                 />
             </Grid>
@@ -599,9 +603,9 @@ const handleOpenEventForm = (event = null) => {
               onChange={handleEventChange}
               required
             >
-              <MenuItem value="pendiente">Pendiente</MenuItem>
-              <MenuItem value="activo">Activo</MenuItem>
-              <MenuItem value="cancelado">Cancelado</MenuItem>
+              <MenuItem value="pendiente">Pending</MenuItem>
+              <MenuItem value="activo">Active</MenuItem>
+              <MenuItem value="cancelado">Cancelled</MenuItem>
             </TextField>
             <Button
               variant="outlined"
@@ -610,7 +614,7 @@ const handleOpenEventForm = (event = null) => {
               startIcon={<ImageIcon />}
               sx={{ border: '1px solid #c4c4c4', backgroundColor: '#f5f5f5', color: '#660152', '&:hover': { backgroundColor: '#e0e0e0' } }}
             >
-              {imagePreview ? 'Cambiar imagen' : 'Subir imagen'}
+              {imagePreview ? 'Change image' : 'Upload image'}
               <input
                 type="file"
                 accept="image/*"
@@ -637,20 +641,20 @@ const handleOpenEventForm = (event = null) => {
                     }
                     setLocalImageUrl(null);
                     setImageError(false);
-                    showSnackbar('Imagen subida correctamente', 'success');
+                    showSnackbar('Image uploaded successfully', 'success');
                   } catch {
                     setImageError(true);
                     if (localImageUrl) {
                       URL.revokeObjectURL(localImageUrl);
                     }
                     setLocalImageUrl(null);
-                    showSnackbar('Error al subir la imagen', 'error');
+                    showSnackbar('Something went wrong while uploading the image', 'error');
                   }
                 }}
               />
             </Button>
             {imageError && (
-              <Typography color="error" variant="caption">Error al subir la imagen</Typography>
+              <Typography color="error" variant="caption">Something went wrong while uploading the image</Typography>
             )}
             </Box>
           </Box>
@@ -661,11 +665,13 @@ const handleOpenEventForm = (event = null) => {
             <TextField 
               fullWidth 
               name="descripcion" 
-              label="Descripción" 
+              label="Description"
+              placeholder='Description'
               multiline 
               rows={3} 
               value={eventFormData.descripcion} 
-              onChange={handleEventChange} 
+              onChange={handleEventChange}
+              InputLabelProps={{ shrink: true }}
               required
             />
           </Grid>
@@ -678,7 +684,7 @@ const handleOpenEventForm = (event = null) => {
                     <Grid item xs={12} md={4}>
                       <Box sx={{ position: 'sticky', top: 0 }}>
                         <Typography variant="subtitle1" gutterBottom fontWeight="medium">
-                          Vista previa:
+                          Preview
                         </Typography>
                         <Card elevation={3}>
                           <Box sx={{ position: 'relative', overflow: 'hidden' }}>
@@ -704,7 +710,7 @@ const handleOpenEventForm = (event = null) => {
                               p: 2
                             }}>
                               <Typography variant="h6" fontWeight="bold">
-                                {eventFormData.nombre || "Nombre del evento"}
+                                {eventFormData.nombre || "Event Name"}
                               </Typography>
                               <Typography variant="body2" sx={{ opacity: 0.9 }}>
                                 {eventFormData.descripcion ? 
@@ -712,7 +718,7 @@ const handleOpenEventForm = (event = null) => {
                                     eventFormData.descripcion.substring(0, 60) + '...' : 
                                     eventFormData.descripcion
                                   ) : 
-                                  "Descripción del evento"
+                                  "Event description"
                                 }
                               </Typography>
                             </Box>
@@ -763,7 +769,7 @@ const handleOpenEventForm = (event = null) => {
         disabled={!eventFormData.nombre || !eventFormData.descripcion || !eventFormData.fecha}
         sx={{ backgroundColor: "#660152", '&:hover': { backgroundColor: "#520040" }, borderRadius: 2, px: 3, fontWeight: 'bold' }}
       >
-        {isEditMode ? 'ACTUALIZAR EVENTO' : 'CREAR EVENTO'}
+        {isEditMode ? 'Update Event' : 'Create Event'}
       </Button>
     </Box>
   </Box>
