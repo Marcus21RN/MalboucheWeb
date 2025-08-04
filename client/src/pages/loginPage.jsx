@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import logo from "../assets/imagenes/logui.png";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -61,7 +62,7 @@ export default function LoginPage() {
             className="h-full w-full bg-cover bg-center "
             style={{
               backgroundImage:
-                "url('https://tse2.mm.bing.net/th/id/OIP.uWq_GpX-JVffgGkWZFKX9QHaNK?r=0&cb=thvnextc1&rs=1&pid=ImgDetMain&o=7&rm=3')",
+                "url('https://cdn.prod.website-files.com/6768f29a6d5da42209173f20/6768f29b6d5da4220917754b_Rectangle%20(92).svg",
             }}
           ></div>
         </div>
@@ -69,7 +70,15 @@ export default function LoginPage() {
         {/* FORMULARIO */}
         <div className="flex items-center justify-center px-8 py-12 bg-white bg-opacity-90 backdrop-blur-sm">
           <div className="w-full max-w-md bg-white shadow-xl rounded-2xl p-8">
-            <h2 className="text-3xl font-bold text-purple-700 mb-6 text-center">
+            <div>
+              <img
+                src={logo}
+                alt="Logo"
+                className="mx-auto mb-6 w-24 h-24"
+              />
+            </div>
+            
+            <h2 className="text-3xl font-bold text-[#660152] mb-6 text-center">
               Welcome Back!
             </h2>
 
@@ -80,7 +89,7 @@ export default function LoginPage() {
                   id="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-3 border border-purple-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 placeholder-gray-400"
+                  className="w-full px-4 py-3 border border-purple-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#660152] placeholder-gray-400"
                   placeholder="you@example.com"
                   required
                 />
@@ -92,7 +101,7 @@ export default function LoginPage() {
                   id="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 border border-purple-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 placeholder-gray-400"
+                  className="w-full px-4 py-3 border border-purple-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#660152] placeholder-gray-400"
                   placeholder="••••••••"
                   required
                 />
@@ -105,7 +114,7 @@ export default function LoginPage() {
               <div>
                 <button
                   type="submit"
-                  className="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition duration-300"
+                  className="w-full bg-[#660152] text-white py-3 rounded-lg hover:bg-[#660152] transition duration-300"
                 >
                   Log In
                 </button>
