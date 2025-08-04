@@ -1,9 +1,11 @@
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Parallax } from 'react-scroll-parallax';
 import { FaClock } from "react-icons/fa";
 import { IoIosArrowUp } from "react-icons/io";
 import sureloj from "../../assets/imagenes/aboutUs.jpg";
+import { Snackbar, Alert } from '@mui/material';
 
 export default function ReservationPage() {
   const [formData, setFormData] = useState({
@@ -20,30 +22,106 @@ export default function ReservationPage() {
 
   const [minDate, setMinDate] = useState('');
   const [maxDate, setMaxDate] = useState('');
-  const [serverError, setServerError] = useState(null);
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'error' });
+  // eslint-disable-next-line no-unused-vars
+  const [errors, setErrors] = useState({});
 
   
 
   // Configurar fechas y horas válidas
   useEffect(() => {
-    // Fechas (hoy hasta 1 semana después)
+    // Fechas (hoy hasta 1 mes después)
     const today = new Date();
-    const nextWeek = new Date();
-    nextWeek.setDate(today.getDate() + 7);
-    
+    const nextMonth = new Date();
+    nextMonth.setMonth(today.getMonth() + 1);
     setMinDate(today.toISOString().split('T')[0]);
-    setMaxDate(nextWeek.toISOString().split('T')[0]);
-
+    setMaxDate(nextMonth.toISOString().split('T')[0]);
   }, []);
 
+
+  // Validaciones en tiempo real
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    let newValue = value;
+    let errorMsg = '';
+
+    if (name === 'cantidadPersonas') {
+      // Solo números, máximo 20
+      if (Number(newValue) > 20) {
+        errorMsg = 'The reservation limit is 20 guests per reservation.';
+        newValue = '20';
+      } else if (Number(newValue) !== '' && Number(newValue) < 1) {
+        errorMsg = 'You must reserve for at least 1 guest.';
+      }
+      if (!/^\d*$/.test(newValue)) {
+        errorMsg = 'Only numbers are allowed.';
+        newValue = newValue.replace(/\D/g, '');
+      }
+    }
+
+    if (["nombreCliente", "primerApell", "segundoApell"].includes(name)) {
+      // Only letters and spaces
+      if (/[^a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]/.test(newValue)) {
+        errorMsg = 'Only letters and spaces are allowed.';
+        newValue = newValue.replace(/[^a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]/g, '');
+      }
+    }
+
+    if (name === 'numTel') {
+      // Only numbers
+      if (/[^0-9]/.test(newValue)) {
+        errorMsg = 'Only numbers are allowed.';
+        newValue = newValue.replace(/\D/g, '');
+      }
+    }
+
+    setFormData(prev => ({ ...prev, [name]: newValue }));
+    setErrors(prev => ({ ...prev, [name]: errorMsg }));
+    if (errorMsg) {
+      setSnackbar({ open: true, message: errorMsg, severity: 'error' });
+    }
+  };
+
+
+  // Validación de email
+  const isValidEmail = (email) => {
+    return /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email);
+  };
+
+  // Validación antes de enviar
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.cantidadPersonas || Number(formData.cantidadPersonas) < 1 || Number(formData.cantidadPersonas) > 20) {
+      newErrors.cantidadPersonas = 'The number of guests must be between 1 and 20.';
+    }
+    if (!formData.fecha) {
+      newErrors.fecha = 'Please select a date.';
+    }
+    if (!formData.horaInicio) {
+      newErrors.horaInicio = 'Please select an arrival time.';
+    }
+    ["nombreCliente", "primerApell", "segundoApell"].forEach(field => {
+      if (!formData[field] || /[^a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]/.test(formData[field])) {
+        newErrors[field] = 'Only letters and spaces are allowed.';
+      }
+    });
+    if (!formData.correoCliente || !isValidEmail(formData.correoCliente)) {
+      newErrors.correoCliente = 'Please enter a valid email address.';
+    }
+    if (!formData.numTel || /[^0-9]/.test(formData.numTel)) {
+      newErrors.numTel = 'Only numbers are allowed.';
+    }
+    setErrors(newErrors);
+    if (Object.keys(newErrors).length > 0) {
+      setSnackbar({ open: true, message: Object.values(newErrors)[0], severity: 'error' });
+      return false;
+    }
+    return true;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setServerError(null);
+    if (!validateForm()) return;
 
     try {
       const reservation = {
@@ -51,23 +129,20 @@ export default function ReservationPage() {
         ...formData
       };
 
-      // eslint-disable-next-line no-unused-vars
-      const response = await axios.post('http://localhost:3000/clientBackend/reservations', reservation);
+      await axios.post('http://localhost:3000/clientBackend/reservations', reservation);
 
       await axios.post('http://localhost:3000/clientBackend/email', {
         correoCliente: formData.correoCliente,
         nombreCliente: formData.nombreCliente,
         reservacion: {
           folio: reservation._id,
-          fecha: formData.fecha,  
+          fecha: formData.fecha,
           horaInicio: formData.horaInicio,
           cantidadPersonas: formData.cantidadPersonas,
-      }
+        }
       });
 
-
-      alert('Reservation submitted successfully');
-      // Reset form
+      setSnackbar({ open: true, message: 'Reservation submitted successfully!', severity: 'success' });
       setFormData({
         cantidadPersonas: '',
         fecha: '',
@@ -79,15 +154,13 @@ export default function ReservationPage() {
         numTel: '',
         estado: 'confirmada',
       });
+      setErrors({});
     } catch (error) {
-      console.error('Error submitting reservation:', error);
-      if (error.response) {
-        // Error del servidor con respuesta
-        setServerError(error.response.data.message || 'Error submitting reservation');
-      } else {
-        // Error sin respuesta (problema de red, etc.)
-        setServerError('Network error. Please try again later.');
+      let message = 'Could not complete the reservation. Please try again later.';
+      if (error.response && error.response.data && error.response.data.message) {
+        message = error.response.data.message;
       }
+      setSnackbar({ open: true, message, severity: 'error' });
     }
   };
 
@@ -132,11 +205,7 @@ export default function ReservationPage() {
 
             {/* FORM */}
             <form onSubmit={handleSubmit} className="bg-[#111418] shadow-2xl p-8 md:p-10 space-y-12">
-              {serverError && (
-                <div className="text-red-500 text-center mb-4">
-                  {serverError}
-                </div>
-              )}
+
 
               {/* Reservation Details */}
               <section>
@@ -146,23 +215,32 @@ export default function ReservationPage() {
                 <div className="grid md:grid-cols-2 gap-8">
                   <div className="relative w-full">
                     <input
-                      type="number"
+                      id="cantidadPersonas"
+                      type="text"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
                       name="cantidadPersonas"
                       value={formData.cantidadPersonas}
                       onChange={handleChange}
+                      onInput={e => {
+                        // Elimina cualquier caracter no numérico en tiempo real
+                        e.target.value = e.target.value.replace(/\D/g, '');
+                      }}
                       placeholder=" "
                       min="1"
-                      max="4"
+                      max="20"
                       required
+                      autoComplete="off"
                       className="peer h-10 w-full border-b-2 border-[#555] bg-transparent text-white placeholder-transparent focus:outline-none focus:border-[#b76ba3]"
                     />
-                    <label className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#b76ba3] peer-focus:text-sm">
+                    <label htmlFor="cantidadPersonas" className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all cursor-text peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#b76ba3] peer-focus:text-sm">
                       Number of Guests
                     </label>
                   </div>
                   
                   <div className="relative w-full">
                     <input
+                      id="fecha"
                       type="date" 
                       name="fecha"
                       value={formData.fecha}
@@ -174,13 +252,14 @@ export default function ReservationPage() {
                       className="peer h-10 w-full border-b-2 border-[#555] bg-transparent text-white placeholder-transparent focus:outline-none focus:border-[#b76ba3] 
                [&::-webkit-calendar-picker-indicator]:invert [&::-webkit-calendar-picker-indicator]:brightness-100 [&::-webkit-calendar-picker-indicator]:hover:brightness-200"
                     />
-                    <label className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#b76ba3] peer-focus:text-sm">
+                    <label htmlFor="fecha" className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all cursor-text peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#b76ba3] peer-focus:text-sm">
                       Date
                     </label>
                   </div>
                   
                   <div className="relative w-full md:col-span-2">
                     <input
+                      id="horaInicio"
                       type="time"
                       name="horaInicio"
                       value={formData.horaInicio}
@@ -192,7 +271,7 @@ export default function ReservationPage() {
                       className="peer h-10 w-full border-b-2 border-[#555] bg-transparent text-white placeholder-transparent focus:outline-none focus:border-[#b76ba3]
                        [&::-webkit-calendar-picker-indicator]:invert [&::-webkit-calendar-picker-indicator]:brightness-100 [&::-webkit-calendar-picker-indicator]:hover:brightness-200"
                     />
-                    <label className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#b76ba3] peer-focus:text-sm">
+                    <label htmlFor="horaInicio" className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all cursor-text peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#b76ba3] peer-focus:text-sm">
                       Arrival Time
                     </label>
                   </div>
@@ -205,13 +284,14 @@ export default function ReservationPage() {
                   Personal Information
                 </h2>
                 <div className="grid md:grid-cols-3 gap-8">
-                  {[
+                  {[ 
                     { label: 'First Name', name: 'nombreCliente', placeholder: 'e.g. John' },
                     { label: 'First Last Name', name: 'primerApell', placeholder: 'e.g. Smith' },
                     { label: 'Second Last Name', name: 'segundoApell', placeholder: 'e.g. Johnson' },
                   ].map(({ label, name }) => (
                     <div key={name} className="relative w-full">
                       <input
+                        id={name}
                         type="text"
                         name={name}
                         value={formData[name]}
@@ -220,7 +300,7 @@ export default function ReservationPage() {
                         required
                         className="peer h-10 w-full border-b-2 border-[#555] bg-transparent text-white placeholder-transparent focus:outline-none focus:border-[#b76ba3]"
                       />
-                      <label className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#b76ba3] peer-focus:text-sm">
+                      <label htmlFor={name} className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all cursor-text peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#b76ba3] peer-focus:text-sm">
                         {label}
                       </label>
                     </div>
@@ -230,6 +310,7 @@ export default function ReservationPage() {
                 <div className="relative mt-8 grid md:grid-cols-2 gap-8">
                   <div className="relative">
                     <input
+                      id="correoCliente"
                       type="email"
                       name="correoCliente"
                       value={formData.correoCliente}
@@ -238,22 +319,24 @@ export default function ReservationPage() {
                       required
                       className="peer h-10 w-full border-b-2 border-[#555] bg-transparent text-white placeholder-transparent focus:outline-none focus:border-[#b76ba3]"
                     />
-                    <label className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#b76ba3] peer-focus:text-sm">
+                    <label htmlFor="correoCliente" className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all cursor-text peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#b76ba3] peer-focus:text-sm">
                       Email Address
                     </label>
                   </div>
 
                   <div className="relative">
                     <input
+                      id="numTel"
                       type="tel"
                       name="numTel"
                       value={formData.numTel}
                       onChange={handleChange}
                       placeholder=" "
+                      maxLength={10} 
                       required
                       className="peer h-10 w-full border-b-2 border-[#555] bg-transparent text-white placeholder-transparent focus:outline-none focus:border-[#b76ba3]"
                     />
-                    <label className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#b76ba3] peer-focus:text-sm">
+                    <label htmlFor="numTel" className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all cursor-text peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#b76ba3] peer-focus:text-sm">
                       Phone Number
                     </label>
                   </div>
@@ -298,6 +381,22 @@ export default function ReservationPage() {
       >
         <IoIosArrowUp size={24} />
       </button>
+
+      {/* Snackbar de MUI para mensajes de error y éxito */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={5000}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert
+          onClose={() => setSnackbar({ ...snackbar, open: false })}
+          severity={snackbar.severity}
+          sx={{ width: '100%', fontWeight: 500, fontFamily: 'montserrat' }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

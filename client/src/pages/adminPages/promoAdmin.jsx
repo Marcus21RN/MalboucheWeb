@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 import {
   Box,
@@ -72,9 +73,9 @@ const PromoAdmin = () => {
       setPromos(res.data);
       setFilteredPromos(res.data);
     } catch (error) {
-      console.error('Error fetching promos:', error);
       setPromos([]);
       setFilteredPromos([]);
+      showSnackbar("Failed to load promotions.", "error");
     }
   };
 
@@ -178,27 +179,25 @@ const PromoAdmin = () => {
     try {
       if (isEditMode && editingPromoId) {
         await axios.put(`http://localhost:3000/adminBackend/promos/${editingPromoId}`, promoFormData);
-        showSnackbar("Promoción actualizada exitosamente", "success");
+        showSnackbar("Promotion updated successfully", "success");
       } else {
         await axios.post("http://localhost:3000/adminBackend/promos", promoFormData);
-        showSnackbar("Promoción creada exitosamente", "success");
+        showSnackbar("Promotion created successfully", "success");
       }
       fetchPromos();
       handleClosePromoForm();
     } catch (error) {
-      console.error('Error saving promo:', error);
-      showSnackbar("Error al guardar promoción", "error");
+      showSnackbar("Failed to save promotion.", "error");
     }
   };
 
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:3000/adminBackend/promos/${id}`);
-      showSnackbar("Promoción eliminada exitosamente", "success");
+      showSnackbar("Promotion deleted successfully", "success");
       fetchPromos();
     } catch (error) {
-      console.error('Error deleting promo:', error);
-      showSnackbar("Error al eliminar promoción", "error");
+      showSnackbar("Failed to delete promotion.", "error");
     }
   };
 
@@ -240,7 +239,7 @@ const PromoAdmin = () => {
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
             <PromoIcon sx={{ mr: 2, color: '#660152', fontSize: 40 }} />
             <Typography variant="h4" color="#660152" fontWeight="bold">
-            Gestión de Promociones
+            Promotion Management
             </Typography>
         </Box>
         <Box sx={{ display: 'flex', flexDirection: "row", alignItems: 'center', justifyContent: 'space-between'}}>
@@ -255,21 +254,21 @@ const PromoAdmin = () => {
                   alignSelf: 'flex-start'
                 }}
               >
-                Crear Promoción
+                Create Promotion
               </Button>  
               <FormControl size="small" sx={{ width: 250, backgroundColor: 'white' }}>
-                <InputLabel id="filter-label">Filtrar por estado</InputLabel>
+                <InputLabel id="filter-label">Filter by status</InputLabel>
                   <Select
                     labelId="filter-label"
                     id="filter"
                     value={filter}
-                    label="Filtrar por estado"
+                    label="Filter by status"
                     onChange={handleFilterChange}
                     size="small"
                   >
-                    <MenuItem value="">Todas las promociones</MenuItem>
-                    <MenuItem value="activo">Activas</MenuItem>
-                    <MenuItem value="inactivo">Inactivas</MenuItem>
+                    <MenuItem value="">All promotions</MenuItem>
+                    <MenuItem value="activo">Active</MenuItem>
+                    <MenuItem value="inactivo">Inactive</MenuItem>
                   </Select>
                 </FormControl>
 
@@ -283,7 +282,7 @@ const PromoAdmin = () => {
               {promos.length}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Total Promociones
+              Total Promotions
             </Typography>
           </CardContent>
         </Card>
@@ -293,7 +292,7 @@ const PromoAdmin = () => {
               {promos.filter(p => p.estado === 'activo').length}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Activas
+              Active
             </Typography>
           </CardContent>
         </Card>
@@ -303,7 +302,7 @@ const PromoAdmin = () => {
               {promos.filter(p => p.estado === 'inactivo').length}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Inactivas
+              Inactive
             </Typography>
           </CardContent>
         </Card>
@@ -313,7 +312,7 @@ const PromoAdmin = () => {
               {promos.filter(p => isPromoActive(p.fechaInicio, p.fechaFin)).length}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Vigentes
+              Ongoing
             </Typography>
           </CardContent>
         </Card>
@@ -327,10 +326,10 @@ const PromoAdmin = () => {
             <Table sx={{ minWidth: 650 }}>
               <TableHead>
                 <TableRow sx={{ backgroundColor: '#660152' }}>
-                  <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Promoción</TableCell>
-                  <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Vigencia</TableCell>
-                  <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Estado</TableCell>
-                  <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Acciones</TableCell>
+                  <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Promotion</TableCell>
+                  <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Validity</TableCell>
+                  <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Status</TableCell>
+                  <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Actions</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -367,14 +366,14 @@ const PromoAdmin = () => {
                     </TableCell>
                     <TableCell>
                       <Typography variant="body1" fontWeight="medium">
-                        {new Date(promo.fechaInicio).toLocaleDateString('es-ES', {
+                        {new Date(promo.fechaInicio).toLocaleDateString('en-US', {
                           day: '2-digit',
                           month: 'short',
                           year: 'numeric'
                         })}
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
-                        hasta {new Date(promo.fechaFin).toLocaleDateString('es-ES', {
+                        to {new Date(promo.fechaFin).toLocaleDateString('en-US', {
                           day: '2-digit',
                           month: 'short', 
                           year: 'numeric'
@@ -382,7 +381,7 @@ const PromoAdmin = () => {
                       </Typography>
                       {isPromoActive(promo.fechaInicio, promo.fechaFin) && (
                         <Chip 
-                          label="VIGENTE" 
+                          label="ONGOING" 
                           size="small"
                           color="success"
                           variant="outlined"
@@ -392,7 +391,7 @@ const PromoAdmin = () => {
                     </TableCell>
                     <TableCell>
                       <Chip 
-                        label={promo.estado.toUpperCase()} 
+                        label={promo.estado === 'activo' ? 'ACTIVE' : promo.estado === 'inactivo' ? 'INACTIVE' : promo.estado.toUpperCase()} 
                         color={getStatusColor(promo.estado)}
                         size="small"
                         sx={{ 
@@ -404,7 +403,7 @@ const PromoAdmin = () => {
                     </TableCell>
                     <TableCell>
                       <Box sx={{ display: 'flex', gap: 1 }}>
-                        <Tooltip title="Editar promoción">
+                        <Tooltip title="Edit promotion">
                           <IconButton
                             color="primary"
                             onClick={() => handleOpenPromoForm(promo)}
@@ -413,7 +412,7 @@ const PromoAdmin = () => {
                             <EditIcon />
                           </IconButton>
                         </Tooltip>
-                        <Tooltip title="Eliminar promoción">
+                        <Tooltip title="Delete promotion">
                           <IconButton
                             color="error"
                             onClick={() => handleDelete(promo._id)}
@@ -432,10 +431,10 @@ const PromoAdmin = () => {
                       <Box sx={{ py: 6 }}>
                         <PromoIcon sx={{ fontSize: 60, color: 'grey.400', mb: 2 }} />
                         <Typography variant="h6" color="text.secondary">
-                          No se encontraron promociones
+                          No promotions found
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
-                          {filter ? `No hay promociones con estado "${filter}"` : 'No hay promociones disponibles'}
+                          {filter ? `No promotions with status "${filter}"` : 'No promotions available'}
                         </Typography>
                       </Box>
                     </TableCell>
@@ -464,7 +463,7 @@ const PromoAdmin = () => {
         }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
             <Typography variant="h6" color="#660152" fontWeight="bold">
-              {isEditMode ? "Editar Promoción" : "Crear Nueva Promoción"}
+            {isEditMode ? "Edit Promotion" : "Create New Promotion"}
             </Typography>
             <IconButton onClick={handleClosePromoForm}>
               <CloseIcon />
@@ -481,7 +480,7 @@ const PromoAdmin = () => {
                     <TextField 
                       fullWidth 
                       name="nombre" 
-                      label="Nombre de promoción" 
+                      label="Promotion name" 
                       value={promoFormData.nombre} 
                       onChange={handlePromoChange} 
                       required
@@ -494,7 +493,7 @@ const PromoAdmin = () => {
                        <TextField 
                       fullWidth 
                       name="fechaInicio" 
-                      label="Fecha de inicio" 
+                      label="Start date" 
                       type="date"
                       value={promoFormData.fechaInicio} 
                       onChange={handlePromoChange} 
@@ -505,7 +504,7 @@ const PromoAdmin = () => {
                     <TextField 
                       fullWidth 
                       name="fechaFin" 
-                      label="Fecha de fin" 
+                      label="End date" 
                       type="date"
                       value={promoFormData.fechaFin} 
                       onChange={handlePromoChange} 
@@ -523,13 +522,13 @@ const PromoAdmin = () => {
                       fullWidth 
                       select 
                       name="estado" 
-                      label="Estado" 
+                      label="Status" 
                       value={promoFormData.estado} 
                       onChange={handlePromoChange}
                       required
                     >
-                      <MenuItem value="activo">Activo</MenuItem>
-                      <MenuItem value="inactivo">Inactivo</MenuItem>
+                      <MenuItem value="activo">Active</MenuItem>
+                      <MenuItem value="inactivo">Inactive</MenuItem>
                     </TextField>
                     <Button
                       variant="outlined"
@@ -538,7 +537,7 @@ const PromoAdmin = () => {
                       startIcon={<ImageIcon />}
                       sx={{ border: '1px solid #c4c4c4', backgroundColor: '#f5f5f5', color: '#660152', '&:hover': { backgroundColor: '#e0e0e0' } }}
                     >
-                    {promoFormData.imagen ? 'Cambiar imagen' : 'Seleccionar imagen'}
+                    {promoFormData.imagen ? 'Change image' : 'Select image'}
                     <input
                       type="file"
                       accept="image/*"
@@ -562,14 +561,13 @@ const PromoAdmin = () => {
                           setImagePreview(res.data.url);
                           setLocalImageUrl(null);
                           setImageError(false);
-                          showSnackbar('Imagen subida correctamente', 'success');
-                          // Liberar memoria del preview local
+                          showSnackbar('Image uploaded successfully', 'success');
+                          // Release memory of local preview
                           URL.revokeObjectURL(localUrl);
-                        // eslint-disable-next-line no-unused-vars
                         } catch (err) {
                           setImageError(true);
                           setLocalImageUrl(null);
-                          showSnackbar('Error al subir la imagen', 'error');
+                          showSnackbar('Error uploading image', 'error');
                         }
                       }}
                     />
@@ -601,13 +599,13 @@ const PromoAdmin = () => {
               <Grid item xs={12} md={4}>
                 <Box sx={{ position: 'sticky', top: 0 }}>
                   <Typography variant="subtitle1" gutterBottom fontWeight="medium">
-                    Vista previa:
+                   Preview:
                   </Typography>
                   <Card elevation={3}>
                     <Box sx={{ position: 'relative', overflow: 'hidden' }}>
                       <img
                         src={localImageUrl || imagePreview}
-                        alt="Vista previa de promoción"
+                        alt="Promotion Preview"
                         onLoad={handleImageLoad}
                         onError={handleImageError}
                         style={{
@@ -627,7 +625,7 @@ const PromoAdmin = () => {
                         p: 2
                       }}>
                         <Typography variant="h6" fontWeight="bold">
-                          {promoFormData.nombre || "Nombre de promoción"}
+                          {promoFormData.nombre || "Promotion Name"}
                         </Typography>
                         <Typography variant="body2" sx={{ opacity: 0.9 }}>
                           {promoFormData.descripcion ? 
@@ -635,7 +633,7 @@ const PromoAdmin = () => {
                               promoFormData.descripcion.substring(0, 60) + '...' : 
                               promoFormData.descripcion
                             ) : 
-                            "Descripción de promoción"
+                            "Promotion description"
                           }
                         </Typography>
                       </Box>
@@ -657,13 +655,12 @@ const PromoAdmin = () => {
                 }}>
                   <ImageIcon sx={{ fontSize: 48, color: '#ccc', mb: 1 }} />
                   <Typography variant="body1" color="text.secondary">
-                    {imageError ? 
-                      "No se pudo cargar la imagen. Verifica la URL." :
-                      "Ingresa una URL válida para ver la vista previa"
+                    {imageError ? "Could not load image. Check the URL." :
+                      "Enter a valid URL to see the preview"
                     }
                   </Typography>
                   <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                    Formatos soportados: JPG, PNG, GIF, WebP, SVG
+                    Supported formats: JPG, PNG, GIF, WebP, SVG
                   </Typography>
                 </Box>
               </Grid>
@@ -675,7 +672,7 @@ const PromoAdmin = () => {
               startIcon={<CancelIcon color="error" />} color="inherit" sx={{ border: '1px solid #660152', backgroundColor: 'transparent', '&:hover': { backgroundColor: '#f5f5f5' } }} 
               onClick={handleClosePromoForm}
             >
-              Cancelar
+              Cancel
             </Button>
             
             <Button 
@@ -684,7 +681,7 @@ const PromoAdmin = () => {
               disabled={!promoFormData.nombre || !promoFormData.descripcion || !promoFormData.fechaInicio || !promoFormData.fechaFin}
               sx={{ backgroundColor: "#660152", '&:hover': { backgroundColor: "#520040" } }}
             >
-              {isEditMode ? 'Actualizar Promoción' : 'Crear Promoción'}
+              {isEditMode ? 'Update Promotion' : 'Create Promotion'}
             </Button>
           </Box>
         </Box>

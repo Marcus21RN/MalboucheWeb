@@ -215,9 +215,14 @@ export default function MenuPage() {
                 if (filteredProductos.length === 0) return null;
                 return (
                   <div key={j} className="border border-[#b76ba3] rounded-sm p-6 bg-[#111418] shadow-md">
-                    <h2 className="text-4xl font-bold font-['Oswald'] mb-4 text-[#b34789] uppercase text-center">
+                    <h2 className="text-4xl font-bold font-['Oswald'] mb-2 text-[#b34789] uppercase text-center">
                       {menu.nombre}
                     </h2>
+                    {menu.descripcion && (
+                      <p className="text-lg font-['montserrat'] text-white text-center mb-4">
+                        {menu.descripcion}
+                      </p>
+                    )}
                     {filteredProductos.map((producto, k) => (
                       <div key={k} className="mb-6 border-b border-[#660152] pb-4">
                         <div className="flex justify-between items-baseline mb-1">

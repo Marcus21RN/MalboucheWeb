@@ -339,115 +339,133 @@ const DashboardIoT = () => {
           </Box>
         {/* Gráfica DHT11 */}
          <ResponsiveContainer width="100%" height={540}>
-            <ComposedChart
-              data={Array.isArray(dhtData) ? [...dhtData].reverse() : []}
-              margin={{ top: 20, right: 30, left: 30, bottom: 20 }}
-            >
-              <CartesianGrid/>
-            
-              <XAxis
-                dataKey="hora"
-                tick={{ fill: '#666', fontWeight: 'bold', fontSize: 12 }}
-                axisLine={{ stroke: '#666' }}
-                tickLine={{ stroke: '#666' }}
-                label={{ value: 'Register Time', position: 'insideBottom', offset: -15, fill: '#444746', fontWeight: 'bold', fontSize: 14, fontFamily: "'montserrat', sans-serif" }}
-              />
-              
-              <YAxis
-                yAxisId="left"
-                dataKey="humedad"
-                tickFormatter={(tick) => `${tick}%`}
-                domain={[0, 100]}
-                tick={{ fill: '#016974', fontWeight: 'bold', fontSize: 12 }}
-                axisLine={{ stroke: '#666' }}
-                tickLine={{ stroke: '#666' }}
-                label={{  value: 'Humidity %', angle: -90, position: 'insideLeft', fill: '#016974', fontWeight: 'bold', fontSize: 14, fontFamily: "'montserrat', sans-serif" }}
-              />
-              
-              <YAxis
-                yAxisId="right"
-                dataKey="temperaturaC"
-                orientation="right"
-                tickFormatter={(tick) => `${tick}°`}
-                domain={[0, 40]}
-                tick={{ fill: '#A21202', fontWeight: 'bold', fontSize: 12 }}
-                axisLine={{ stroke: '#666' }}
-                tickLine={{ stroke: '#666' }}
-                label={{ value: 'Temperature °C', angle: -90, position: 'insideRight', fill: '#A21202', fontWeight: 'bold', fontSize: 14, fontFamily: "'montserrat', sans-serif" }}
-              />
-              {/* Tooltip para Temperatura °C */}
-              <Tooltip
-                formatter={(value, name) => {
-                    const unit = name === 'Temperature °C' ? '°C' : '%';
-                    return [`${value}${unit}`, name];
-                }}
-                labelStyle={{ color: '#000', fontWeight: 'bold', fontFamily: "'montserrat', sans-serif" }}
-                itemStyle={{ fontWeight: 'bold' }}
-              />
-
-              <Legend
-                  verticalAlign="top"
-                  align="left"
-                  iconType="circle"
-                  wrapperStyle={{ paddingBottom: '20px' }}
-                  formatter={(value, entry) => {
-                      // eslint-disable-next-line no-unused-vars
-                      const color = entry.color;
-                      return <span style={{ color: '#444746', fontWeight: 'bold', fontFamily: "'montserrat', sans-serif" }}>{value}</span>;
-                  }}
-              />
-
-              {/* Área de humedad */}
-              <Area
-                yAxisId="left"
-                type="monotone"
-                dataKey="humedad"
-                stroke="#02B6C9"
-                fill="#02B6C9"
-                fillOpacity={0.1}
-                strokeWidth={0}
-              />
-
-              {/* Área de temperatura */}
-              <Area
-                yAxisId="right"
-                type="monotone"
-                dataKey="temperaturaC"
-                stroke="#C91602"
-                fill="#C91602"
-                fillOpacity={0.3}
-                strokeWidth={0}
-              />
-              
-              {/* Líneas por encima de las áreas */}
-              <Line
-                yAxisId="left"
-                type="monotone"
-                dataKey="humedad"
-                stroke="#02B6C9"
-                strokeWidth={4}
-                name=" Humidity %"
-                dot={{ r: 4, fill: '#02B6C9' }}
-                activeDot={{ r: 6 }}
-                label={({ x, y, value }) => (
-                  <text x={x} y={y} dy={-10} fill="#02B6C9" fontSize={12} fontWeight="bold" textAnchor="middle">{value}%</text>
-                )}
-              />
-              
-              <Line
-                yAxisId="right"
-                type="monotone"
-                dataKey="temperaturaC"
-                stroke="#C91602"
-                strokeWidth={4}
-                name="Temperature °C"
-                dot={{ r: 4, fill: '#C91602' }}
-                activeDot={{ r: 6 }}
-                label={({ x, y, value }) => (
-                  <text x={x} y={y} dy={-10} fill="#C91602" fontSize={12} fontWeight="bold" textAnchor="middle">{value}°</text>
-                )}
-              />
-            </ComposedChart>
+            {(() => {
+              const data = Array.isArray(dhtData) ? [...dhtData].reverse() : [];
+              const maxHumidity = data.length > 0 ? Math.max(...data.map(d => d.humedad || 0)) : 100;
+              const maxTemp = data.length > 0 ? Math.max(...data.map(d => d.temperaturaC || 0)) : 40;
+              return (
+                <ComposedChart
+                  data={data}
+                  margin={{ top: 20, right: 30, left: 30, bottom: 20 }}
+                >
+                  <CartesianGrid/>
+                  <XAxis
+                    dataKey="hora"
+                    tick={{ fill: '#666', fontWeight: 'bold', fontSize: 12 }}
+                    axisLine={{ stroke: '#666' }}
+                    tickLine={{ stroke: '#666' }}
+                    label={{ value: 'Register Time', position: 'insideBottom', offset: -15, fill: '#444746', fontWeight: 'bold', fontSize: 14, fontFamily: "'montserrat', sans-serif" }}
+                  />
+                  <YAxis
+                    yAxisId="left"
+                    dataKey="humedad"
+                    tickFormatter={(tick) => `${tick}%`}
+                    domain={[0, maxHumidity + 5]}
+                    tick={{ fill: '#016974', fontWeight: 'bold', fontSize: 12 }}
+                    axisLine={{ stroke: '#666' }}
+                    tickLine={{ stroke: '#666' }}
+                    label={{  value: 'Humidity %', angle: -90, position: 'insideLeft', fill: '#016974', fontWeight: 'bold', fontSize: 14, fontFamily: "'montserrat', sans-serif" }}
+                  />
+                  <YAxis
+                    yAxisId="right"
+                    dataKey="temperaturaC"
+                    orientation="right"
+                    tickFormatter={(tick) => `${tick}°`}
+                    domain={[0, maxTemp + 2]}
+                    tick={{ fill: '#A21202', fontWeight: 'bold', fontSize: 12 }}
+                    axisLine={{ stroke: '#666' }}
+                    tickLine={{ stroke: '#666' }}
+                    label={{ value: 'Temperature °C', angle: -90, position: 'insideRight', fill: '#A21202', fontWeight: 'bold', fontSize: 14, fontFamily: "'montserrat', sans-serif" }}
+                  />
+                  <Tooltip
+                    content={({ active, payload, label }) => {
+                      if (!active || !payload || !payload.length) return null;
+                      // Buscar los valores de las líneas (no de las áreas)
+                      const humidity = payload.find(p => p.dataKey === 'humedad' && p.name === 'Humidity %');
+                      const temp = payload.find(p => p.dataKey === 'temperaturaC' && p.name === 'Temperature °C');
+                      return (
+                        <div style={{ background: '#fff', border: '1px solid #ccc', borderRadius: 8, padding: 12, fontFamily: 'montserrat, sans-serif', minWidth: 120 }}>
+                          <div style={{ fontWeight: 'bold', marginBottom: 6 }}>{label}</div>
+                          {humidity && (
+                            <div style={{ color: '#02B6C9', fontWeight: 'bold', marginBottom: 2 }}>
+                              Humidity % : {humidity.value}%
+                            </div>
+                          )}
+                          {temp && (
+                            <div style={{ color: '#C91602', fontWeight: 'bold' }}>
+                              Temperature °C : {temp.value}°C
+                            </div>
+                          )}
+                        </div>
+                      );
+                    }}
+                  />
+                  <Legend
+                    verticalAlign="top"
+                    align="left"
+                    iconType="circle"
+                    wrapperStyle={{ paddingBottom: '20px' }}
+                    payload={[
+                      { value: 'Humidity %', type: 'line', id: 'humedad', color: '#02B6C9' },
+                      { value: 'Temperature °C', type: 'line', id: 'temperaturaC', color: '#C91602' }
+                    ]}
+                    // eslint-disable-next-line no-unused-vars
+                    formatter={(value, entry) => (
+                      <span style={{ color: '#444746', fontWeight: 'bold', fontFamily: "'montserrat', sans-serif" }}>{value}</span>
+                    )}
+                  />
+                  {/* Área de humedad */}
+                  <Area
+                    yAxisId="left"
+                    type="monotone"
+                    dataKey="humedad"
+                    stroke="#02B6C9"
+                    fill="#02B6C9"
+                    fillOpacity={0.1}
+                    strokeWidth={0}
+                    legendType="none"
+                  />
+                  {/* Área de temperatura */}
+                  <Area
+                    yAxisId="right"
+                    type="monotone"
+                    dataKey="temperaturaC"
+                    stroke="#C91602"
+                    fill="#C91602"
+                    fillOpacity={0.3}
+                    strokeWidth={0}
+                    legendType="none"
+                  />
+                  {/* Líneas por encima de las áreas */}
+                  <Line
+                    yAxisId="left"
+                    type="monotone"
+                    dataKey="humedad"
+                    stroke="#02B6C9"
+                    strokeWidth={4}
+                    name="Humidity %"
+                    dot={{ r: 4, fill: '#02B6C9' }}
+                    activeDot={{ r: 6 }}
+                    label={({ x, y, value }) => (
+                      <text x={x} y={y} dy={-10} fill="#02B6C9" fontSize={12} fontWeight="bold" textAnchor="middle">{value}%</text>
+                    )}
+                  />
+                  <Line
+                    yAxisId="right"
+                    type="monotone"
+                    dataKey="temperaturaC"
+                    stroke="#C91602"
+                    strokeWidth={4}
+                    name="Temperature °C"
+                    dot={{ r: 4, fill: '#C91602' }}
+                    activeDot={{ r: 6 }}
+                    label={({ x, y, value }) => (
+                      <text x={x} y={y} dy={-10} fill="#C91602" fontSize={12} fontWeight="bold" textAnchor="middle">{value}°</text>
+                    )}
+                  />
+                </ComposedChart>
+              );
+            })()}
           </ResponsiveContainer>
         </CardContent>
       </Card>
@@ -506,41 +524,43 @@ const DashboardIoT = () => {
           </Box>
 
           <ResponsiveContainer width="100%" height={400}>
-            <BarChart
-              data={Array.isArray(ultraData) ? [...ultraData].reverse() : []}
-              margin={{ top: 5, right: 10, left: 10, bottom: 20 }}
-            >
-              <CartesianGrid stroke="#e0e0e0" vertical={false} />
-              
-              <XAxis
-                dataKey="hora"
-                tick={{ fill: '#444746', fontWeight: 'bold', fontSize: 12 }}
-                axisLine={{ stroke: '#444746' }}
-                tickLine={{ stroke: '#444746' }}
-                label={{ value: 'Timestamp', position: 'insideBottom', offset: -15, fill: '#444746', fontWeight: 'bold', fontSize: 14, fontFamily: "'montserrat', sans-serif" }}
-              />
-              
-              <YAxis
-                domain={[0, 1000]}
-                tickFormatter={(tick) => `${tick}cm`}
-                tick={{ fill: '#1063C1', fontWeight: 'bold', fontSize: 12 }}
-                axisLine={{ stroke: '#444746' }}
-                tickLine={{ stroke: '#444746' }}
-                label={{ value: 'Distance', angle: -90, position: 'insideLeft', fill: '#3E91EF', fontWeight: 'bold', fontSize: 14, fontFamily: "'montserrat', sans-serif" }}
-              />
-              
-              <Tooltip
-                cursor={{ fill: 'rgba(206, 206, 206, 0.4)' }}
-                formatter={(value) => [`${value} cm`, 'Distance']}
-                labelStyle={{ color: '#000', fontWeight: 'bold' }}
-              />
-              
-              <Bar
-                dataKey="distanciaCM"
-                fill="#84B8F5" 
-                radius={[4, 4, 0, 0]}
-              />
-            </BarChart>
+            {(() => {
+              const data = Array.isArray(ultraData) ? [...ultraData].reverse() : [];
+              const max = data.length > 0 ? Math.max(...data.map(d => d.distanciaCM || 0)) : 1000;
+              return (
+                <BarChart
+                  data={data}
+                  margin={{ top: 5, right: 10, left: 10, bottom: 20 }}
+                >
+                  <CartesianGrid stroke="#e0e0e0" vertical={false} />
+                  <XAxis
+                    dataKey="hora"
+                    tick={{ fill: '#444746', fontWeight: 'bold', fontSize: 12 }}
+                    axisLine={{ stroke: '#444746' }}
+                    tickLine={{ stroke: '#444746' }}
+                    label={{ value: 'Timestamp', position: 'insideBottom', offset: -15, fill: '#444746', fontWeight: 'bold', fontSize: 14, fontFamily: "'montserrat', sans-serif" }}
+                  />
+                  <YAxis
+                    domain={[0, max + 20]}
+                    tickFormatter={(tick) => `${tick}cm`}
+                    tick={{ fill: '#1063C1', fontWeight: 'bold', fontSize: 12 }}
+                    axisLine={{ stroke: '#444746' }}
+                    tickLine={{ stroke: '#444746' }}
+                    label={{ value: 'Distance', angle: -90, position: 'insideLeft', fill: '#3E91EF', fontWeight: 'bold', fontSize: 14, fontFamily: "'montserrat', sans-serif" }}
+                  />
+                  <Tooltip
+                    cursor={{ fill: 'rgba(206, 206, 206, 0.4)' }}
+                    formatter={(value) => [`${value} cm`, 'Distance']}
+                    labelStyle={{ color: '#000', fontWeight: 'bold' }}
+                  />
+                  <Bar
+                    dataKey="distanciaCM"
+                    fill="#84B8F5" 
+                    radius={[4, 4, 0, 0]}
+                  />
+                </BarChart>
+              );
+            })()}
           </ResponsiveContainer>
         </CardContent>
       </Card>

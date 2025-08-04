@@ -1,4 +1,3 @@
-import { validateReservationData, checkReservationAvailability, validateReservationTime } from '../middlewares/reservationValidation.js';
 import Reservation from '../../models/reservation.js';
 
 export const createReservation = async (req, res) => {
@@ -27,11 +26,9 @@ export const createReservation = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Error al crear la reservación:', error);
-      return res.status(400).json({
-        success: false,
-        message: 'Error de validación',
-        errors: error.message
-      });
+    return res.status(400).json({
+      success: false,
+      message: 'Reservation could not be created.'
+    });
   }
 };

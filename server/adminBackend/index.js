@@ -5,7 +5,7 @@ const router = express.Router();
 
 
 
-import empleadoRoutes from './routes/empleado.  js';
+import empleadoRoutes from './routes/empleado.js';
 import iotRoutes from './routes/iotRoutes.js';
 import productoRoutes from './routes/producto.js';
 import menuRoutes from './routes/menu.js';

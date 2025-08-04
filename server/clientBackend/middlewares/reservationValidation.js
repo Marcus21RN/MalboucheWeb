@@ -1,96 +1,56 @@
-import Reservation from '../../models/reservation.js';
-
-// Validaciones básicas de los datos de entrada
-export const validateReservationData = (req, res, next) => {
-  const {
-    nombreCliente,
-    primerApell,
-    numTel,
-    fecha,
-    horaInicio,
-    cantidadPersonas
-  } = req.body;
-
-  // Validar campos requeridos
-  if (!nombreCliente || !primerApell || !numTel || !fecha || !horaInicio || !cantidadPersonas) {
-    return res.status(400).json({
-      success: false,
-      message: 'Faltan campos requeridos: nombre, apellido, teléfono, fecha, hora y cantidad de personas'
-    });
-  }
-
-  // Validar formato del teléfono
-  if (!/^\d{10}$/.test(numTel.toString())) {
-    return res.status(400).json({
-      success: false,
-      message: 'El número de teléfono debe tener exactamente 10 dígitos numéricos'
-    });
-  }
-
-  // Validar cantidad de personas (1-4)
-  if (cantidadPersonas < 1 || cantidadPersonas > 4) {
-    return res.status(400).json({
-      success: false,
-      message: 'La reservación debe ser para entre 1 y 4 personas'
-    });
-  }
-
-  // Validar formato de fecha
-  if (isNaN(Date.parse(fecha))) {
-    return res.status(400).json({
-      success: false,
-      message: 'La fecha proporcionada no tiene un formato válido'
-    });
-  }
-
-  // Validar formato de hora (HH:MM)
-  if (!/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/.test(horaInicio)) {
-    return res.status(400).json({
-      success: false,
-      message: 'El horario debe estar en formato HH:MM (24 horas)'
-    });
-  }
-
-  next();
-};
-
-// Validación de disponibilidad (límite de reservaciones por día)
-export const checkReservationAvailability = async (req, res, next) => {
+// Validación de límite de personas reservadas por día (máximo 20)
+export const checkPeopleLimitPerDay = async (req, res, next) => {
   try {
-    const { fecha } = req.body;
-    const MAX_RESERVATIONS_PER_DAY = 10;
+    const { fecha, cantidadPersonas } = req.body;
+    if (!fecha || !cantidadPersonas) return next(); // Si falta info, dejar que otra validación lo rechace
 
-    const reservationsCount = await Reservation.countDocuments({
-      fecha: fecha,
+    // Buscar todas las reservaciones confirmadas para la fecha
+    const start = new Date(fecha);
+    start.setHours(0,0,0,0);
+    const end = new Date(fecha);
+    end.setHours(23,59,59,999);
+
+    const reservas = await Reservation.find({
+      fecha: { $gte: start, $lte: end },
       estado: 'confirmada'
     });
+    const totalPersonas = reservas.reduce((acc, r) => acc + (r.cantidadPersonas || 0), 0);
+    const personasSolicitadas = Number(cantidadPersonas);
+    const LIMITE = 20;
 
-    if (reservationsCount >= MAX_RESERVATIONS_PER_DAY) {
-      return res.status(409).json({
-        success: false,
-        message: 'Lo sentimos, no hay disponibilidad para la fecha seleccionada. Por favor elige otra fecha.'
-      });
+    if (totalPersonas + personasSolicitadas > LIMITE) {
+      const disponibles = LIMITE - totalPersonas;
+      if (disponibles > 0) {
+        return res.status(409).json({
+          success: false,
+          message: `Solo hay ${disponibles} espacio(s) disponible(s) para reservar ese día.`
+        });
+      } else {
+        return res.status(409).json({
+          success: false,
+          message: 'No hay espacios disponibles para reservar ese día.'
+        });
+      }
     }
-
     next();
   } catch (error) {
-    console.error('Error al verificar disponibilidad:', error);
+    console.error('Error al validar límite de personas por día:', error);
     res.status(500).json({
       success: false,
-      message: 'Ocurrió un error al verificar la disponibilidad'
+      message: 'Error al validar disponibilidad de personas para la fecha.'
     });
   }
 };
 
-// Validación de horario de reservación
+import Reservation from '../../models/reservation.js';
+
+
 export const validateReservationTime = (req, res, next) => {
   try {
     const { fecha, horaInicio } = req.body;
-    
     // Crear objeto Date combinando fecha y hora
     const reservationDateTime = new Date(`${fecha}T${horaInicio}`);
     const now = new Date();
-    
     // Validar que no sea en el pasado
     if (reservationDateTime < now) {
       return res.status(400).json({
@@ -98,7 +58,6 @@ export const validateReservationTime = (req, res, next) => {
         message: 'No se pueden hacer reservaciones para fechas/horas pasadas'
       });
     }
-    
     // Validar anticipación mínima (2 horas)
     const minReservationTime = new Date(now.getTime() + 2 * 60 * 60 * 1000);
     if (reservationDateTime < minReservationTime) {
@@ -107,7 +66,6 @@ export const validateReservationTime = (req, res, next) => {
         message: 'Las reservaciones requieren al menos 2 horas de anticipación. Por favor selecciona un horario posterior.'
       });
     }
-    
     // Validar horario de atención (3:00 PM a 12:00 AM)
     const [hours] = horaInicio.split(':').map(Number);
     if (hours < 15 || hours >= 24) {
@@ -116,7 +74,6 @@ export const validateReservationTime = (req, res, next) => {
         message: 'Nuestro horario de atención es de 3:00 PM a 12:00 AM. Por favor selecciona un horario dentro de este rango.'
       });
     }
-
     next();
   } catch (error) {
     console.error('Error en validación de horario:', error);

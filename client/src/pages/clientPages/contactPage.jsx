@@ -1,9 +1,90 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Snackbar, Alert } from '@mui/material';
 import { Parallax } from 'react-scroll-parallax';
 import { FaMapMarkerAlt, FaPhone, FaEnvelope, FaClock } from 'react-icons/fa';
 import { IoIosArrowUp } from "react-icons/io";
 
 export default function ContactPage() {
+  const [formData, setFormData] = useState({
+    name: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    subject: '',
+    message: '',
+  });
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'error' });
+  // eslint-disable-next-line no-unused-vars
+  const [errors, setErrors] = useState({});
+
+  // Validaciones en tiempo real
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    let newValue = value;
+    let errorMsg = '';
+
+    if (["name", "lastName"].includes(name)) {
+      if (/[^a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]/.test(newValue)) {
+        errorMsg = 'Only letters and spaces are allowed.';
+        newValue = newValue.replace(/[^a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]/g, '');
+      }
+    }
+    if (name === 'phone') {
+      if (/[^0-9]/.test(newValue)) {
+        errorMsg = 'Only numbers are allowed.';
+        newValue = newValue.replace(/\D/g, '');
+      }
+    }
+    setFormData(prev => ({ ...prev, [name]: newValue }));
+    setErrors(prev => ({ ...prev, [name]: errorMsg }));
+    if (errorMsg) {
+      setSnackbar({ open: true, message: errorMsg, severity: 'error' });
+    }
+  };
+
+  // Validación de email
+  const isValidEmail = (email) => {
+    return /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email);
+  };
+
+  // Validación antes de enviar
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.name || /[^a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]/.test(formData.name)) {
+      newErrors.name = 'Only letters and spaces are allowed.';
+    }
+    if (!formData.lastName || /[^a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]/.test(formData.lastName)) {
+      newErrors.lastName = 'Only letters and spaces are allowed.';
+    }
+    if (!formData.email || !isValidEmail(formData.email)) {
+      newErrors.email = 'Please enter a valid email address.';
+    }
+    if (!formData.phone || /[^0-9]/.test(formData.phone)) {
+      newErrors.phone = 'Only numbers are allowed.';
+    }
+    if (!formData.subject) {
+      newErrors.subject = 'Please enter a subject.';
+    }
+    if (!formData.message) {
+      newErrors.message = 'Please enter your message.';
+    }
+    setErrors(newErrors);
+    if (Object.keys(newErrors).length > 0) {
+      setSnackbar({ open: true, message: Object.values(newErrors)[0], severity: 'error' });
+      return false;
+    }
+    return true;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validateForm()) return;
+    // Aquí iría la llamada a la API para enviar el correo
+    setSnackbar({ open: true, message: 'Thank you for your feedback! We appreciate your comments.', severity: 'success' });
+    setFormData({ name: '', lastName: '', email: '', phone: '', subject: '', message: '' });
+    setErrors({});
+  };
+
   return (
     <div className="min-h-screen bg-black">
       {/* === BANNER PRINCIPAL === */}
@@ -44,13 +125,17 @@ export default function ContactPage() {
             <h3 className="text-2xl font-bold text-white font-['oswald'] mb-8 uppercase tracking-wider border-b border-[#b76ba3] pb-4">
               Send us a message
             </h3>
-            <form className="space-y-6">
+            <form className="space-y-6" onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="relative">
                   <input
                     id="name"
+                    name="name"
                     type="text"
                     placeholder="Name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
                     className="peer h-10 w-full border-b-2 border-[#555] bg-transparent text-white placeholder-transparent focus:outline-none focus:border-[#b76ba3]"
                   />
                   <label htmlFor="name" className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#b76ba3] peer-focus:text-sm">
@@ -59,35 +144,81 @@ export default function ContactPage() {
                 </div>
                 <div className="relative">
                   <input
-                    id="lastname"
+                    id="lastName"
+                    name="lastName"
                     type="text"
                     placeholder="Last Name"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                    required
                     className="peer h-10 w-full border-b-2 border-[#555] bg-transparent text-white placeholder-transparent focus:outline-none focus:border-[#b76ba3]"
                   />
-                  <label htmlFor="lastname" className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#b76ba3] peer-focus:text-sm">
+                  <label htmlFor="lastName" className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#b76ba3] peer-focus:text-sm">
                     Last Name
+                  </label>
+                </div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="relative">
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    placeholder="Email Address"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="peer h-10 w-full border-b-2 border-[#555] bg-transparent text-white placeholder-transparent focus:outline-none focus:border-[#b76ba3]"
+                  />
+                  <label htmlFor="email" className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#b76ba3] peer-focus:text-sm">
+                    Email Address
+                  </label>
+                </div>
+                <div className="relative">
+                  <input
+                    id="phone"
+                    name="phone"
+                    type="tel"
+                    placeholder="Phone Number"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    maxLength={10}
+                    minLength={10}
+                    required
+                    className="peer h-10 w-full border-b-2 border-[#555] bg-transparent text-white placeholder-transparent focus:outline-none focus:border-[#b76ba3]"
+                  />
+                  <label htmlFor="phone" className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#b76ba3] peer-focus:text-sm">
+                    Phone Number
                   </label>
                 </div>
               </div>
               <div className="relative">
                 <input
-                  id="email"
-                  type="email"
-                  placeholder="Email Address"
+                  id="subject"
+                  name="subject"
+                  type="text"
+                  placeholder="Subject"
+                  value={formData.subject}
+                  onChange={handleChange}
                   className="peer h-10 w-full border-b-2 border-[#555] bg-transparent text-white placeholder-transparent focus:outline-none focus:border-[#b76ba3]"
                 />
-                <label htmlFor="email" className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#b76ba3] peer-focus:text-sm">
-                  Email Address
+                <label htmlFor="subject" className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#b76ba3] peer-focus:text-sm">
+                  Subject
                 </label>
               </div>
               <div className="relative">
                 <textarea
                   id="message"
+                  name="message"
+                  type="text"
                   rows="4"
-                  placeholder="Your Message..."
+                  placeholder=""
+                  value={formData.message}
+                  onChange={handleChange}                
                   className="peer w-full border-b-2 border-[#555] bg-transparent text-white placeholder-gray-500 focus:outline-none focus:border-[#b76ba3] resize-none"
                 ></textarea>
-                
+                <label htmlFor="message" className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#b76ba3] peer-focus:text-sm">
+                  Give us your feedback...
+                </label>
               </div>
               <button
                 type="submit"
@@ -96,6 +227,21 @@ export default function ContactPage() {
                 Send Message
               </button>
             </form>
+            {/* Snackbar de MUI para mensajes de éxito y error */}
+            <Snackbar
+              open={snackbar.open}
+              autoHideDuration={5000}
+              onClose={() => setSnackbar({ ...snackbar, open: false })}
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            >
+              <Alert
+                onClose={() => setSnackbar({ ...snackbar, open: false })}
+                severity={snackbar.severity}
+                sx={{ width: '100%', fontWeight: 500, fontFamily: 'montserrat' }}
+              >
+                {snackbar.message}
+              </Alert>
+            </Snackbar>
           </div>
         </div>
         
