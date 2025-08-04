@@ -54,17 +54,17 @@ db.createCollection("empleado", {
 // INSERTS
 db.empleado.insertMany([
   {
-    _id: 1001,
-    nombre: "Carlos",
-    primerApellido: "Gómez",
-    segundoApellido: "Ramírez",
-    correo: "carlos.gomez@example.com",
-    password: "password123",
+    _id: 1,
+    nombre: "ADMIN",
+    primerApellido: "Admin",
+    segundoApellido: "",
+    correo: "admin@admin.com",
+    password: "ADMINA123",
     estado: "activo",
     IDRol: "ADMIN"
   },
   {
-    _id: 1002,
+    _id: 2,
     nombre: "Lucia",
     primerApellido: "Mendoza",
     segundoApellido: null,
@@ -74,7 +74,7 @@ db.empleado.insertMany([
     IDRol: "EMPLE"
   },
   {
-    _id: 1003,
+    _id: 3,
     nombre: "Sofia",
     primerApellido: "López",
     segundoApellido: "Becerra",
@@ -84,7 +84,7 @@ db.empleado.insertMany([
     IDRol: "EMPLE"
   },
   {
-    _id: 1004,
+    _id: 4,
     nombre: "Andrés",
     primerApellido: "Pérez",
     segundoApellido: "Morales",

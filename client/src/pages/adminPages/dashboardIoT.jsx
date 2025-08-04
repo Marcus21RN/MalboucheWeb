@@ -83,7 +83,7 @@ const DashboardIoT = () => {
     min: dhtStats.temperaturaC.min,
     max: dhtStats.temperaturaC.max,
     latest: dhtStats.temperaturaC.latest,
-    trend: null // Puedes calcular el trend si lo necesitas
+    // trend: null
   } : { avg: 0, min: 0, max: 0, latest: 0, trend: null };
 
   const humidityStats = dhtStats ? {
@@ -91,7 +91,7 @@ const DashboardIoT = () => {
     min: dhtStats.humedad.min,
     max: dhtStats.humedad.max,
     latest: dhtStats.humedad.latest,
-    trend: null
+    // trend: null
   } : { avg: 0, min: 0, max: 0, latest: 0, trend: null };
 
   const distanceStats = ultraStats ? {
@@ -99,7 +99,7 @@ const DashboardIoT = () => {
     min: ultraStats.distanciaCM.min,
     max: ultraStats.distanciaCM.max,
     latest: ultraStats.distanciaCM.latest,
-    trend: null
+  //  trend: null
   } : { avg: 0, min: 0, max: 0, latest: 0, trend: null };
 
   const mlxTempStats = mlxStats ? {
@@ -107,7 +107,7 @@ const DashboardIoT = () => {
     min: mlxStats.temperaturaC.min,
     max: mlxStats.temperaturaC.max,
     latest: mlxStats.temperaturaC.latest,
-    trend: null
+  //  trend: null
   } : { avg: 0, min: 0, max: 0, latest: 0, trend: null };
 
   // Tarjeta de estadística rápida

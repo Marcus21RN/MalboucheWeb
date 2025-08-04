@@ -8,6 +8,5 @@ router.post('/', validarJWT, empleado.crearEmpleado);
 router.get('/', empleado.obtenerEmpleados);
 router.get('/:id', empleado.obtenerEmpleadoPorId);
 router.put('/:id', validarJWT, empleado.actualizarEmpleado);
-router.delete('/:id', validarJWT, empleado.eliminarEmpleado);
 
 export default router;

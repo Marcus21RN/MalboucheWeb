@@ -9,14 +9,30 @@ export const crearEmpleado = async (req, res) => {
 
     // Validar contraseña de confirmación del usuario autenticado
     const usuarioId = req.user?.id;
-    if (!usuarioId) return res.status(401).json({ error: 'Usuario no autenticado' });
+    if (!usuarioId) {
+      console.error('User not authenticated');
+      return res.status(401).json({ error: 'You are not authenticated.' });
+    }
     const usuario = await Empleado.findById(usuarioId);
-    if (!usuario) return res.status(401).json({ error: 'Usuario no encontrado' });
+    if (!usuario) {
+      console.error('Authenticated user not found');
+      return res.status(401).json({ error: 'Authenticated user not found.' });
+    }
     const validPassword = await bcrypt.compare(confirmPassword, usuario.password);
-    if (!validPassword) return res.status(403).json({ error: 'Contraseña de confirmación incorrecta' });
+    if (!validPassword) {
+      return res.status(403).json({ error: 'Incorrect confirmation password.' });
+    }
 
     const rolValido = await validarRolExistente(IDRol);
-    if (!rolValido) return res.status(400).json({ error: 'El IDRol no existe' });
+    if (!rolValido) {
+      return res.status(400).json({ error: 'Selected role does not exist.' });
+    }
+
+    // Validar si el correo ya está registrado
+    const existingEmail = await Empleado.findOne({ correo });
+    if (existingEmail) {
+      return res.status(400).json({ error: 'This email is already registered. Please use another email.' });
+    }
 
     // Obtener el siguiente ID autoincremental
     const count = await Empleado.countDocuments();
@@ -39,10 +55,11 @@ export const crearEmpleado = async (req, res) => {
     await nuevoEmpleado.save();
     res.status(201).json({
       ...nuevoEmpleado.toObject(),
-      passwordDefault // Solo para mostrar la password generada si se requiere
+      passwordDefault // Only for showing the generated password if needed
     });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error('Error creating employee:', err);
+    res.status(500).json({ error: 'Could not create employee. Please try again.' });
   }
 };
 
@@ -52,7 +69,8 @@ export const obtenerEmpleados = async (req, res) => {
     const empleados = await Empleado.find();
     res.json(empleados);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error('Error fetching employees:', err);
+    res.status(500).json({ error: 'Could not fetch employees. Please try again.' });
   }
 };
 
@@ -60,10 +78,13 @@ export const obtenerEmpleados = async (req, res) => {
 export const obtenerEmpleadoPorId = async (req, res) => {
   try {
     const empleado = await Empleado.findById(req.params.id);
-    if (!empleado) return res.status(404).json({ error: 'Empleado no encontrado' });
+    if (!empleado) {
+      return res.status(404).json({ error: 'Employee not found.' });
+    }
     res.json(empleado);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error('Error fetching employee by ID:', err);
+    res.status(500).json({ error: 'Could not fetch employee. Please try again.' });
   }
 };
 
@@ -74,15 +95,34 @@ export const actualizarEmpleado = async (req, res) => {
 
     // Validar contraseña de confirmación del usuario autenticado
     const usuarioId = req.user?.id;
-    if (!usuarioId) return res.status(401).json({ error: 'Usuario no autenticado' });
+
+    if (!usuarioId) {
+      console.error('User not authenticated');
+      return res.status(401).json({ error: 'You are not authenticated.' });
+    }
     const usuario = await Empleado.findById(usuarioId);
-    if (!usuario) return res.status(401).json({ error: 'Usuario no encontrado' });
+    if (!usuario) {
+      console.error('Authenticated user not found');
+      return res.status(401).json({ error: 'Authenticated user not found.' });
+    }
     const validPassword = await bcrypt.compare(confirmPassword, usuario.password);
-    if (!validPassword) return res.status(403).json({ error: 'Contraseña de confirmación incorrecta' });
+    if (!validPassword) {
+      return res.status(403).json({ error: 'Incorrect confirmation password.' });
+    }
 
     if (IDRol) {
       const rolValido = await validarRolExistente(IDRol);
-      if (!rolValido) return res.status(400).json({ error: 'El IDRol no existe' });
+      if (!rolValido) {
+        return res.status(400).json({ error: 'Selected role does not exist.' });
+      }
+    }
+
+    // Validar si el correo ya está registrado por otro empleado
+    if (req.body.correo) {
+      const existingEmail = await Empleado.findOne({ correo: req.body.correo, _id: { $ne: req.params.id } });
+      if (existingEmail) {
+        return res.status(400).json({ error: 'This email is already registered. Please use another email.' });
+      }
     }
 
     // Si se proporciona una nueva contraseña, hashearla antes de actualizar
@@ -96,16 +136,8 @@ export const actualizarEmpleado = async (req, res) => {
     const actualizado = await Empleado.findByIdAndUpdate(req.params.id, updateData, { new: true });
     res.json(actualizado);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error('Error updating employee:', err);
+    res.status(500).json({ error: 'Could not update employee. Please try again.' });
   }
 };
 
-// Eliminar
-export const eliminarEmpleado = async (req, res) => {
-  try {
-    await Empleado.findByIdAndDelete(req.params.id);
-    res.json({ mensaje: 'Empleado eliminado' });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};

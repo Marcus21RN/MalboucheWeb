@@ -47,6 +47,7 @@ import {
 import {
   EditOutlined as EditIcon,
   DeleteOutline as DeleteIcon,
+  CheckCircle as CheckCircleIcon,
   Add as AddIcon,
   Close as CloseIcon,
   Person as PersonIcon,
@@ -61,7 +62,7 @@ export default function EmployesAdmin() {
   const [empleados, setEmpleados] = useState([]);
   const [formData, setFormData] = useState({
     _id: "", nombre: "", primerApellido: "", segundoApellido: "",
-    correo: "", password: "", estado: "activo", IDRol: "EMPLE"
+    correo: "", password: "", estado: "activo", IDRol: ""
   });
   const [modoEdicion, setModoEdicion] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
@@ -70,39 +71,66 @@ export default function EmployesAdmin() {
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
   const [searchTerm, setSearchTerm] = useState("");
   const [filterEstado, setFilterEstado] = useState("todos");
+  const [filterRole, setFilterRole] = useState("todos");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [orderBy, setOrderBy] = useState("nombre");
   const [order, setOrder] = useState("asc");
-  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [openStatusDialog, setOpenStatusDialog] = useState(false);
   const [openSaveDialog, setOpenSaveDialog] = useState(false);
-  const [empleadoToDelete, setEmpleadoToDelete] = useState(null);
+  const [empleadoToStatus, setEmpleadoToStatus] = useState(null);
   const [confirmPassword, setConfirmPassword] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
 
   // Funciones originales mantenidas
-  const handleDeleteClick = (id) => {
-    setEmpleadoToDelete(id);
-    setOpenDeleteDialog(true);
+  // Nueva función para abrir el diálogo de cambio de estado
+  const handleStatusClick = (empleado) => {
+    setEmpleadoToStatus(empleado);
+    setOpenStatusDialog(true);
   };
 
-  const handleConfirmDelete = async () => {
+  // Confirmar cambio de estado (activar/desactivar)
+  const [statusConfirmPassword, setStatusConfirmPassword] = useState("");
+  const [statusConfirmPasswordError, setStatusConfirmPasswordError] = useState(false);
+
+  const handleConfirmStatus = async () => {
+    if (!statusConfirmPassword) {
+      setStatusConfirmPasswordError(true);
+      showSnackbar("Confirmation password is required.", "error");
+      return;
+    }
     try {
-      await axios.delete(`http://localhost:3000/adminBackend/empleados/${empleadoToDelete}`);
+      const nuevoEstado = empleadoToStatus.estado === "activo" ? "inactivo" : "activo";
+      await axios.put(`http://localhost:3000/adminBackend/empleados/${empleadoToStatus._id}`, {
+        ...empleadoToStatus,
+        estado: nuevoEstado,
+        confirmPassword: statusConfirmPassword
+      });
       fetchEmpleados();
-      showSnackbar("Empleado eliminado", "success");
+      showSnackbar(
+        nuevoEstado === "activo" ? "Employee activated successfully." : "Employee deactivated successfully.",
+        "success"
+      );
     } catch (error) {
-      showSnackbar("Error al eliminar empleado", "error");
+      // Solo mostrar mensajes amigables para el usuario
+      if (error.response?.data?.error?.toLowerCase().includes("password")) {
+        setStatusConfirmPasswordError(true);
+        showSnackbar("Incorrect confirmation password.", "error");
+      } else {
+        showSnackbar("Could not update employee status. Please try again.", "error");
+      }
     } finally {
-      setOpenDeleteDialog(false);
-      setEmpleadoToDelete(null);
+      setOpenStatusDialog(false);
+      setEmpleadoToStatus(null);
+      setStatusConfirmPassword("");
+      setStatusConfirmPasswordError(false);
     }
   };
 
   const handleSubmitWithConfirmation = async (e) => {
     e.preventDefault();
-    if (!formData.nombre || !formData.primerApellido || !formData.correo) {
-      showSnackbar("Por favor complete los campos requeridos", "error");
+    if (!formData.nombre || !formData.primerApellido || !formData.correo || !formData.IDRol) {
+      showSnackbar("All fields are required.", "error");
       return;
     }
     setConfirmPassword("");
@@ -115,36 +143,40 @@ export default function EmployesAdmin() {
   const handleConfirmSave = async () => {
     if (!confirmPassword) {
       setConfirmPasswordError(true);
-      showSnackbar("La contraseña de confirmación es requerida", "error");
+      showSnackbar("Confirmation password is required.", "error");
       return;
     }
+
 
     const url = modoEdicion
       ? `http://localhost:3000/adminBackend/empleados/${formData._id}`
       : "http://localhost:3000/adminBackend/empleados";
 
-    // Generar la contraseña solo si es registro nuevo
-    let passwordGenerada = formData.password;
+    // Solo generar y enviar password si es registro nuevo
+    let payload;
     if (!modoEdicion) {
-      passwordGenerada = `${formData.nombre}${formData.primerApellido.charAt(0)}123`;
+      const passwordGenerada = `${formData.nombre}${formData.primerApellido.charAt(0)}123`;
+      payload = { ...formData, password: passwordGenerada, confirmPassword };
+    } else {
+      // En edición, no enviar password
+      const { password, ...rest } = formData;
+      payload = { ...rest, confirmPassword };
     }
-
-    // Enviar la contraseña de confirmación al backend
-    const payload = { ...formData, password: passwordGenerada, confirmPassword };
 
     try {
       if (modoEdicion) {
         await axios.put(url, payload);
-        showSnackbar("Empleado actualizado", "success");
+        showSnackbar("Employee updated successfully.", "success");
       } else {
         await axios.post(url, payload);
-        showSnackbar("Empleado registrado", "success");
+        showSnackbar("Employee registered successfully.", "success");
 
         // --- AQUÍ SE ENVÍA EL CORREO DE BIENVENIDA ---
         await axios.post("http://localhost:3000/adminBackend/email/bienvenida-empleado", {
           toEmail: formData.correo,
           nombre: formData.nombre,
           primerApellido: formData.primerApellido,
+          // eslint-disable-next-line no-undef
           password: passwordGenerada,
           IDRol: formData.IDRol
         });
@@ -153,9 +185,17 @@ export default function EmployesAdmin() {
       fetchEmpleados();
       resetForm();
     } catch (error) {
-      const msg = error.response?.data?.error || "Error en la operación";
-      setConfirmPasswordError(true);
-      showSnackbar("Error: " + msg, "error");
+      // Validación de correo duplicado y otros mensajes amigables
+      const msg = error.response?.data?.error || "Could not save employee. Please try again.";
+      if (msg.toLowerCase().includes("email is already registered")) {
+        setConfirmPasswordError(true);
+        showSnackbar("This email is already registered. Please use another email.", "error");
+      } else if (msg.toLowerCase().includes("password")) {
+        setConfirmPasswordError(true);
+        showSnackbar("Incorrect confirmation password.", "error");
+      } else {
+        showSnackbar("Could not save employee. Please try again.", "error");
+      }
     } finally {
       setOpenSaveDialog(false);
     }
@@ -170,7 +210,10 @@ export default function EmployesAdmin() {
     const matchesEstado =
       filterEstado === "todos" || emp.estado === filterEstado;
 
-    return matchesSearch && matchesEstado;
+    const matchesRole =
+      filterRole === "todos" || emp.IDRol === filterRole;
+
+    return matchesSearch && matchesEstado && matchesRole;
   });
 
   const sortedEmpleados = [...empleadosFiltrados].sort((a, b) => {
@@ -201,7 +244,7 @@ export default function EmployesAdmin() {
     }
   };
 
-  useEffect(() => { fetchEmpleados(); }, []);
+  useEffect(() => { fetchEmpleados(); },);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -217,7 +260,7 @@ export default function EmployesAdmin() {
   const resetForm = () => {
     setFormData({
       _id: "", nombre: "", primerApellido: "", segundoApellido: "",
-      correo: "", password: "", estado: "activo", IDRol: "EMPLE"
+      correo: "", password: "", estado: "activo", IDRol: ""
     });
     setModoEdicion(false);
     setOpenDialog(false);
@@ -316,6 +359,18 @@ export default function EmployesAdmin() {
               <MenuItem value="activo">Active</MenuItem>
               <MenuItem value="inactivo">Inactive</MenuItem>
             </Select>
+          </FormControl>
+          <FormControl size="small" sx={{ width: 180, backgroundColor: 'white' }}>
+            <InputLabel>Filter by Role</InputLabel>
+              <Select
+              value={filterRole}
+              label="Filter by Role"
+              onChange={(e) => setFilterRole(e.target.value)}
+              >
+              <MenuItem value="todos">All</MenuItem>
+              <MenuItem value="ADMIN">Administrator</MenuItem>
+              <MenuItem value="EMPLE">Employee</MenuItem>
+              </Select>
           </FormControl>
         </Box>
       </Box>
@@ -445,9 +500,10 @@ export default function EmployesAdmin() {
                     </TableCell>
                     <TableCell>
                       <Chip 
-                        label={emp.estado.toUpperCase()} 
+                        label={emp.estado === "activo" ? "ACTIVE" : "INACTIVE"}
                         color={getStatusColor(emp.estado)}
                         size="small"
+                        // Mostrar "ACTIVO" en inglés
                         sx={{ 
                           fontWeight: 'medium',
                           minWidth: 80,
@@ -459,26 +515,38 @@ export default function EmployesAdmin() {
                     </TableCell>
                     <TableCell>
                       
-                      <Box sx={{ display: 'flex', gap: 1 }}>
-                        <Tooltip title="Update employee">
-                          <IconButton
-                            color="primary"
-                            onClick={() => handleEdit(emp)}
-                            size="small"
-                          >
-                            <EditIcon />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Delete employee">
+                    <Box sx={{ display: 'flex', gap: 1 }}>
+                      <Tooltip title="Update employee">
+                        <IconButton
+                          color="primary"
+                          onClick={() => handleEdit(emp)}
+                          size="small"
+                        >
+                          <EditIcon />
+                        </IconButton>
+                      </Tooltip>
+                      {emp.estado === "activo" ? (
+                        <Tooltip title="Deactivate employee">
                           <IconButton
                             color="error"
-                            onClick={() => handleDeleteClick(emp._id)}
+                            onClick={() => handleStatusClick(emp)}
                             size="small"
                           >
                             <DeleteIcon />
                           </IconButton>
                         </Tooltip>
-                      </Box>
+                      ) : (
+                        <Tooltip title="Activate employee">
+                          <IconButton
+                            color="success"
+                            onClick={() => handleStatusClick(emp)}
+                            size="small"
+                          >
+                            <CheckCircleIcon />
+                          </IconButton>
+                        </Tooltip>
+                      )}
+                    </Box>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -595,38 +663,53 @@ export default function EmployesAdmin() {
         </form>
       </Dialog>
 
-      {/* Diálogo de confirmación para eliminar */}
+      {/* Diálogo de confirmación para activar/desactivar */}
       <Dialog
-        open={openDeleteDialog}
-        onClose={() => setOpenDeleteDialog(false)}
+        open={openStatusDialog}
+        onClose={() => setOpenStatusDialog(false)}
       >
         <DialogTitle sx={{ color: "#660152" }}>
-          Accept
+          {empleadoToStatus?.estado === "activo" ? "Deactivate employee" : "Activate employee"}
         </DialogTitle>
         <DialogContent>
           <Typography>
-            Are you sure you want to delete this employee? This action cannot be undone.
+            {empleadoToStatus?.estado === "activo"
+              ? "Are you sure you want to deactivate this employee? You will be able to reactivate them later."
+              : "Are you sure you want to activate this employee?"}
           </Typography>
+          <form onSubmit={e => { e.preventDefault(); handleConfirmStatus(); }}>
+            <TextField
+              label="Confirmation password"
+              type="password"
+              value={statusConfirmPassword}
+              onChange={e => { setStatusConfirmPassword(e.target.value); setStatusConfirmPasswordError(false); }}
+              error={statusConfirmPasswordError}
+              helperText={statusConfirmPasswordError ? "Incorrect password" : ""}
+              fullWidth
+              sx={{ mt: 2 }}
+              autoFocus
+            />
+            <DialogActions>
+              <Button 
+                onClick={() => setOpenStatusDialog(false)}
+                sx={{ color: "#660152" }}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                variant="contained"
+                sx={{ 
+                  backgroundColor: "#660152",
+                  '&:hover': { backgroundColor: "#520040" }
+                }}
+                startIcon={<DeleteIcon />}
+              >
+                {empleadoToStatus?.estado === "activo" ? "Desactivar" : "Activar"}
+              </Button>
+            </DialogActions>
+          </form>
         </DialogContent>
-        <DialogActions>
-          <Button 
-            onClick={() => setOpenDeleteDialog(false)}
-            sx={{ color: "#660152" }}
-          >
-            Cancel
-          </Button>
-          <Button
-            onClick={handleConfirmDelete}
-            variant="contained"
-            sx={{ 
-              backgroundColor: "#660152",
-              '&:hover': { backgroundColor: "#520040" }
-            }}
-            startIcon={<DeleteIcon />}
-          >
-            Confirm Delete
-          </Button>
-        </DialogActions>
       </Dialog>
 
       {/* Diálogo de confirmación para guardar/editar */}
@@ -635,27 +718,27 @@ export default function EmployesAdmin() {
         onClose={() => setOpenSaveDialog(false)}
       >
         <DialogTitle sx={{ color: "#660152" }}>
-          {modoEdicion ? "Confirmar Actualización" : "Confirmar Registro"}
+          {modoEdicion ? "Confirm Update" : "Confirm Registration"}
         </DialogTitle>
         <DialogContent>
           <Typography>
             {modoEdicion
-              ? "¿Estás seguro de que deseas actualizar la información de este empleado?"
-              : "¿Estás seguro de que deseas registrar este nuevo empleado?"}
+              ? "Are you sure you want to update this employee's information?"
+              : "Are you sure you want to register this new employee?"}
           </Typography>
           {!modoEdicion && (
             <Typography variant="body2" sx={{ mt: 2, fontStyle: "italic" }}>
-              Se enviará un correo al empleado con sus credenciales de acceso.
+              An email will be sent to the employee with their access credentials.
             </Typography>
           )}
           <form onSubmit={e => { e.preventDefault(); handleConfirmSave(); }}>
             <TextField
-              label="Contraseña de confirmación"
+              label="Confirmation password"
               type="password"
               value={confirmPassword}
               onChange={e => { setConfirmPassword(e.target.value); setConfirmPasswordError(false); }}
               error={confirmPasswordError}
-              helperText={confirmPasswordError ? "Contraseña incorrecta" : ""}
+              helperText={confirmPasswordError ? "Incorrect password" : ""}
               fullWidth
               sx={{ mt: 2 }}
               autoFocus
@@ -665,7 +748,7 @@ export default function EmployesAdmin() {
                 onClick={() => setOpenSaveDialog(false)}
                 sx={{ color: "#660152" }}
               >
-                Cancelar
+                Cancel
               </Button>
               <Button
                 type="submit"
@@ -676,7 +759,7 @@ export default function EmployesAdmin() {
                 }}
                 startIcon={<SaveIcon />}
               >
-                {modoEdicion ? "Confirmar Actualización" : "Confirmar Registro"}
+                {modoEdicion ? "Confirm Update" : "Confirm Registration"}
               </Button>
             </DialogActions>
           </form>
