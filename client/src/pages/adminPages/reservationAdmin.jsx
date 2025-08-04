@@ -59,7 +59,7 @@ const ReservationAdmin = () => {
           params.nombre = filtroNombre;
           params.folio = filtroNombre;
         }
-        if (filtroEstado) {
+        if (filtroEstado && filtroEstado !== 'finalizada') {
           params.estado = filtroEstado;
         }
         const res = await axios.get("http://localhost:3000/adminBackend/reservations", { params });
@@ -73,10 +73,27 @@ const ReservationAdmin = () => {
     fetchReservations();
   }, [filtroNombre, filtroEstado, filtroDiaSemana]);
 
-  // Asegura que reservaciones siempre sea un array
+  
+  // Función para actualizar el estado "finalizada" si la fecha ya expiró
+  const addFinalizadaStatus = (reservas) => {
+    const now = new Date();
+    return reservas.map(res => {
+      const fechaReserva = new Date(res.fecha);
+      // Si la fecha ya pasó y no está cancelada, marcar como finalizada
+      if (res.estado !== 'cancelada' && fechaReserva < now) {
+        return { ...res, estado: 'finalizada' };
+      }
+      return res;
+    });
+  };
+
+
+
   const safeReservaciones = Array.isArray(reservaciones) ? reservaciones : [];
+   // Aplica el estado "finalizada" automáticamente
+  const reservacionesConEstado = addFinalizadaStatus(safeReservaciones);
   // Filtro adicional en frontend para asegurar búsqueda consistente
-  const filtradas = safeReservaciones.filter(res => {
+  const filtradas = reservacionesConEstado.filter(res => {
     // Normaliza campos para búsqueda
     const folio = (res._id || '').toLowerCase();
     const nombre = (res.nombreCliente || '').toLowerCase();
@@ -89,11 +106,12 @@ const ReservationAdmin = () => {
       nombre.includes(filtro) ||
       primerApell.includes(filtro) ||
       segundoApell.includes(filtro);
-    // Estado ya viene filtrado del backend, pero si quieres forzar aquí:
-    // const matchEstado = filtroEstado ? res.estado === filtroEstado : true;
-    return !filtroNombre || match;
+    // Si hay filtro de estado, también filtra por estado
+    const matchEstado = filtroEstado ? res.estado === filtroEstado : true;
+    return (!filtroNombre || match) && matchEstado;
   });
 
+  
   // Funciones de utilidad para estilos
   const getStatusColor = (status) => {
     switch (status) {
@@ -101,10 +119,13 @@ const ReservationAdmin = () => {
         return 'success';
       case 'cancelada':
         return 'error';
+      case 'finalizada':
+        return 'secondary'; // Gris para finalizada
       default:
         return 'default';
     }
   };
+
 
   const getAvatarColor = (nombre) => {
     const colors = ['#660152', '#b76ba3', '#520040', '#8b4a6b'];
@@ -151,7 +172,7 @@ const ReservationAdmin = () => {
       await axios.patch(`http://localhost:3000/adminBackend/reservations/${selected._id}/cancel`, { motivo });
 
       // 2. Envía el correo de cancelación usando tu endpoint
-      await axios.post("http://localhost:3000/adminBackend/emailReserva/cancel-reservation", {
+      await axios.post("http://localhost:3000/adminBackend/email-reserva/cancel-reservation", {
         toEmail: selected.correoCliente,
         nombreCliente: selected.nombreCliente,
         folio: selected._id,
@@ -205,6 +226,7 @@ const ReservationAdmin = () => {
               <MenuItem value="">All Reservations</MenuItem>
               <MenuItem value="confirmada">Confirmed</MenuItem>
               <MenuItem value="cancelada">Cancelled</MenuItem>
+              <MenuItem value="finalizada">Finished</MenuItem>
             </Select>
           </FormControl>
 
@@ -218,7 +240,7 @@ const ReservationAdmin = () => {
             sx={{ width: 220, backgroundColor: 'white', borderRadius: 1 }}
           />
 
-          {/* Eliminado filtro por rango de fechas */}
+    
 
           {/* Filtro por día de la semana */}
           <FormControl sx={{ maxWidth: 180, minWidth: 180 }}>
@@ -424,7 +446,7 @@ const ReservationAdmin = () => {
                               <IconButton
                                 color="error"
                                 onClick={() => handleOpenDialog(res)}
-                                disabled={res.estado === 'cancelada'}
+                                disabled={res.estado === 'cancelada' || res.estado === 'finalizada'}
                                 size="small"
                               >
                                 <CancelIcon />
@@ -500,7 +522,7 @@ const ReservationAdmin = () => {
                     <PersonIcon sx={{ color: '#660152' }} />
                     <Box>
                       <Typography variant="subtitle2" color="#660152" sx={{ fontWeight: 600 }}>Client</Typography>
-                      <Typography variant="body1" sx={{ mb: 1 }}>{ticketDialog.nombreCliente} {ticketDialog.primerApellido}</Typography>
+                      <Typography variant="body1" sx={{ mb: 1 }}>{ticketDialog.nombreCliente} {ticketDialog.primerApell}</Typography>
                     </Box>
                   </Box>
                   <Box sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -545,7 +567,18 @@ const ReservationAdmin = () => {
                       <EventIcon sx={{ color: '#660152', mr: 0.5 }} />
                       <Typography variant="subtitle2" color="#660152" sx={{ fontWeight: 600 }}>Status</Typography>
                     </Box>
-                    <Typography variant="body1" sx={{ textTransform: 'capitalize', ml: 4, mt: 0.5 }}>{ticketDialog.estado}</Typography>
+                    <Chip 
+                      label={ticketDialog.estado.toUpperCase()} 
+                      color={getStatusColor(ticketDialog.estado)}
+                      size="small"
+                      sx={{ 
+                        fontWeight: 'bold',
+                        minWidth: 100,
+                        textTransform: 'uppercase',
+                        ml: 4,
+                        mt: 0.5
+                      }}
+                    />
                   </Box>
                   <Box sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
                     <CalendarIcon sx={{ color: '#660152' }} />
@@ -555,7 +588,30 @@ const ReservationAdmin = () => {
                     </Box>
                   </Box>
                 </Grid>
+                
+ 
               </Grid>
+                {ticketDialog.estado === 'cancelada' && ticketDialog.motivoCancel && (
+                  <Grid item xs={12}>
+                    <Box sx={{ 
+                      backgroundColor: '#ffebee', 
+                      p: 2, 
+                      borderRadius: 1,
+                      border: '1px solid #ffcdd2',
+                      fullWidth: true,
+                    }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                        <CancelIcon sx={{ color: '#d32f2f' }} />
+                        <Typography variant="subtitle2" color="#d32f2f" sx={{ fontWeight: 600, textTransform: 'uppercase',  }}>
+                          Cancellation Reason
+                        </Typography>
+                      </Box>
+                      <Typography variant="body2" sx={{ ml: 4 }}>
+                        {ticketDialog.motivoCancel}
+                      </Typography>
+                    </Box>
+                  </Grid>
+                )}
             </Box>
           )}
         </DialogContent>
