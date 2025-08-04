@@ -12,7 +12,7 @@ import {
   DialogActions, DialogContent, DialogContentText, DialogTitle
 } from "@mui/material";
 import {
-  AddCircleOutline, EditOutlined, DeleteOutline,
+  AddCircleOutline, CheckCircle, EditOutlined, DeleteOutline,
   LocalBar, Restaurant, WineBar, Fastfood, Close,
   FilterAlt, People, Schedule, Email, Phone, Receipt,
   MenuBook as MenuIcon, Visibility as VisibilityIcon
@@ -624,8 +624,9 @@ const MenuAdmin = () => {
                           </Box>
                         </TableCell>
                         <TableCell>
-                          <Chip 
-                            label={menu.estado?.toUpperCase() || 'UNDEFINED'} 
+                          <Chip
+                          
+                            label={menu.estado === "activo" ? "ACTIVE" : "INACTIVE"}
                             color={getStatusColor(menu.estado)}
                             size="small"
                             sx={{ 
@@ -660,7 +661,11 @@ const MenuAdmin = () => {
                                 onClick={() => handleToggleMenuStatus(menu._id)}
                                 size="small"
                               >
-                                <DeleteOutline />
+                                {menu.estado === 'activo' ? (
+                                  <DeleteOutline />
+                                ) : (
+                                  <CheckCircle sx={{ color: 'success.main' }} />
+                                )}
                               </IconButton>
                             </Tooltip>
                           </Box>
@@ -863,7 +868,7 @@ const MenuAdmin = () => {
                         </TableCell>
                         <TableCell>
                           <Chip 
-                            label={producto.estado.toUpperCase()} 
+                            label={producto.estado === "activo" ? "ACTIVE" : "INACTIVE"} 
                             color={getStatusColor(producto.estado)}
                             size="small"
                             sx={{ 
@@ -889,7 +894,11 @@ const MenuAdmin = () => {
                                 onClick={() => handleToggleProductStatus(producto._id)}
                                 size="small"
                               >
-                                <DeleteOutline />
+                                {producto.estado === 'activo' ? (
+                                  <DeleteOutline />
+                                ) : (
+                                  <CheckCircle sx={{ color: 'success.main' }} />
+                                )}
                               </IconButton>
                             </Tooltip>
                           </Box>
@@ -1129,8 +1138,8 @@ const MenuAdmin = () => {
                   <TextField 
                     fullWidth 
                     name="nombre" 
-                    label="Product Name" 
-                    placeholder="Product Name" 
+                    label="Menu Name" 
+                    placeholder="Menu Name" 
                     value={menuFormData.nombre} 
                     onChange={handleMenuChange} 
                     required
@@ -1186,7 +1195,6 @@ const MenuAdmin = () => {
               </Grid>
               <Grid item xs={12} md={6}>
                 <Box sx={{ width: '100%' }}>
-                  {/* Espacio para futuras extensiones */}
                 </Box>
               </Grid>
               <Box sx={{ width: '100%' }}>
@@ -1209,7 +1217,7 @@ const MenuAdmin = () => {
             // Pestaña 2: Productos
             <Box>
               <Typography variant="subtitle1" gutterBottom>
-                Select Menu Type:
+                Selected Menu Type: <strong>{menuFormCategory || "None"}</strong>
               </Typography>
 
           <Grid container spacing={1} sx={{ mb: 2 }}>
