@@ -144,13 +144,27 @@ const ReservationAdmin = () => {
   };
 
   // Cancelar reservación vía backend
-  const handleCancelReservation = async () => {
+   const handleCancelReservation = async () => {
     if (!motivo.trim()) return;
     try {
+      // 1. Cancela la reservación en el backend
       await axios.patch(`http://localhost:3000/adminBackend/reservations/${selected._id}/cancel`, { motivo });
+
+      // 2. Envía el correo de cancelación usando tu endpoint
+      await axios.post("http://localhost:3000/adminBackend/emailReserva/cancel-reservation", {
+        toEmail: selected.correoCliente,
+        nombreCliente: selected.nombreCliente,
+        folio: selected._id,
+        fecha: selected.fecha ? new Date(selected.fecha).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '',
+        horaInicio: selected.horaInicio,
+        cantidadPersonas: selected.cantidadPersonas,
+        motivo: motivo
+      });
+
       setSnackbarOpen(true);
       setOpenDialog(false);
-      // Refrescar lista
+
+      // Refresca la lista
       const params = {};
       if (filtroNombre) {
         params.nombre = filtroNombre;
