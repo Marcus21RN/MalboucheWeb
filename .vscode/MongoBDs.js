@@ -133,7 +133,16 @@ db.createCollection("evento", {
   validator: {
     $jsonSchema: {
       bsonType: "object",
-      required: ["_id", "nombre", "descripcion", "fechaCreacion", "fechaEvento", "horaInicio", "horaFinal", "estado"],
+      required: [
+        "_id",
+        "nombre",
+        "descripcion",
+        "fechaCreacion",
+        "fechaEvento",
+        "horaInicio",
+        "horaFinal",
+        "estado"
+      ],
       properties: {
         _id: {
           bsonType: "string",
@@ -168,6 +177,10 @@ db.createCollection("evento", {
           enum: ["activo", "cancelado", "pendiente"],
           description: "Estado del evento"
         },
+        motivo: {
+          bsonType: ["string", "null"],
+          description: "Motivo de cancelación del evento"
+        },
         imagen: {
           bsonType: ["string", "null"],
           description: "URL de la imagen del evento"
@@ -183,40 +196,48 @@ db.evento.insertMany([
     _id: "CJ001",
     nombre: "Concierto de Jazz",
     descripcion: "Noche de jazz en vivo con la banda Blue Notes",
-    fecha: ISODate("2025-06-28T00:00:00Z"),
+    fechaCreacion: ISODate("2025-06-01T00:00:00Z"),
+    fechaEvento: ISODate("2025-06-28T00:00:00Z"),
     horaInicio: "20:00",
     horaFinal: "23:00",
     estado: "pendiente",
+    motivo: null,
     imagen: "https://example.com/concierto-jazz.jpg"
   },
   {
     _id: "NS001",
     nombre: "Noche de Salsa",
     descripcion: "Clases y baile libre con orquesta en vivo",
-    fecha: ISODate("2025-07-05T00:00:00Z"),
+    fechaCreacion: ISODate("2025-06-10T00:00:00Z"),
+    fechaEvento: ISODate("2025-07-05T00:00:00Z"),
     horaInicio: "21:00",
     horaFinal: "00:00",
     estado: "pendiente",
+    motivo: null,
     imagen: "https://example.com/noche-salsa.jpg"
   },
   {
     _id: "CQ002",
     nombre: "Tributo a Queen",
     descripcion: "Concierto tributo con banda invitada",
-    fecha: ISODate("2025-07-12T00:00:00Z"),
+    fechaCreacion: ISODate("2025-06-15T00:00:00Z"),
+    fechaEvento: ISODate("2025-07-12T00:00:00Z"),
     horaInicio: "20:30",
     horaFinal: "23:30",
     estado: "pendiente",
+    motivo: null,
     imagen: "https://example.com/tributo-queen.jpg"
   },
   {
     _id: "NK002",
     nombre: "Noche de Karaoke",
     descripcion: "Participa y gana bebidas gratis",
-    fecha: ISODate("2025-07-19T00:00:00Z"),
+    fechaCreacion: ISODate("2025-06-20T00:00:00Z"),
+    fechaEvento: ISODate("2025-07-19T00:00:00Z"),
     horaInicio: "19:00",
     horaFinal: "22:00",
     estado: "pendiente",
+    motivo: null,
     imagen: "https://example.com/noche-karaoke.jpg"
   }
 ])
@@ -287,6 +308,10 @@ db.createCollection("reservacion", {
           bsonType: "string",
           enum: ["pendiente", "cancelada", "finalizada"],
           description: "Estado de la reservación"
+        },
+        motivo: {
+          bsonType: ["string", "null"],
+          description: "Motivo de cancelación (solo si aplica)"
         }
       }
     }
@@ -307,7 +332,8 @@ db.reservacion.insertMany([
     horaInicio: "19:00",
     cantidadPersonas: 2,
     fechaReservacion: ISODate("2025-06-01T00:00:00Z"),
-    estado: "cancelada"
+    estado: "cancelada",
+    motivo: "El cliente no pudo asistir por motivos personales."
   },
   {
     _id: "RSV-0014",
@@ -320,7 +346,8 @@ db.reservacion.insertMany([
     horaInicio: "18:00",
     cantidadPersonas: 3,
     fechaReservacion: ISODate("2025-06-01T00:00:00Z"),
-    estado: "cancelada"
+    estado: "cancelada",
+    motivo: "Cancelación por cambio de planes del cliente."
   },
   {
     _id: "RSV-0013",
@@ -333,7 +360,8 @@ db.reservacion.insertMany([
     horaInicio: "19:30",
     cantidadPersonas: 5,
     fechaReservacion: ISODate("2025-06-01T00:00:00Z"),
-    estado: "finalizada"
+    estado: "finalizada",
+    motivo: null
   },
   {
     _id: "RSV-0012",
@@ -346,7 +374,8 @@ db.reservacion.insertMany([
     horaInicio: "20:00",
     cantidadPersonas: 4,
     fechaReservacion: ISODate("2025-06-01T00:00:00Z"),
-    estado: "finalizada"
+    estado: "finalizada",
+    motivo: null
   },
   {
     _id: "RSV-0010",
@@ -359,7 +388,8 @@ db.reservacion.insertMany([
     horaInicio: "20:00",
     cantidadPersonas: 2,
     fechaReservacion: ISODate("2025-07-01T00:00:00Z"),
-    estado: "pendiente"
+    estado: "pendiente",
+    motivo: null
   },
   {
     _id: "RSV-0011",
@@ -372,9 +402,11 @@ db.reservacion.insertMany([
     horaInicio: "21:00",
     cantidadPersonas: 6,
     fechaReservacion: ISODate("2025-07-01T00:00:00Z"),
-    estado: "pendiente"
+    estado: "pendiente",
+    motivo: null
   }
 ])
+
 
 // COLECCIÓN: PRODUCTO
 // Esta colección almacena información sobre los productos disponibles en el sistema, incluyendo su precio y descripción.
