@@ -54,7 +54,12 @@ import {
   AdminPanelSettings as AdminIcon,
   Work as WorkIcon,
   Save as SaveIcon,
-  Cancel as CancelIcon
+  Cancel as CancelIcon,
+  Search as SearchIcon,
+  Email as EmailIcon,
+  Badge as BadgeIcon,
+  AssignmentInd as AssignmentIndIcon,
+  VerifiedUser as VerifiedUserIcon
 } from "@mui/icons-material";
 import { motion } from 'framer-motion';
 
@@ -314,21 +319,22 @@ export default function EmployesAdmin() {
 
   return (
     <Box component={motion.div} 
-      sx={{ padding: 3 }}
+      sx={{ padding:1}}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
     >
-      <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-        <PersonIcon sx={{ mr: 2, color: '#660152', fontSize: 40 }} />
-        <Typography variant="h4" color="#660152" fontWeight="bold">
+      <Box sx={{ display: 'flex', alignItems: 'center', mb: 5 }}>
+        <PersonIcon sx={{ mr: 2, color: '#660152', fontSize: 50, backgroundColor: '#FFE6FA', borderRadius: '50%', padding: '8px' }} />
+        <Typography variant="h5" color="#660152" fontWeight="bold">
           Employees Management
         </Typography>
       </Box>
-      <Box sx={{ mb: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Box sx={{ mb: 3, display: 'flex', flexDirection: 'column', gap: 2 }}>
-        <Button 
-          variant="contained" 
+      <Box sx={{display: 'flex', flexDirection: "row", alignItems: 'center', justifyContent: 'space-between'  }}>
+        <Box sx={{ mb: 3, display: 'flex', flexDirection: 'column', gap:2}}>
+        <Button
+          variant="contained"
           startIcon={<AddIcon />}
+          
           onClick={() => setOpenDialog(true)}
           sx={{ 
             backgroundColor: "#660152", 
@@ -339,7 +345,7 @@ export default function EmployesAdmin() {
           Add Employee
         </Button>
 
-        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2 }}>
+        <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
           <TextField
             label="Search by name, email or ID"
             variant="outlined"
@@ -348,7 +354,7 @@ export default function EmployesAdmin() {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <FormControl size="small" sx={{ width: 180, backgroundColor: 'white' }}>
+          <FormControl size="small" sx={{ width: 120, backgroundColor: 'white' }}>
             <InputLabel>Filter by Status</InputLabel>
             <Select
               value={filterEstado}
@@ -360,7 +366,7 @@ export default function EmployesAdmin() {
               <MenuItem value="inactivo">Inactive</MenuItem>
             </Select>
           </FormControl>
-          <FormControl size="small" sx={{ width: 180, backgroundColor: 'white' }}>
+          <FormControl size="small" sx={{ width: 120, backgroundColor: 'white' }}>
             <InputLabel>Filter by Role</InputLabel>
               <Select
               value={filterRole}
@@ -387,7 +393,8 @@ export default function EmployesAdmin() {
             </Typography>
           </CardContent>
         </Card>
-        <Card sx={{ minWidth: 120 }}>
+        <Card  sx={{ minWidth: 120,  }} >
+
           <CardContent sx={{ textAlign: 'center', py: 2 }}>
             <Typography variant="h4" color="success.main" fontWeight="bold">
               {empleados.filter(e => e.estado === 'activo').length}
@@ -419,7 +426,6 @@ export default function EmployesAdmin() {
         </Card>
       </Box>
       </Box>
-      
 
       <Card elevation={3}>
         <CardContent sx={{ p: 0 }}>
@@ -427,18 +433,18 @@ export default function EmployesAdmin() {
             <Table sx={{ minWidth: 650 }}>
               <TableHead>
                 <TableRow sx={{ backgroundColor: '#660152' }}>
-                  <TableCell sx={{ color: 'white', fontWeight: 'bold', cursor: 'pointer' }} onClick={() => handleSort("_id")}>
+                  <TableCell sx={{ color: 'white', fontWeight: 'bold', cursor: 'pointer', fontFamily: 'montserrat' }} onClick={() => handleSort("_id")}>
                     ID {orderBy === "_id" && (order === "asc" ? "▲" : "▼")}
                   </TableCell>
-                  <TableCell sx={{ color: 'white', fontWeight: 'bold', cursor: 'pointer' }} onClick={() => handleSort("nombre")}>
+                  <TableCell sx={{ color: 'white', fontWeight: 'bold', cursor: 'pointer', fontFamily: 'montserrat' }} onClick={() => handleSort("nombre")}>
                     Employee {orderBy === "nombre" && (order === "asc" ? "▲" : "▼")}
                   </TableCell>
-                  <TableCell sx={{ color: 'white', fontWeight: 'bold', cursor: 'pointer' }} onClick={() => handleSort("correo")}>
+                  <TableCell sx={{ color: 'white', fontWeight: 'bold', cursor: 'pointer', fontFamily: 'montserrat' }} onClick={() => handleSort("correo")}>
                     Email {orderBy === "correo" && (order === "asc" ? "▲" : "▼")}
                   </TableCell>
-                  <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Role</TableCell>
-                  <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Status</TableCell>
-                  <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Actions</TableCell>
+                  <TableCell sx={{ color: 'white', fontWeight: 'bold', fontFamily: 'montserrat',  }}>Role</TableCell>
+                  <TableCell sx={{ color: 'white', fontWeight: 'bold', fontFamily: 'montserrat',  }}>Status</TableCell>
+                  <TableCell sx={{ color: 'white', fontWeight: 'bold', fontFamily: 'montserrat', }}>Actions</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -460,41 +466,47 @@ export default function EmployesAdmin() {
                             width: 50, 
                             height: 50,
                             backgroundColor: getAvatarColor(emp.nombre),
-                            fontWeight: 'bold'
+                            fontWeight: 'bold',
+                            fontSize: '18px',
+                            fontFamily: 'montserrat'
                           }}
                         >
                           {emp.nombre.charAt(0)}{emp.primerApellido.charAt(0)}
                         </Avatar>
                         <Box>
-                          <Typography variant="h6" fontWeight="bold">
-                            {`${emp.nombre} ${emp.primerApellido}`}
+                          <Typography variant="h6" fontWeight="bold" sx={{ fontSize: '16px' }}>
+                            {`${emp.primerApellido} ${emp.segundoApellido}`}
                           </Typography>
-                          {emp.segundoApellido && (
-                            <Typography variant="body2" color="text.secondary">
-                              {emp.segundoApellido}
+                          {emp.nombre && (
+                            <Typography variant="body2" color="text.secondary " sx={{ fontSize: '14px'  , fontFamily: 'montserrat' }}>
+                              {emp.nombre}
                             </Typography>
                           )}
                         </Box>
                       </Box>
                     </TableCell>
                     <TableCell>
-                      <Typography variant="body1">
+                      <Typography variant="body1" fontFamily="montserrat" fontWeight="bold" sx={{ fontSize: '14px' }}>
                         {emp.correo}
                       </Typography>
                     </TableCell>
-                    <TableCell>
+                    <TableCell >
                       <Chip 
                         icon={getRoleIcon(emp.IDRol)}
-                        label={emp.IDRol === 'ADMIN' ? 'Admin' : 'Employee'} 
+                        label={emp.IDRol === 'ADMIN' ? 'ADMIN' : 'EMPLOYEE'} 
                         color={getRoleColor(emp.IDRol)}
                         size="small"
                         sx={{ 
-                          fontWeight: 'medium',
+                          fontWeight: 'bold',
                           minWidth: 100,
                           maxWidth: 120,
                           textAlign: 'center',
                           display: 'flex',
-                          
+                          alignItems: 'center',
+                          fontSize: '12px',
+                          fontFamily: 'montserrat',
+                      
+
                         }}
                       />
                     </TableCell>
@@ -503,13 +515,15 @@ export default function EmployesAdmin() {
                         label={emp.estado === "activo" ? "ACTIVE" : "INACTIVE"}
                         color={getStatusColor(emp.estado)}
                         size="small"
-                        // Mostrar "ACTIVO" en inglés
+                        
                         sx={{ 
-                          fontWeight: 'medium',
+                          fontWeight: 'bold',
                           minWidth: 80,
                           maxWidth: 90,
                           textAlign: 'center',
                           display: 'flex',
+                          fontSize: '12px',
+                          fontFamily: 'montserrat',
                         }}
                       />
                     </TableCell>
@@ -581,14 +595,15 @@ export default function EmployesAdmin() {
       </Card>
 
       {/* Dialog original para crear/editar */}
-      <Dialog open={openDialog} onClose={resetForm} fullWidth maxWidth="sm">
-        <DialogTitle sx={{ color: "#660152", fontWeight: "bold" }}>
+      <Dialog open={openDialog} onClose={resetForm} fullWidth maxWidth="md" sx={{height: '90vh'}}>
+        <DialogTitle sx={{ color: "#fff", fontWeight: "bold", fontFamily: "montserrat", backgroundColor: "#660152" }}>
           {modoEdicion ? "Update Employee" : "New Employee"}
         </DialogTitle>
         <form onSubmit={handleSubmitWithConfirmation}>
-          <DialogContent>
+          <DialogContent >
             <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-              <Box sx={{ display: "flex", gap: 2 }}>
+              <Box sx={{ display: "flex", gap: 2, }}>
+              
               <TextField 
                 label="Name" 
                 name="nombre" 
@@ -596,6 +611,7 @@ export default function EmployesAdmin() {
                 onChange={handleChange} 
                 required 
                 fullWidth 
+                
               />
               <TextField 
                 label="First Last Name" 
