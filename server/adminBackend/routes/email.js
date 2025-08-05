@@ -1,8 +1,12 @@
 import express from "express";
 const router = express.Router();
 import fetch from "node-fetch";
-const COURIER_API_KEY = "dk_prod_S7VFSY1BDPMRTCK7CEQRK5DPQXT2";
-const COURIER_TEMPLATE_ID = "DTCVHDPZPSM8CXJKJY1A9QJZ4PS3";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const COURIER_API_KEY = process.env.COURIER_API_KEY;
+const COURIER_TEMPLATE_ID = process.env.COURIER_TEMPLATE_ID;
 
 router.post("/bienvenida-empleado", async (req, res) => {
   const { toEmail, nombre, primerApellido, password, IDRol } = req.body;

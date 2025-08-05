@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import axios from "axios";
 import { useEffect, useState } from "react";
 import {
@@ -25,8 +26,15 @@ import {
   Alert,
   Chip,
   Avatar,
-  Divider
+  Divider,
+  Button,
+  Stack,
+  ToggleButton,
+  ToggleButtonGroup,
+  Slider,
+  IconButton
 } from "@mui/material";
+import TextField from '@mui/material/TextField';
 import {
   ThermostatOutlined,
   OpacityOutlined,
@@ -41,6 +49,8 @@ import {
 } from "@mui/icons-material";
 import { motion } from 'framer-motion';
 
+
+
 const DashboardIoT = () => {
   const [dhtData, setDHTData] = useState([]);
   const [ultraData, setUltraData] = useState([]);
@@ -50,6 +60,16 @@ const DashboardIoT = () => {
   const [mlxStats, setMlxStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  // Filtros históricos
+  const [selectedSensor, setSelectedSensor] = useState('dht11');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [hourRange, setHourRange] = useState([0, 23]);
+  const [quickRange, setQuickRange] = useState('');
+  const [historicalData, setHistoricalData] = useState([]);
+  const [loadingHistorical, setLoadingHistorical] = useState(false);
+  const [historicalError, setHistoricalError] = useState('');
 
   useEffect(() => {
     setLoading(true);
@@ -76,6 +96,52 @@ const DashboardIoT = () => {
       })
       .finally(() => setLoading(false));
   }, []);
+
+  // Consultar histórico según filtros
+  const fetchHistorical = async () => {
+    setLoadingHistorical(true);
+    setHistoricalError('');
+    let url = `http://localhost:3000/adminBackend/iot/historico/${selectedSensor}`;
+    const params = {};
+    if (startDate) params.startDate = startDate;
+    if (endDate) params.endDate = endDate;
+    if (hourRange) {
+      params.startHour = hourRange[0];
+      params.endHour = hourRange[1];
+    }
+    try {
+      const res = await axios.get(url, { params });
+      setHistoricalData(Array.isArray(res.data) ? res.data.reverse() : []);
+    } catch {
+      setHistoricalError('Error al cargar el histórico.');
+    } finally {
+      setLoadingHistorical(false);
+    }
+  };
+
+  // Botones rápidos
+  const handleQuickRange = (type) => {
+    setQuickRange(type);
+    const today = dayjs().format('YYYY-MM-DD');
+    if (type === 'today') {
+      setStartDate(today);
+      setEndDate(today);
+    } else if (type === 'week') {
+      setStartDate(dayjs().subtract(6, 'day').format('YYYY-MM-DD'));
+      setEndDate(today);
+    } else if (type === 'month') {
+      setStartDate(dayjs().subtract(29, 'day').format('YYYY-MM-DD'));
+      setEndDate(today);
+    }
+  };
+
+  // Limpiar filtros
+  const handleClearFilters = () => {
+    setStartDate('');
+    setEndDate('');
+    setHourRange([0, 23]);
+    setQuickRange('');
+  };
 
   // Estadísticas calculadas desde el backend
   const tempStats = dhtStats ? {
@@ -183,6 +249,54 @@ const DashboardIoT = () => {
     </Card>
   );
 
+  // Exportar histórico a PDF desde backend
+  async function handleExportPDF() {
+    if (!historicalData.length) return;
+    // Prepara los datos para el backend (formatea fechas a string legible)
+    let rows = [];
+    if (selectedSensor === 'dht11') {
+      rows = historicalData.map(d => ({
+        fecha: d.fecha ? new Date(d.fecha).toLocaleDateString() : '',
+        hora: d.hora,
+        temperaturaC: d.temperaturaC,
+        humedad: d.humedad
+      }));
+    } else if (selectedSensor === 'ultrasonico') {
+      rows = historicalData.map(d => ({
+        fecha: d.fecha ? new Date(d.fecha).toLocaleDateString() : '',
+        hora: d.hora,
+        distanciaCM: d.distanciaCM
+      }));
+    } else if (selectedSensor === 'mlx90614') {
+      rows = historicalData.map(d => ({
+        fecha: d.fecha ? new Date(d.fecha).toLocaleDateString() : '',
+        hora: d.hora,
+        temperaturaC: d.temperaturaC
+      }));
+    }
+    try {
+      const response = await axios.post(
+        'http://localhost:3000/adminBackend/iot/historico/export/pdf',
+        { sensor: selectedSensor, data: rows },
+        { responseType: 'blob' }
+      );
+      // Obtener nombre sugerido del header o generar uno
+      let filename = response.headers['content-disposition']?.split('filename=')[1]?.replaceAll('"', '') || `historico_${selectedSensor}_${dayjs().format('YYYYMMDD_HHmmss')}.pdf`;
+      // Descargar automáticamente
+      const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', filename);
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    // eslint-disable-next-line no-unused-vars
+    } catch (err) {
+      alert('Error al exportar PDF.');
+    }
+  }
+
   if (loading) {
     return (
       <Box
@@ -197,7 +311,7 @@ const DashboardIoT = () => {
       >
         <CircularProgress size={60} sx={{ color: '#84B8F5' }} />
         <Typography variant="h6" color="#84B8F5">
-          Cargando datos de sensores...
+          Loading sensor data...
         </Typography>
       </Box>
     );
@@ -220,7 +334,280 @@ const DashboardIoT = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
     >
-      {/* Header */}
+      {/* Panel de filtros históricos moderno y amigable sin MUI X */}
+      <Card elevation={4} sx={{ mb: 4, p: 2, background: 'linear-gradient(90deg, #f3e7e9 0%, #e3eeff 100%)' }}>
+        <CardContent>
+          <Typography variant="h6" color="#660152" fontWeight="bold" sx={{ mb: 2 }}>
+            Consulta Histórica de Sensores
+          </Typography>
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} alignItems="center" justifyContent="center" sx={{ flexWrap: 'wrap', mb: 2 }}>
+            {/* Selector de sensor con íconos grandes */}
+            <ToggleButtonGroup
+              value={selectedSensor}
+              exclusive
+              onChange={(_, v) => v && setSelectedSensor(v)}
+              sx={{ bgcolor: 'white', borderRadius: 2, boxShadow: 1 }}
+            >
+              <ToggleButton value="dht11" sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                <ThermostatOutlined sx={{ fontSize: 32, color: '#C91602' }} />
+                <OpacityOutlined sx={{ fontSize: 24, color: '#02B6C9' }} />
+                <Typography variant="caption">DHT11</Typography>
+              </ToggleButton>
+              <ToggleButton value="ultrasonico" sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                <StraightenOutlined sx={{ fontSize: 32, color: '#84B8F5' }} />
+                <Typography variant="caption">Ultrasonico</Typography>
+              </ToggleButton>
+              <ToggleButton value="mlx90614" sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                <ShowChartOutlined sx={{ fontSize: 32, color: '#E87D56' }} />
+                <Typography variant="caption">MLX90614</Typography>
+              </ToggleButton>
+            </ToggleButtonGroup>
+
+            {/* Fecha inicial */}
+            <TextField
+              label="Fecha inicial"
+              type="date"
+              InputLabelProps={{ shrink: true }}
+              value={startDate}
+              onChange={e => setStartDate(e.target.value)}
+              sx={{ minWidth: 150, bgcolor: 'white', borderRadius: 2 }}
+            />
+            {/* Fecha final */}
+            <TextField
+              label="Fecha final"
+              type="date"
+              InputLabelProps={{ shrink: true }}
+              value={endDate}
+              onChange={e => setEndDate(e.target.value)}
+              sx={{ minWidth: 150, bgcolor: 'white', borderRadius: 2 }}
+            />
+
+            {/* Time range slider */}
+            <Box sx={{ minWidth: 220, px: 2 }}>
+              <Typography variant="caption" color="text.secondary">Rango de horas</Typography>
+              <Slider
+                value={hourRange}
+                onChange={(_, v) => setHourRange(v)}
+                valueLabelDisplay="auto"
+                min={0}
+                max={23}
+                marks={[{ value: 0, label: '0:00' }, { value: 6, label: '6:00' }, { value: 12, label: '12:00' }, { value: 18, label: '18:00' }, { value: 23, label: '23:00' }]}
+                sx={{ color: '#660152' }}
+              />
+            </Box>
+
+            {/* Botones rápidos */}
+            <Stack direction="row" spacing={1}>
+              <Button variant={quickRange === 'today' ? 'contained' : 'outlined'} onClick={() => handleQuickRange('today')} sx={{ color: '#660152', borderColor: '#660152', '&.MuiButton-contained': { background: '#660152', color: '#fff' } }}>Hoy</Button>
+              <Button variant={quickRange === 'week' ? 'contained' : 'outlined'} onClick={() => handleQuickRange('week')} sx={{ color: '#660152', borderColor: '#660152', '&.MuiButton-contained': { background: '#660152', color: '#fff' } }}>Última semana</Button>
+              <Button variant={quickRange === 'month' ? 'contained' : 'outlined'} onClick={() => handleQuickRange('month')} sx={{ color: '#660152', borderColor: '#660152', '&.MuiButton-contained': { background: '#660152', color: '#fff' } }}>Último mes</Button>
+            </Stack>
+
+            {/* Botón limpiar filtros */}
+            <Button
+              onClick={() => { handleClearFilters(); setHistoricalData([]); }}
+              variant="outlined"
+              sx={{
+                height: 56,
+                fontWeight: 'bold',
+                fontFamily: 'montserrat',
+                border: '2px solid #C91602',
+                color: '#C91602',
+                background: '#fff',
+                '&:hover': { background: '#ffeaea', borderColor: '#C91602' }
+              }}
+              startIcon={
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke="#C91602" strokeWidth="2" strokeLinecap="round"/></svg>
+              }
+            >
+              Clear
+            </Button>
+
+            {/* Botón consultar */}
+            <Button
+              variant="contained"
+              onClick={fetchHistorical}
+              sx={{
+                height: 56,
+                fontWeight: 'bold',
+                fontFamily: 'montserrat',
+                background: '#660152',
+                color: '#fff',
+                '&:hover': { background: '#4b013b' }
+              }}
+            >
+              Consult
+            </Button>
+            <Button
+              variant="outlined"
+              onClick={handleExportPDF}
+              sx={{
+                height: 56,
+                fontWeight: 'bold',
+                fontFamily: 'montserrat',
+                border: '2px solid #1063C1',
+                color: '#1063C1',
+                background: '#fff',
+                ml: 1,
+                '&:hover': { background: '#e3eeff', borderColor: '#1063C1' }
+              }}
+              startIcon={<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 21h16" stroke="#1063C1" strokeWidth="2" strokeLinecap="round"/></svg>}
+              disabled={!historicalData.length}
+            >
+              Exportar PDF
+            </Button>
+          </Stack>
+          {loadingHistorical && (
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mt: 2 }}>
+              <CircularProgress size={32} sx={{ color: '#84B8F5' }} />
+              <Typography sx={{ ml: 2 }}>Cargando histórico...</Typography>
+            </Box>
+          )}
+          {historicalError && (
+            <Alert severity="error" sx={{ mt: 2 }}>{historicalError}</Alert>
+          )}
+          {/* Gráfica histórica */}
+          {historicalData.length > 0 && !loadingHistorical && (
+            <Box sx={{ mt: 3 }}>
+              <Typography variant="subtitle1" color="#660152" fontWeight="bold" sx={{ mb: 2 }}>
+                Histórico de {selectedSensor === 'dht11' ? 'DHT11' : selectedSensor === 'ultrasonico' ? 'Ultrasonico' : 'MLX90614'}
+              </Typography>
+              <ResponsiveContainer width="100%" height={400}>
+                {selectedSensor === 'dht11' ? (
+                  <ComposedChart data={historicalData} margin={{ top: 20, right: 30, left: 30, bottom: 20 }}>
+                    <CartesianGrid/>
+                    <XAxis
+                      dataKey="hora"
+                      interval={Math.ceil(historicalData.length / 8) - 1}
+                      tick={{ fill: '#666', fontWeight: 'bold', fontSize: 12 }}
+                      axisLine={{ stroke: '#666' }}
+                      tickLine={{ stroke: '#666' }}
+                      angle={-35}
+                      dy={10}
+                      label={{ value: 'Hora', position: 'insideBottom', offset: -15, fill: '#444746', fontWeight: 'bold', fontSize: 14 }}
+                      tickFormatter={h => h.slice(0, 5)}
+                    />
+                    <YAxis yAxisId="left" dataKey="humedad" tickFormatter={tick => `${tick}%`} domain={[0, 100]} tick={{ fill: '#016974', fontWeight: 'bold', fontSize: 12 }} axisLine={{ stroke: '#666' }} tickLine={{ stroke: '#666' }} label={{ value: 'Humedad %', angle: -90, position: 'insideLeft', fill: '#016974', fontWeight: 'bold', fontSize: 14 }} />
+                    <YAxis yAxisId="right" dataKey="temperaturaC" orientation="right" tickFormatter={tick => `${tick}°`} domain={[0, 50]} tick={{ fill: '#A21202', fontWeight: 'bold', fontSize: 12 }} axisLine={{ stroke: '#666' }} tickLine={{ stroke: '#666' }} label={{ value: 'Temp °C', angle: -90, position: 'insideRight', fill: '#A21202', fontWeight: 'bold', fontSize: 14 }} />
+                    <Tooltip
+                      content={({ active, payload, label }) => {
+                        if (!active || !payload || !payload.length) return null;
+                        // Filtrar duplicados por dataKey
+                        const shown = {};
+                        const items = payload.filter(p => {
+                          if (p.dataKey === 'humedad' && !shown.humedad) { shown.humedad = true; return true; }
+                          if (p.dataKey === 'temperaturaC' && !shown.temperaturaC) { shown.temperaturaC = true; return true; }
+                          return false;
+                        });
+                        // Obtener la fecha del dato (asumiendo que todos los payload tienen la misma fecha)
+                        const fecha = payload[0]?.payload?.fecha;
+                        return (
+                          <div style={{ background: '#fff', border: '1px solid #ccc', borderRadius: 8, padding: 12, fontFamily: 'montserrat, sans-serif', minWidth: 140 }}>
+                            <div style={{ fontWeight: 'bold', marginBottom: 4 }}>{label}</div>
+                            {fecha && (
+                              <div style={{ color: '#888', fontSize: 12, marginBottom: 6 }}>
+                                {new Date(fecha).toLocaleDateString()}
+                              </div>
+                            )}
+                            {items.map((entry, i) => (
+                              <div key={i} style={{ color: entry.dataKey === 'humedad' ? '#02B6C9' : '#C91602', fontWeight: 'bold', marginBottom: 2 }}>
+                                {entry.dataKey === 'humedad' ? 'Humedad %' : 'Temp °C'} : {entry.value}
+                              </div>
+                            ))}
+                          </div>
+                        );
+                      }}
+                    />
+                    <Area yAxisId="left" type="monotone" dataKey="humedad" stroke="#02B6C9" fill="#02B6C9" fillOpacity={0.1} strokeWidth={0} legendType="none" />
+                    <Area yAxisId="right" type="monotone" dataKey="temperaturaC" stroke="#C91602" fill="#C91602" fillOpacity={0.3} strokeWidth={0} legendType="none" />
+                    <Line yAxisId="left" type="monotone" dataKey="humedad" stroke="#02B6C9" strokeWidth={3} name="Humedad %" dot={{ r: 3, fill: '#02B6C9' }} />
+                    <Line yAxisId="right" type="monotone" dataKey="temperaturaC" stroke="#C91602" strokeWidth={3} name="Temp °C" dot={{ r: 3, fill: '#C91602' }} />
+                  </ComposedChart>
+                ) : selectedSensor === 'ultrasonico' ? (
+                  <BarChart data={historicalData} margin={{ top: 20, right: 10, left: 10, bottom: 20 }}>
+                    <CartesianGrid stroke="#e0e0e0" vertical={false} />
+                    <XAxis
+                      dataKey="hora"
+                      interval={Math.ceil(historicalData.length / 8) - 1}
+                      tick={{ fill: '#444746', fontWeight: 'bold', fontSize: 12 }}
+                      axisLine={{ stroke: '#444746' }}
+                      tickLine={{ stroke: '#444746' }}
+                      angle={-35}
+                      dy={10}
+                      label={{ value: 'Hora', position: 'insideBottom', offset: -15, fill: '#444746', fontWeight: 'bold', fontSize: 14 }}
+                      tickFormatter={h => h.slice(0, 5)}
+                    />
+                    <YAxis domain={[0, 1000]} tickFormatter={tick => `${tick}cm`} tick={{ fill: '#1063C1', fontWeight: 'bold', fontSize: 12 }} axisLine={{ stroke: '#444746' }} tickLine={{ stroke: '#444746' }} label={{ value: 'Distancia', angle: -90, position: 'insideLeft', fill: '#3E91EF', fontWeight: 'bold', fontSize: 14 }} />
+                    <Tooltip
+                    content={({ active, payload, label }) => {
+                    if (!active || !payload || !payload.length) return null;
+                    const item = payload.find(p => p.dataKey === 'distanciaCM');
+                    const fecha = payload[0]?.payload?.fecha;
+                    return (
+                      <div style={{ background: '#fff', border: '1px solid #ccc', borderRadius: 8, padding: 12, fontFamily: 'montserrat, sans-serif', minWidth: 140 }}>
+                      <div style={{ fontWeight: 'bold', marginBottom: 4 }}>{label}</div>
+                      {fecha && (
+                        <div style={{ color: '#888', fontSize: 12, marginBottom: 6 }}>
+                        {new Date(fecha).toLocaleDateString()}
+                        </div>
+                      )}
+                      {item && (
+                      <div style={{ color: '#1063C1', fontWeight: 'bold', marginBottom: 2 }}>
+                      Distancia (cm): {item.value}
+                      </div>
+                      )}
+                      </div>
+                        );
+                      }}
+                    />
+                    <Bar dataKey="distanciaCM" fill="#84B8F5" radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                ) : (
+                  <BarChart data={historicalData} margin={{ top: 20, right: 10, left: 10, bottom: 20 }}>
+                    <CartesianGrid stroke="#e0e0e0" vertical={false} />
+                    <XAxis
+                      dataKey="hora"
+                      interval={Math.ceil(historicalData.length / 8) - 1}
+                      tick={{ fill: '#444746', fontWeight: 'bold', fontSize: 12 }}
+                      axisLine={{ stroke: '#444746' }}
+                      tickLine={{ stroke: '#444746' }}
+                      angle={-35}
+                      dy={10}
+                      label={{ value: 'Hora', position: 'insideBottom', offset: -15, fill: '#444746', fontWeight: 'bold', fontSize: 14 }}
+                      tickFormatter={h => h.slice(0, 5)}
+                    />
+                    <YAxis domain={[0, 50]} tickFormatter={tick => `${tick}°C`} tick={{ fill: '#444746', fontWeight: 'bold', fontSize: 12 }} axisLine={{ stroke: '#444746' }} tickLine={{ stroke: '#444746' }} label={{ value: 'Temp °C', angle: -90, position: 'insideLeft', fill: '#444746', fontWeight: 'bold', fontSize: 14 }} />
+                      <Tooltip
+                      content={({ active, payload, label }) => {
+                      if (!active || !payload || !payload.length) return null;
+                      const item = payload.find(p => p.dataKey === 'temperaturaC');
+                      const fecha = payload[0]?.payload?.fecha;
+                      return (
+                        <div style={{ background: '#fff', border: '1px solid #ccc', borderRadius: 8, padding: 12, fontFamily: 'montserrat, sans-serif', minWidth: 140 }}>
+                          <div style={{ fontWeight: 'bold', marginBottom: 4 }}>{label}</div>
+                          {fecha && (
+                          <div style={{ color: '#888', fontSize: 12, marginBottom: 6 }}>
+                          {new Date(fecha).toLocaleDateString()}
+                        </div>
+                           )}
+                         {item && (
+                          <div style={{ color: '#E87D56', fontWeight: 'bold', marginBottom: 2 }}>
+                          Temperatura °C: {item.value}
+                          </div>
+                        )}
+                        </div>
+                        );
+                      }}
+                      />
+                    <Bar dataKey="temperaturaC" fill="#E87D56" />
+                  </BarChart>
+                )}
+              </ResponsiveContainer>
+            </Box>
+          )}
+        </CardContent>
+      </Card>
+       {/* Header */}
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
         <SensorsOutlined sx={{ mr: 2, color: '#660152', fontSize: 40 }} />
         <Typography variant="h4" color="#660152" fontWeight="bold" fontFamily={"'montserrat', sans-serif"}>
@@ -282,7 +669,7 @@ const DashboardIoT = () => {
 
       {/* Gráficas */}
       <Typography variant="h5" color="#660152" fontWeight="bold" sx={{ mb: 3, textAlign: 'center' }}>
-         Sensor Charts
+         Real Time Sensor Charts
       </Typography>
 
       {/* DHT11 Chart */}

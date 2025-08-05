@@ -1,8 +1,12 @@
     import express from "express";
     const router = express.Router();
     import fetch from "node-fetch";
-    const COURIER_API_KEY = "dk_prod_S7VFSY1BDPMRTCK7CEQRK5DPQXT2";
-    const COURIER_TEMPLATE_ID = "XJ83SMFN1P49TNJH6AJVMMAJKQ54"; 
+    import dotenv from "dotenv";
+
+    dotenv.config();
+
+    const COURIER_API_KEY = process.env.COURIER2_API_KEY;
+    const COURIER_TEMPLATE_ID = process.env.COURIER2_TEMPLATE_ID;
 
     router.post("/cancel-reservation", async (req, res) => {
     const { toEmail, nombreCliente, folio, fecha, horaInicio, cantidadPersonas, motivo } = req.body;

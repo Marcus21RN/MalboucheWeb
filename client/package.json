@@ -10,13 +10,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@date-io/dayjs": "^3.2.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@hookform/resolvers": "^5.2.0",
-    "@mui/icons-material": "^7.2.0",
-    "@mui/material": "^7.2.0",
+    "@mui/icons-material": "^7.3.0",
+    "@mui/material": "^7.3.0",
     "@tailwindcss/vite": "^4.1.8",
     "axios": "^1.11.0",
+    "dayjs": "^1.11.13",
     "framer-motion": "^12.23.7",
     "jwt-decode": "^4.0.0",
     "react": "^19.1.0",
