@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   Bar,
   BarChart,
@@ -48,6 +48,7 @@ import {
   BarChart as BarChartIcon
 } from "@mui/icons-material";
 import { motion } from 'framer-motion';
+import html2canvas from 'html2canvas';
 
 
 
@@ -70,6 +71,7 @@ const DashboardIoT = () => {
   const [historicalData, setHistoricalData] = useState([]);
   const [loadingHistorical, setLoadingHistorical] = useState(false);
   const [historicalError, setHistoricalError] = useState('');
+  const chartRef = useRef();
 
   useEffect(() => {
     setLoading(true);
@@ -252,6 +254,12 @@ const DashboardIoT = () => {
   // Exportar histórico a PDF desde backend
   async function handleExportPDF() {
     if (!historicalData.length) return;
+    // Captura la gráfica como imagen base64
+    let chartImage = null;
+    if (chartRef.current) {
+      const canvas = await html2canvas(chartRef.current);
+      chartImage = canvas.toDataURL('image/png');
+    }
     // Prepara los datos para el backend (formatea fechas a string legible)
     let rows = [];
     if (selectedSensor === 'dht11') {
@@ -277,7 +285,7 @@ const DashboardIoT = () => {
     try {
       const response = await axios.post(
         'http://localhost:3000/adminBackend/iot/historico/export/pdf',
-        { sensor: selectedSensor, data: rows },
+        { sensor: selectedSensor, data: rows, chartImage },
         { responseType: 'blob' }
       );
       // Obtener nombre sugerido del header o generar uno
@@ -472,91 +480,92 @@ const DashboardIoT = () => {
               <Typography variant="subtitle1" color="#660152" fontWeight="bold" sx={{ mb: 2 }}>
                 Histórico de {selectedSensor === 'dht11' ? 'DHT11' : selectedSensor === 'ultrasonico' ? 'Ultrasonico' : 'MLX90614'}
               </Typography>
-              <ResponsiveContainer width="100%" height={400}>
-                {selectedSensor === 'dht11' ? (
-                  <ComposedChart data={historicalData} margin={{ top: 20, right: 30, left: 30, bottom: 20 }}>
-                    <CartesianGrid/>
-                    <XAxis
-                      dataKey="hora"
-                      interval={Math.ceil(historicalData.length / 8) - 1}
-                      tick={{ fill: '#666', fontWeight: 'bold', fontSize: 12 }}
-                      axisLine={{ stroke: '#666' }}
-                      tickLine={{ stroke: '#666' }}
-                      angle={-35}
-                      dy={10}
-                      label={{ value: 'Hora', position: 'insideBottom', offset: -15, fill: '#444746', fontWeight: 'bold', fontSize: 14 }}
-                      tickFormatter={h => h.slice(0, 5)}
-                    />
-                    <YAxis yAxisId="left" dataKey="humedad" tickFormatter={tick => `${tick}%`} domain={[0, 100]} tick={{ fill: '#016974', fontWeight: 'bold', fontSize: 12 }} axisLine={{ stroke: '#666' }} tickLine={{ stroke: '#666' }} label={{ value: 'Humedad %', angle: -90, position: 'insideLeft', fill: '#016974', fontWeight: 'bold', fontSize: 14 }} />
-                    <YAxis yAxisId="right" dataKey="temperaturaC" orientation="right" tickFormatter={tick => `${tick}°`} domain={[0, 50]} tick={{ fill: '#A21202', fontWeight: 'bold', fontSize: 12 }} axisLine={{ stroke: '#666' }} tickLine={{ stroke: '#666' }} label={{ value: 'Temp °C', angle: -90, position: 'insideRight', fill: '#A21202', fontWeight: 'bold', fontSize: 14 }} />
-                    <Tooltip
+              <div ref={chartRef} style={{ background: '#fff', borderRadius: 8, padding: 8 }}>
+                <ResponsiveContainer width="100%" height={400}>
+                  {selectedSensor === 'dht11' ? (
+                    <ComposedChart data={historicalData} margin={{ top: 20, right: 30, left: 30, bottom: 20 }}>
+                      <CartesianGrid/>
+                      <XAxis
+                        dataKey="hora"
+                        interval={Math.ceil(historicalData.length / 8) - 1}
+                        tick={{ fill: '#666', fontWeight: 'bold', fontSize: 12 }}
+                        axisLine={{ stroke: '#666' }}
+                        tickLine={{ stroke: '#666' }}
+                        angle={-35}
+                        dy={10}
+                        label={{ value: 'Hora', position: 'insideBottom', offset: -15, fill: '#444746', fontWeight: 'bold', fontSize: 14 }}
+                        tickFormatter={h => h.slice(0, 5)}
+                      />
+                      <YAxis yAxisId="left" dataKey="humedad" tickFormatter={tick => `${tick}%`} domain={[0, 100]} tick={{ fill: '#016974', fontWeight: 'bold', fontSize: 12 }} axisLine={{ stroke: '#666' }} tickLine={{ stroke: '#666' }} label={{ value: 'Humedad %', angle: -90, position: 'insideLeft', fill: '#016974', fontWeight: 'bold', fontSize: 14 }} />
+                      <YAxis yAxisId="right" dataKey="temperaturaC" orientation="right" tickFormatter={tick => `${tick}°`} domain={[0, 50]} tick={{ fill: '#A21202', fontWeight: 'bold', fontSize: 12 }} axisLine={{ stroke: '#666' }} tickLine={{ stroke: '#666' }} label={{ value: 'Temp °C', angle: -90, position: 'insideRight', fill: '#A21202', fontWeight: 'bold', fontSize: 14 }} />
+                      <Tooltip
+                        content={({ active, payload, label }) => {
+                          if (!active || !payload || !payload.length) return null;
+                          // Filtrar duplicados por dataKey
+                          const shown = {};
+                          const items = payload.filter(p => {
+                            if (p.dataKey === 'humedad' && !shown.humedad) { shown.humedad = true; return true; }
+                            if (p.dataKey === 'temperaturaC' && !shown.temperaturaC) { shown.temperaturaC = true; return true; }
+                            return false;
+                          });
+                          // Obtener la fecha del dato (asumiendo que todos los payload tienen la misma fecha)
+                          const fecha = payload[0]?.payload?.fecha;
+                          return (
+                            <div style={{ background: '#fff', border: '1px solid #ccc', borderRadius: 8, padding: 12, fontFamily: 'montserrat, sans-serif', minWidth: 140 }}>
+                              <div style={{ fontWeight: 'bold', marginBottom: 4 }}>{label}</div>
+                              {fecha && (
+                                <div style={{ color: '#888', fontSize: 12, marginBottom: 6 }}>
+                                  {new Date(fecha).toLocaleDateString()}
+                                </div>
+                              )}
+                              {items.map((entry, i) => (
+                                <div key={i} style={{ color: entry.dataKey === 'humedad' ? '#02B6C9' : '#C91602', fontWeight: 'bold', marginBottom: 2 }}>
+                                  {entry.dataKey === 'humedad' ? 'Humedad %' : 'Temp °C'} : {entry.value}
+                                </div>
+                              ))}
+                            </div>
+                          );
+                        }}
+                      />
+                      <Area yAxisId="left" type="monotone" dataKey="humedad" stroke="#02B6C9" fill="#02B6C9" fillOpacity={0.1} strokeWidth={0} legendType="none" />
+                      <Area yAxisId="right" type="monotone" dataKey="temperaturaC" stroke="#C91602" fill="#C91602" fillOpacity={0.3} strokeWidth={0} legendType="none" />
+                      <Line yAxisId="left" type="monotone" dataKey="humedad" stroke="#02B6C9" strokeWidth={3} name="Humedad %" dot={{ r: 3, fill: '#02B6C9' }} />
+                      <Line yAxisId="right" type="monotone" dataKey="temperaturaC" stroke="#C91602" strokeWidth={3} name="Temp °C" dot={{ r: 3, fill: '#C91602' }} />
+                    </ComposedChart>
+                  ) : selectedSensor === 'ultrasonico' ? (
+                    <BarChart data={historicalData} margin={{ top: 20, right: 10, left: 10, bottom: 20 }}>
+                      <CartesianGrid stroke="#e0e0e0" vertical={false} />
+                      <XAxis
+                        dataKey="hora"
+                        interval={Math.ceil(historicalData.length / 8) - 1}
+                        tick={{ fill: '#444746', fontWeight: 'bold', fontSize: 12 }}
+                        axisLine={{ stroke: '#444746' }}
+                        tickLine={{ stroke: '#444746' }}
+                        angle={-35}
+                        dy={10}
+                        label={{ value: 'Hora', position: 'insideBottom', offset: -15, fill: '#444746', fontWeight: 'bold', fontSize: 14 }}
+                        tickFormatter={h => h.slice(0, 5)}
+                      />
+                      <YAxis domain={[0, 1000]} tickFormatter={tick => `${tick}cm`} tick={{ fill: '#1063C1', fontWeight: 'bold', fontSize: 12 }} axisLine={{ stroke: '#444746' }} tickLine={{ stroke: '#444746' }} label={{ value: 'Distancia', angle: -90, position: 'insideLeft', fill: '#3E91EF', fontWeight: 'bold', fontSize: 14 }} />
+                      <Tooltip
                       content={({ active, payload, label }) => {
-                        if (!active || !payload || !payload.length) return null;
-                        // Filtrar duplicados por dataKey
-                        const shown = {};
-                        const items = payload.filter(p => {
-                          if (p.dataKey === 'humedad' && !shown.humedad) { shown.humedad = true; return true; }
-                          if (p.dataKey === 'temperaturaC' && !shown.temperaturaC) { shown.temperaturaC = true; return true; }
-                          return false;
-                        });
-                        // Obtener la fecha del dato (asumiendo que todos los payload tienen la misma fecha)
-                        const fecha = payload[0]?.payload?.fecha;
-                        return (
-                          <div style={{ background: '#fff', border: '1px solid #ccc', borderRadius: 8, padding: 12, fontFamily: 'montserrat, sans-serif', minWidth: 140 }}>
-                            <div style={{ fontWeight: 'bold', marginBottom: 4 }}>{label}</div>
-                            {fecha && (
-                              <div style={{ color: '#888', fontSize: 12, marginBottom: 6 }}>
-                                {new Date(fecha).toLocaleDateString()}
-                              </div>
-                            )}
-                            {items.map((entry, i) => (
-                              <div key={i} style={{ color: entry.dataKey === 'humedad' ? '#02B6C9' : '#C91602', fontWeight: 'bold', marginBottom: 2 }}>
-                                {entry.dataKey === 'humedad' ? 'Humedad %' : 'Temp °C'} : {entry.value}
-                              </div>
-                            ))}
+                      if (!active || !payload || !payload.length) return null;
+                      const item = payload.find(p => p.dataKey === 'distanciaCM');
+                      const fecha = payload[0]?.payload?.fecha;
+                      return (
+                        <div style={{ background: '#fff', border: '1px solid #ccc', borderRadius: 8, padding: 12, fontFamily: 'montserrat, sans-serif', minWidth: 140 }}>
+                        <div style={{ fontWeight: 'bold', marginBottom: 4 }}>{label}</div>
+                        {fecha && (
+                          <div style={{ color: '#888', fontSize: 12, marginBottom: 6 }}>
+                          {new Date(fecha).toLocaleDateString()}
                           </div>
-                        );
-                      }}
-                    />
-                    <Area yAxisId="left" type="monotone" dataKey="humedad" stroke="#02B6C9" fill="#02B6C9" fillOpacity={0.1} strokeWidth={0} legendType="none" />
-                    <Area yAxisId="right" type="monotone" dataKey="temperaturaC" stroke="#C91602" fill="#C91602" fillOpacity={0.3} strokeWidth={0} legendType="none" />
-                    <Line yAxisId="left" type="monotone" dataKey="humedad" stroke="#02B6C9" strokeWidth={3} name="Humedad %" dot={{ r: 3, fill: '#02B6C9' }} />
-                    <Line yAxisId="right" type="monotone" dataKey="temperaturaC" stroke="#C91602" strokeWidth={3} name="Temp °C" dot={{ r: 3, fill: '#C91602' }} />
-                  </ComposedChart>
-                ) : selectedSensor === 'ultrasonico' ? (
-                  <BarChart data={historicalData} margin={{ top: 20, right: 10, left: 10, bottom: 20 }}>
-                    <CartesianGrid stroke="#e0e0e0" vertical={false} />
-                    <XAxis
-                      dataKey="hora"
-                      interval={Math.ceil(historicalData.length / 8) - 1}
-                      tick={{ fill: '#444746', fontWeight: 'bold', fontSize: 12 }}
-                      axisLine={{ stroke: '#444746' }}
-                      tickLine={{ stroke: '#444746' }}
-                      angle={-35}
-                      dy={10}
-                      label={{ value: 'Hora', position: 'insideBottom', offset: -15, fill: '#444746', fontWeight: 'bold', fontSize: 14 }}
-                      tickFormatter={h => h.slice(0, 5)}
-                    />
-                    <YAxis domain={[0, 1000]} tickFormatter={tick => `${tick}cm`} tick={{ fill: '#1063C1', fontWeight: 'bold', fontSize: 12 }} axisLine={{ stroke: '#444746' }} tickLine={{ stroke: '#444746' }} label={{ value: 'Distancia', angle: -90, position: 'insideLeft', fill: '#3E91EF', fontWeight: 'bold', fontSize: 14 }} />
-                    <Tooltip
-                    content={({ active, payload, label }) => {
-                    if (!active || !payload || !payload.length) return null;
-                    const item = payload.find(p => p.dataKey === 'distanciaCM');
-                    const fecha = payload[0]?.payload?.fecha;
-                    return (
-                      <div style={{ background: '#fff', border: '1px solid #ccc', borderRadius: 8, padding: 12, fontFamily: 'montserrat, sans-serif', minWidth: 140 }}>
-                      <div style={{ fontWeight: 'bold', marginBottom: 4 }}>{label}</div>
-                      {fecha && (
-                        <div style={{ color: '#888', fontSize: 12, marginBottom: 6 }}>
-                        {new Date(fecha).toLocaleDateString()}
+                        )}
+                        {item && (
+                        <div style={{ color: '#1063C1', fontWeight: 'bold', marginBottom: 2 }}>
+                        Distancia (cm): {item.value}
                         </div>
-                      )}
-                      {item && (
-                      <div style={{ color: '#1063C1', fontWeight: 'bold', marginBottom: 2 }}>
-                      Distancia (cm): {item.value}
-                      </div>
-                      )}
-                      </div>
+                        )}
+                        </div>
                         );
                       }}
                     />
@@ -602,11 +611,13 @@ const DashboardIoT = () => {
                     <Bar dataKey="temperaturaC" fill="#E87D56" />
                   </BarChart>
                 )}
-              </ResponsiveContainer>
+                </ResponsiveContainer>
+              </div>
             </Box>
           )}
         </CardContent>
       </Card>
+
        {/* Header */}
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
         <SensorsOutlined sx={{ mr: 2, color: '#660152', fontSize: 40 }} />

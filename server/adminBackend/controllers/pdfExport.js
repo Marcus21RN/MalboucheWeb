@@ -18,6 +18,23 @@ export const exportSensorHistoryPDF = (req, res) => {
   doc.moveDown(2);
   doc.fillColor('#222').font('Helvetica');
 
+  // Si viene imagen de gráfica, insertarla
+  let y = 80;
+  if (req.body.chartImage) {
+    try {
+      const base64Data = req.body.chartImage.replace(/^data:image\/png;base64,/, '');
+      const imgBuffer = Buffer.from(base64Data, 'base64');
+      // Usar casi todo el ancho disponible y mayor altura
+      const imgMargin = 30;
+      const imgWidth = doc.page.width - imgMargin * 2;
+      const imgHeight = imgWidth * 0.7; // Relación de aspecto más alta
+      doc.image(imgBuffer, imgMargin, y, { width: imgWidth, height: imgHeight });
+      y += imgHeight + 32; // Más espacio después de la imagen
+    } catch (e) {
+      // Si hay error, solo continúa
+    }
+  }
+
   // Tabla
   let columns = [];
   if (sensor === 'dht11') {
@@ -29,9 +46,7 @@ export const exportSensorHistoryPDF = (req, res) => {
   }
 
   // Tabla: encabezados
-  const tableTop = 80;
   const colWidth = (doc.page.width - 120) / columns.length;
-  let y = tableTop;
   doc.roundedRect(60, y, doc.page.width - 120, 28, 6).fillAndStroke('#f3e7e9', '#660152');
   doc.fillColor('#660152').font('Helvetica-Bold').fontSize(13);
   columns.forEach((col, i) => {
@@ -66,7 +81,7 @@ export const exportSensorHistoryPDF = (req, res) => {
     // Salto de página si es necesario
     if (y > doc.page.height - 60) {
       doc.addPage();
-      y = tableTop;
+      y = 80;
     }
   });
 
