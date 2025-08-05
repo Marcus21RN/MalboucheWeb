@@ -4,7 +4,6 @@ import {
   getEventById,
   createEvent,
   updateEvent,
-  deleteEvent
 } from '../controllers/event.js';
 
 const router = express.Router();
@@ -21,7 +20,5 @@ router.post('/', createEvent);
 // Actualizar un evento
 router.put('/:id', updateEvent);
 
-// Eliminar un evento
-router.delete('/:id', deleteEvent);
 
 export default router;

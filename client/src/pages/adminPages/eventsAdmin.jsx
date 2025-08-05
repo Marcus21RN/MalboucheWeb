@@ -93,8 +93,7 @@ const EventsAdmin = () => {
       }));
       setEvents(mapped);
       setFilteredEvents(mapped);
-    } catch (error) {
-      console.error('Error fetching events:', error);
+    } catch {
       setEvents([]);
       setFilteredEvents([]);
     }
@@ -247,29 +246,8 @@ const handleOpenEventForm = (event = null) => {
       }
       await fetchEvents();
       handleCloseEventForm();
-    } catch (error) {
-      console.error('Error saving event:', error);
+    } catch {
       showSnackbar('Error saving event', 'error');
-    }
-  };
-
-{/*  const handleCancelEvent = async (id) => {
-    try {
-      await axios.put(`http://localhost:3000/adminBackend/events/${id}`, { estado: 'cancelado' });
-      await fetchEvents();
-    } catch (error) {
-      console.error('Error canceling event:', error);
-    }
-  }; */}
-
-  const handleDelete = async (id) => {
-    try {
-      await axios.delete(`http://localhost:3000/adminBackend/events/${id}`);
-      await fetchEvents();
-      showSnackbar('Event deleted successfully', 'success');
-    } catch (error) {
-      console.error('Error deleting event:', error);
-      showSnackbar('Error deleting event', 'error');
     }
   };
 
@@ -442,8 +420,16 @@ const handleOpenEventForm = (event = null) => {
                     </TableCell>
                     <TableCell>
                       <Chip 
-                        // Mostrar el estado de event.estado en inglés para consistencia con el filtro de estado, como activo, inactivo y pendiente
-                        label={event.estado === "activo" ? "ACTIVE" : event.estado === "inactivo" ? "INACTIVE" : "PENDING"}
+                        // Show event status in English: ACTIVE, CANCELED
+                        label={
+                          event.estado === "activo"
+                            ? "ACTIVE"
+                            : event.estado === "inactivo"
+                            ? "INACTIVE"
+                            : event.estado === "cancelado"
+                            ? "CANCELED"
+                            : "PENDING"
+                        }
                         color={getStatusColor(event.estado)}
                         size="small"
                         sx={{ 
@@ -456,7 +442,7 @@ const handleOpenEventForm = (event = null) => {
                     </TableCell>
                     <TableCell>
                       <Box sx={{ display: 'flex', gap: 1 }}>
-                        <Tooltip title="Editar evento">
+                        <Tooltip title="Edit event">
                           <IconButton
                             color="primary"
                             onClick={() => handleOpenEventForm(event)}
@@ -465,27 +451,49 @@ const handleOpenEventForm = (event = null) => {
                             <EditIcon />
                           </IconButton>
                         </Tooltip>
-                        {/* <Tooltip title="Cancelar evento">
-                          <span>
+                        {event.estado === 'activo' ? (
+                          <Tooltip title="Cancel event">
                             <IconButton
-                              color="warning"
-                              onClick={() => handleCancelEvent(event._id)}
-                              disabled={event.estado === 'cancelado'}
+                              color="error"
+                              onClick={async () => {
+                                try {
+                                  await axios.put(`http://localhost:3000/adminBackend/events/${event._id}`, {
+                                    ...event,
+                                    estado: 'cancelado'
+                                  });
+                                  showSnackbar('Event canceled successfully', 'success');
+                                  fetchEvents();
+                                } catch {
+                                  showSnackbar('Failed to cancel event.', 'error');
+                                }
+                              }}
                               size="small"
                             >
-                              <CancelIcon />
+                              <DeleteIcon />
                             </IconButton>
-                          </span>
-                        </Tooltip> */}
-                        <Tooltip title="Delete event">
-                          <IconButton
-                            color="error"
-                            onClick={() => handleDelete(event._id)}
-                            size="small"
-                          >
-                            <DeleteIcon />
-                          </IconButton>
-                        </Tooltip>
+                          </Tooltip>
+                        ) : (
+                          <Tooltip title="Activate event">
+                            <IconButton
+                              sx={{ color: 'green' }}
+                              onClick={async () => {
+                                try {
+                                  await axios.put(`http://localhost:3000/adminBackend/events/${event._id}`, {
+                                    ...event,
+                                    estado: 'activo'
+                                  });
+                                  showSnackbar('Event activated successfully', 'success');
+                                  fetchEvents();
+                                } catch {
+                                  showSnackbar('Failed to activate event.', 'error');
+                                }
+                              }}
+                              size="small"
+                            >
+                              <CheckCircle />
+                            </IconButton>
+                          </Tooltip>
+                        )}
                       </Box>
                     </TableCell>
                   </TableRow>
@@ -598,12 +606,12 @@ const handleOpenEventForm = (event = null) => {
               fullWidth 
               select 
               name="estado" 
-              label="Estado" 
+              label="Status" 
               value={eventFormData.estado} 
               onChange={handleEventChange}
               required
             >
-              <MenuItem value="pendiente">Pending</MenuItem>
+              {!isEditMode && <MenuItem value="pendiente">Pending</MenuItem>}
               <MenuItem value="activo">Active</MenuItem>
               <MenuItem value="cancelado">Cancelled</MenuItem>
             </TextField>
@@ -761,7 +769,7 @@ const handleOpenEventForm = (event = null) => {
         sx={{ borderRadius: 2, px: 3, fontWeight: 'bold', borderWidth: 2, borderColor: '#b71c1c' }}
         startIcon={<CancelIcon />}
       >
-        CANCELAR
+        CANCEL
       </Button>
       <Button
         variant="contained"

@@ -31,6 +31,7 @@ import {
   Cancel as CancelIcon,
   EditOutlined as EditIcon,
   DeleteOutline as DeleteIcon,
+  CheckCircle as CheckCircleIcon,
   Add as AddIcon,
   Close as CloseIcon,
   LocalOffer as PromoIcon,
@@ -65,13 +66,35 @@ const PromoAdmin = () => {
 
   useEffect(() => {
     fetchPromos();
-  }, []);
+  },);
 
   const fetchPromos = async () => {
     try {
       const res = await axios.get("http://localhost:3000/adminBackend/promos");
-      setPromos(res.data);
-      setFilteredPromos(res.data);
+      const now = new Date();
+      // Update status based on dates
+      const updatedPromos = await Promise.all(res.data.map(async (promo) => {
+        const start = new Date(promo.fechaInicio);
+        const end = new Date(promo.fechaFin);
+        let newEstado = promo.estado;
+        if (now > end && promo.estado !== 'inactivo') {
+          // Auto-deactivate if event is over
+          newEstado = 'inactivo';
+          // Optionally update backend
+          try {
+            await axios.put(`http://localhost:3000/adminBackend/promos/${promo._id}`, { ...promo, estado: 'inactivo' });
+          } catch (e) {/* ignore error on auto-update */}
+        } else if (now >= start && now <= end && promo.estado !== 'activo') {
+          // Auto-activate if event is ongoing
+          newEstado = 'activo';
+          try {
+            await axios.put(`http://localhost:3000/adminBackend/promos/${promo._id}`, { ...promo, estado: 'activo' });
+          } catch (e) {/* ignore error on auto-update */}
+        }
+        return { ...promo, estado: newEstado };
+      }));
+      setPromos(updatedPromos);
+      setFilteredPromos(updatedPromos);
     } catch (error) {
       setPromos([]);
       setFilteredPromos([]);
@@ -175,7 +198,39 @@ const PromoAdmin = () => {
     setImagePreview(null);
   };
 
+    // Date validation for promotions
+  const validatePromoDates = (fechaInicio, fechaFin) => {
+    const today = new Date();
+    today.setHours(0,0,0,0); // Ignore time
+    const start = new Date(fechaInicio);
+    const end = new Date(fechaFin);
+    const maxFuture = new Date();
+    maxFuture.setMonth(today.getMonth() + 1);
+
+    if (!fechaInicio || !fechaFin) {
+      return "Both start and end dates are required.";
+    }
+    if (start < today) {
+      return "Start date cannot be in the past.";
+    }
+    if (end < today) {
+      return "End date cannot be in the past.";
+    }
+    if (end < start) {
+      return "End date cannot be before start date.";
+    }
+    if (start > maxFuture || end > maxFuture) {
+      return "Promotion dates cannot be more than 1 month in the future.";
+    }
+    return null; // No error
+  };
+
   const handleSavePromo = async () => {
+    const errorMsg = validatePromoDates(promoFormData.fechaInicio, promoFormData.fechaFin);
+    if (errorMsg) {
+      showSnackbar(errorMsg, 'error');
+      return;
+    }
     try {
       if (isEditMode && editingPromoId) {
         await axios.put(`http://localhost:3000/adminBackend/promos/${editingPromoId}`, promoFormData);
@@ -412,15 +467,49 @@ const PromoAdmin = () => {
                             <EditIcon />
                           </IconButton>
                         </Tooltip>
-                        <Tooltip title="Delete promotion">
-                          <IconButton
-                            color="error"
-                            onClick={() => handleDelete(promo._id)}
-                            size="small"
-                          >
-                            <DeleteIcon />
-                          </IconButton>
-                        </Tooltip>
+                        {promo.estado === 'activo' ? (
+                          <Tooltip title="Deactivate promotion">
+                            <IconButton
+                              color="error"
+                              onClick={async () => {
+                                try {
+                                  await axios.put(`http://localhost:3000/adminBackend/promos/${promo._id}`, {
+                                    ...promo,
+                                    estado: 'inactivo'
+                                  });
+                                  showSnackbar("Promotion deactivated successfully", "success");
+                                  fetchPromos();
+                                } catch (error) {
+                                  showSnackbar("Failed to deactivate promotion.", "error");
+                                }
+                              }}
+                              size="small"
+                            >
+                              <DeleteIcon />
+                            </IconButton>
+                          </Tooltip>
+                        ) : (
+                          <Tooltip title="Activate promotion">
+                            <IconButton
+                              sx={{ color: 'green' }}
+                              onClick={async () => {
+                                try {
+                                  await axios.put(`http://localhost:3000/adminBackend/promos/${promo._id}`, {
+                                    ...promo,
+                                    estado: 'activo'
+                                  });
+                                  showSnackbar("Promotion activated successfully", "success");
+                                  fetchPromos();
+                                } catch (error) {
+                                  showSnackbar("Failed to activate promotion.", "error");
+                                }
+                              }}
+                              size="small"
+                            >
+                              <CheckCircleIcon />
+                            </IconButton>
+                          </Tooltip>
+                        )}
                       </Box>
                     </TableCell>
                   </TableRow>
