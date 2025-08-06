@@ -45,7 +45,8 @@ import {
   ShowChartOutlined,
   DataUsage,
   Timeline,
-  BarChart as BarChartIcon
+  BarChart as BarChartIcon,
+  Search as SearchIcon
 } from "@mui/icons-material";
 import { motion } from 'framer-motion';
 import html2canvas from 'html2canvas';
@@ -228,7 +229,7 @@ const DashboardIoT = () => {
 
   // Tarjeta mini para estadísticas de cada gráfica
   const MiniStatCard = ({ label, value, unit, color, icon }) => (
-    <Card sx={{
+    <Card sx={{ 
       minWidth: 120,
       width: 180,
       textAlign: 'center',
@@ -342,109 +343,327 @@ const DashboardIoT = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
     >
-      {/* Panel de filtros históricos moderno y amigable sin MUI X */}
-      <Card elevation={4} sx={{ mb: 4, p: 2, background: 'linear-gradient(90deg, #f3e7e9 0%, #e3eeff 100%)' }}>
-        <CardContent>
-          <Typography variant="h6" color="#660152" fontWeight="bold" sx={{ mb: 2 }}>
-            Consulta Histórica de Sensores
-          </Typography>
-          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} alignItems="center" justifyContent="center" sx={{ flexWrap: 'wrap', mb: 2 }}>
-            {/* Selector de sensor con íconos grandes */}
-            <ToggleButtonGroup
-              value={selectedSensor}
-              exclusive
-              onChange={(_, v) => v && setSelectedSensor(v)}
-              sx={{ bgcolor: 'white', borderRadius: 2, boxShadow: 1 }}
+      {/* Panel de filtros históricos con Material UI profesional */}
+      <Card 
+        elevation={8} 
+        sx={{ 
+          mb: 4, 
+          background: '#fff', 
+          borderRadius: 1,
+          overflow: 'visible',
+          position: 'relative'
+        }}
+      >
+        <CardContent sx={{ position: 'relative', zIndex: 2, p: 3 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 3, justifyContent: 'center' }}>
+            <Avatar 
+              sx={{ 
+                bgcolor: '#660152', 
+                mr: 2, 
+                width: 48, 
+                height: 48,
+                backdropFilter: 'blur(10px)'
+              }}
             >
-              <ToggleButton value="dht11" sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-                <ThermostatOutlined sx={{ fontSize: 32, color: '#C91602' }} />
-                <OpacityOutlined sx={{ fontSize: 24, color: '#02B6C9' }} />
-                <Typography variant="caption">DHT11</Typography>
-              </ToggleButton>
-              <ToggleButton value="ultrasonico" sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-                <StraightenOutlined sx={{ fontSize: 32, color: '#84B8F5' }} />
-                <Typography variant="caption">Ultrasonico</Typography>
-              </ToggleButton>
-              <ToggleButton value="mlx90614" sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-                <ShowChartOutlined sx={{ fontSize: 32, color: '#E87D56' }} />
-                <Typography variant="caption">MLX90614</Typography>
-              </ToggleButton>
-            </ToggleButtonGroup>
+              <SearchIcon sx={{ color: '#fff', fontSize: 28 }} />
+            </Avatar>
+            <Typography 
+              variant="h5" 
+              sx={{ 
+                color: '#660152', 
+                fontWeight: 700, 
+                fontFamily: 'Montserrat, sans-serif',
+                
+              }}
+            >
+              Historical IoT Sensors Query
+            </Typography>
+          </Box>
 
-            {/* Fecha inicial */}
-            <TextField
-              label="Fecha inicial"
-              type="date"
-              InputLabelProps={{ shrink: true }}
-              value={startDate}
-              onChange={e => setStartDate(e.target.value)}
-              sx={{ minWidth: 150, bgcolor: 'white', borderRadius: 2 }}
-            />
-            {/* Fecha final */}
-            <TextField
-              label="Fecha final"
-              type="date"
-              InputLabelProps={{ shrink: true }}
-              value={endDate}
-              onChange={e => setEndDate(e.target.value)}
-              sx={{ minWidth: 150, bgcolor: 'white', borderRadius: 2 }}
-            />
+          {/* Sección de selección de sensor, filtros de tiempo y filtros rápidos */}
+          <Grid container spacing={3} sx={{ mb: 3, justifyContent: 'center' }}>
+            {/* Selección de Sensor */}
+            <Grid item xs={12} lg={4}>
+              <Card 
+                elevation={4} 
+                sx={{ 
+                  p: 3, 
+                  background: 'rgba(255, 255, 255, 0.95)',
+                  backdropFilter: 'blur(10px)',
+                  borderRadius: 2,
+                  height: '100%'
+                }}
+              >
+                <Typography variant="h6" sx={{ color: '#5C6BC0', fontWeight: 600, mb: 2, textAlign: 'center' }}>
+                  Select Sensor
+                </Typography>
+                <ToggleButtonGroup
+                  value={selectedSensor}
+                  exclusive
+                  onChange={(_, v) => v && setSelectedSensor(v)}
+                  sx={{ 
+                    display: 'flex', 
+                    justifyContent: 'center',
+                    width: '100%',
+                    '& .MuiToggleButton-root': {
+                      border: '2px solid #5C6BC0',
+                      borderRadius: 2,
+                      mx: 0.5,
+                      flex: 1,
+                      '&.Mui-selected': {
+                        background: '#5C6BC0',
+                        color: '#fff',
+                        '&:hover': {
+                          background: '#3F51B5'
+                        }
+                      }
+                    }
+                  }}
+                >
+                  <ToggleButton value="dht11" sx={{ p: 1.5, display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                    <ThermostatOutlined sx={{ fontSize: 28, color: selectedSensor === 'dht11' ? '#fff' : '#5C6BC0' }} />
+                    <OpacityOutlined sx={{ fontSize: 20, color: selectedSensor === 'dht11' ? '#fff' : '#42A5F5' }} />
+                    <Typography variant="caption" sx={{ fontWeight: 600, fontSize: '0.7rem' }}>DHT11</Typography>
+                  </ToggleButton>
+                  <ToggleButton value="ultrasonico" sx={{ p: 1.5, display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                    <StraightenOutlined sx={{ fontSize: 28, color: selectedSensor === 'ultrasonico' ? '#fff' : '#9C27B0' }} />
+                    <Typography variant="caption" sx={{ fontWeight: 600, fontSize: '0.7rem' }}>Ultrasonic</Typography>
+                  </ToggleButton>
+                  <ToggleButton value="mlx90614" sx={{ p: 1.5, display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                    <ShowChartOutlined sx={{ fontSize: 28, color: selectedSensor === 'mlx90614' ? '#fff' : '#FF7043' }} />
+                    <Typography variant="caption" sx={{ fontWeight: 600, fontSize: '0.7rem' }}>MLX90614</Typography>
+                  </ToggleButton>
+                </ToggleButtonGroup>
+              </Card>
+            </Grid>
 
-            {/* Time range slider */}
-            <Box sx={{ minWidth: 220, px: 2 }}>
-              <Typography variant="caption" color="text.secondary">Rango de horas</Typography>
-              <Slider
-                value={hourRange}
-                onChange={(_, v) => setHourRange(v)}
-                valueLabelDisplay="auto"
-                min={0}
-                max={23}
-                marks={[{ value: 0, label: '0:00' }, { value: 6, label: '6:00' }, { value: 12, label: '12:00' }, { value: 18, label: '18:00' }, { value: 23, label: '23:00' }]}
-                sx={{ color: '#660152' }}
-              />
-            </Box>
+            {/* Filtros de Tiempo */}
+            <Grid item xs={12} lg={4}>
+              <Card 
+                elevation={4} 
+                sx={{ 
+                  p: 3, 
+                  background: 'rgba(255, 255, 255, 0.95)',
+                  backdropFilter: 'blur(10px)',
+                  borderRadius: 2,
+                  height: '100%'
+                }}
+              >
+                <Typography variant="h6" sx={{ color: '#4CAF50', fontWeight: 600, mb: 2, textAlign: 'center' }}>
+                  Time Filters
+                </Typography>
+                <Box>
+                  {/* Fechas en una fila */}
+                  <Grid container spacing={2} sx={{ mb: 3 }}>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        label="Start Date"
+                        type="date"
+                        fullWidth
+                        size="small"
+                        InputLabelProps={{ shrink: true }}
+                        value={startDate}
+                        onChange={e => setStartDate(e.target.value)}
+                        sx={{ 
+                          '& .MuiOutlinedInput-root': {
+                            borderRadius: 2,
+                            '&:hover fieldset': { borderColor: '#4CAF50' },
+                            '&.Mui-focused fieldset': { borderColor: '#4CAF50' }
+                          }
+                        }}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        label="End Date"
+                        type="date"
+                        fullWidth
+                        size="small"
+                        InputLabelProps={{ shrink: true }}
+                        value={endDate}
+                        onChange={e => setEndDate(e.target.value)}
+                        sx={{ 
+                          '& .MuiOutlinedInput-root': {
+                            borderRadius: 2,
+                            '&:hover fieldset': { borderColor: '#4CAF50' },
+                            '&.Mui-focused fieldset': { borderColor: '#4CAF50' }
+                          }
+                        }}
+                      />
+                    </Grid>
+                  </Grid>
+                  
+                  {/* Rango de horas debajo */}
+                  <Box sx={{ px: 1 }}>
+                    <Typography variant="caption" sx={{ color: '#4CAF50', fontWeight: 600, mb: 1, display: 'block' }}>
+                      Hour Range: {hourRange[0]}:00 - {hourRange[1]}:00
+                    </Typography>
+                    <Slider
+                      value={hourRange}
+                      onChange={(_, v) => setHourRange(v)}
+                      valueLabelDisplay="auto"
+                      min={0}
+                      max={23}
+                      size="small"
+                      marks={[
+                        { value: 0, label: '0h' }, 
+                        { value: 6, label: '6h' }, 
+                        { value: 12, label: '12h' }, 
+                        { value: 18, label: '18h' }, 
+                        { value: 23, label: '23h' }
+                      ]}
+                      sx={{ 
+                        color: '#4CAF50',
+                        '& .MuiSlider-thumb': {
+                          background: '#4CAF50',
+                          border: '2px solid #fff',
+                          boxShadow: '0 2px 8px rgba(76, 175, 80, 0.3)'
+                        },
+                        '& .MuiSlider-markLabel': {
+                          fontSize: '0.7rem'
+                        }
+                      }}
+                    />
+                  </Box>
+                </Box>
+              </Card>
+            </Grid>
 
-            {/* Botones rápidos */}
-            <Stack direction="row" spacing={1}>
-              <Button variant={quickRange === 'today' ? 'contained' : 'outlined'} onClick={() => handleQuickRange('today')} sx={{ color: '#660152', borderColor: '#660152', '&.MuiButton-contained': { background: '#660152', color: '#fff' } }}>Hoy</Button>
-              <Button variant={quickRange === 'week' ? 'contained' : 'outlined'} onClick={() => handleQuickRange('week')} sx={{ color: '#660152', borderColor: '#660152', '&.MuiButton-contained': { background: '#660152', color: '#fff' } }}>Última semana</Button>
-              <Button variant={quickRange === 'month' ? 'contained' : 'outlined'} onClick={() => handleQuickRange('month')} sx={{ color: '#660152', borderColor: '#660152', '&.MuiButton-contained': { background: '#660152', color: '#fff' } }}>Último mes</Button>
-            </Stack>
+            {/* Filtros Rápidos */}
+            <Grid item xs={12} lg={4}>
+              <Card 
+                elevation={4} 
+                sx={{ 
+                  p: 3, 
+                  background: 'rgba(255, 255, 255, 0.95)',
+                  backdropFilter: 'blur(10px)',
+                  borderRadius: 2,
+                  height: '100%'
+                }}
+              >
+                <Typography variant="h6" sx={{ color: '#FF9800', fontWeight: 600, mb: 2, textAlign: 'center' }}>
+                  Quick Filters
+                </Typography>
+                <Stack direction="column" spacing={1.5} justifyContent="center">
+                  <Button 
+                    variant={quickRange === 'today' ? 'contained' : 'outlined'} 
+                    onClick={() => handleQuickRange('today')} 
+                    fullWidth
+                    sx={{ 
+                      borderRadius: 2,
+                      fontWeight: 600,
+                      py: 1.5,
+                      color: quickRange === 'today' ? '#fff' : '#FF9800', 
+                      borderColor: '#FF9800', 
+                      background: quickRange === 'today' ? '#FF9800' : 'transparent',
+                      '&:hover': { 
+                        background: quickRange === 'today' ? '#F57C00' : 'rgba(255, 152, 0, 0.1)',
+                        borderColor: '#FF9800'
+                      }
+                    }}
+                  >
+                    Today
+                  </Button>
+                  <Button 
+                    variant={quickRange === 'week' ? 'contained' : 'outlined'} 
+                    onClick={() => handleQuickRange('week')} 
+                    fullWidth
+                    sx={{ 
+                      borderRadius: 2,
+                      fontWeight: 600,
+                      py: 1.5,
+                      color: quickRange === 'week' ? '#fff' : '#FF9800', 
+                      borderColor: '#FF9800', 
+                      background: quickRange === 'week' ? '#FF9800' : 'transparent',
+                      '&:hover': { 
+                        background: quickRange === 'week' ? '#F57C00' : 'rgba(255, 152, 0, 0.1)',
+                        borderColor: '#FF9800'
+                      }
+                    }}
+                  >
+                    Last Week
+                  </Button>
+                  <Button 
+                    variant={quickRange === 'month' ? 'contained' : 'outlined'} 
+                    onClick={() => handleQuickRange('month')} 
+                    fullWidth
+                    sx={{ 
+                      borderRadius: 2,
+                      fontWeight: 600,
+                      py: 1.5,
+                      color: quickRange === 'month' ? '#fff' : '#FF9800', 
+                      borderColor: '#FF9800', 
+                      background: quickRange === 'month' ? '#FF9800' : 'transparent',
+                      '&:hover': { 
+                        background: quickRange === 'month' ? '#F57C00' : 'rgba(255, 152, 0, 0.1)',
+                        borderColor: '#FF9800'
+                      }
+                    }}
+                  >
+                    Last Month
+                  </Button>
+                </Stack>
+              </Card>
+            </Grid>
+          </Grid>
 
-            {/* Botón limpiar filtros */}
+          {/* Botones de acción */}
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} justifyContent="center">
             <Button
               onClick={() => { handleClearFilters(); setHistoricalData([]); }}
               variant="outlined"
+              size="large"
               sx={{
+                minWidth: 150,
                 height: 56,
-                fontWeight: 'bold',
-                fontFamily: 'montserrat',
-                border: '2px solid #C91602',
-                color: '#C91602',
-                background: '#fff',
-                '&:hover': { background: '#ffeaea', borderColor: '#C91602' }
+                fontWeight: 700,
+                fontFamily: 'Montserrat, sans-serif',
+                borderRadius: 3,
+                border: '2px solid #660152',
+                color: '#660152',
+                background: 'rgba(255, 255, 255, 0.1)',
+                backdropFilter: 'blur(10px)',
+                textTransform: 'uppercase',
+                '&:hover': { 
+                  background: '#F3E5F5', 
+                  borderColor: '#660152',
+                  
+                }
               }}
               startIcon={
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke="#C91602" strokeWidth="2" strokeLinecap="round"/></svg>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                  <path d="M18 6L6 18M6 6l12 12" stroke="#660152" strokeWidth="2" strokeLinecap="round"/>
+                </svg>
               }
             >
-              Clear
+              Clear Filters
             </Button>
 
-            {/* Botón consultar */}
             <Button
               variant="contained"
+              size="large"
               onClick={fetchHistorical}
               sx={{
+                minWidth: 150,
                 height: 56,
-                fontWeight: 'bold',
-                fontFamily: 'montserrat',
-                background: '#660152',
-                color: '#fff',
-                '&:hover': { background: '#4b013b' }
+                fontWeight: 700,
+                fontFamily: 'Montserrat, sans-serif',
+                borderRadius: 3,
+                border: '2px solid #660152',
+                 background: 'rgba(255, 255, 255, 0.1)',
+                
+                color: '#660152',
+                textTransform: 'uppercase',
+               
+                '&:hover': { 
+                  background: '#F3E5F5',
+                  borderColor: '#660152',
+                 
+                }
               }}
+              startIcon={<SearchIcon sx={{ color: '#660152' }} />}
             >
-              Consult
+              Query Data
             </Button>
             <Button
               variant="outlined"
@@ -453,22 +672,22 @@ const DashboardIoT = () => {
                 height: 56,
                 fontWeight: 'bold',
                 fontFamily: 'montserrat',
-                border: '2px solid #1063C1',
-                color: '#1063C1',
+                border: '2px solid #660152',
+                color: '#660152',
                 background: '#fff',
                 ml: 1,
-                '&:hover': { background: '#e3eeff', borderColor: '#1063C1' }
+                '&:hover': { background: '#F3E5F5', borderColor: '#660152' }
               }}
-              startIcon={<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 21h16" stroke="#1063C1" strokeWidth="2" strokeLinecap="round"/></svg>}
+              startIcon={<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 21h16" stroke="#9C27B0" strokeWidth="2" strokeLinecap="round"/></svg>}
               disabled={!historicalData.length}
             >
-              Exportar PDF
+              Export PDF
             </Button>
           </Stack>
           {loadingHistorical && (
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mt: 2 }}>
-              <CircularProgress size={32} sx={{ color: '#84B8F5' }} />
-              <Typography sx={{ ml: 2 }}>Cargando histórico...</Typography>
+              <CircularProgress size={32} sx={{ color: '#4CAF50' }} />
+              <Typography sx={{ ml: 2, color: '#fff' }}>Loading historical data...</Typography>
             </Box>
           )}
           {historicalError && (
@@ -477,8 +696,8 @@ const DashboardIoT = () => {
           {/* Gráfica histórica */}
           {historicalData.length > 0 && !loadingHistorical && (
             <Box sx={{ mt: 3 }}>
-              <Typography variant="subtitle1" color="#660152" fontWeight="bold" sx={{ mb: 2 }}>
-                Histórico de {selectedSensor === 'dht11' ? 'DHT11' : selectedSensor === 'ultrasonico' ? 'Ultrasonico' : 'MLX90614'}
+              <Typography variant="subtitle1" color="#fff" fontWeight="bold" sx={{ mb: 2 }}>
+                Historical Data of {selectedSensor === 'dht11' ? 'DHT11' : selectedSensor === 'ultrasonico' ? 'Ultrasonic' : 'MLX90614'}
               </Typography>
               <div ref={chartRef} style={{ background: '#fff', borderRadius: 8, padding: 8 }}>
                 <ResponsiveContainer width="100%" height={400}>
