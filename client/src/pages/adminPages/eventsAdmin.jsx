@@ -28,7 +28,7 @@ import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import {
   Cancel as CancelIcon,
-  Delete as DeleteIcon,
+  DeleteOutline,
   Event as EventIcon,
   MusicNote,
   Restaurant,
@@ -47,6 +47,37 @@ import axios from 'axios';
 // Se mapea en fetchEvents y en los handlers de guardado.
 
 const EventsAdmin = () => {
+  // Modal de confirmación para activar/desactivar evento
+  const [confirmModal, setConfirmModal] = useState({ open: false, type: '', event: null });
+
+  const handleOpenConfirmModal = (type, event) => {
+    setConfirmModal({ open: true, type, event });
+  };
+
+  const handleCloseConfirmModal = () => {
+    setConfirmModal({ open: false, type: '', event: null });
+  };
+
+  const handleConfirmAction = async () => {
+    if (!confirmModal.event) return;
+    try {
+      await axios.put(`http://localhost:3000/adminBackend/events/${confirmModal.event._id}`, {
+        ...confirmModal.event,
+        estado: confirmModal.type === 'activate' ? 'activo' : 'cancelado'
+      });
+      showSnackbar(
+        confirmModal.type === 'activate' ? 'Event activated successfully' : 'Event inactivated successfully',
+        'success'
+      );
+      fetchEvents();
+    } catch {
+      showSnackbar(
+        confirmModal.type === 'activate' ? 'Failed to activate event.' : 'Failed to cancel event.',
+        'error'
+      );
+    }
+    handleCloseConfirmModal();
+  };
   const [events, setEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [filter, setFilter] = useState('');
@@ -78,6 +109,54 @@ const EventsAdmin = () => {
     estado: "pendiente",
     imagen: ""
   });
+
+  // Validaciones para el formulario de evento
+  const [formErrors, setFormErrors] = useState({});
+
+  const validateEventForm = (data) => {
+    const errors = {};
+    // Nombre: requerido, mínimo 3 caracteres
+    if (!data.nombre || data.nombre.trim().length < 3) {
+      errors.nombre = 'Event name is required (min 3 characters).';
+    }
+    // Descripción: requerida, mínimo 10 caracteres
+    if (!data.descripcion || data.descripcion.trim().length < 10) {
+      errors.descripcion = 'Description is required (min 10 characters).';
+    }
+    // Fecha: requerida, válida y futura
+    if (!data.fecha) {
+      errors.fecha = 'Event date is required.';
+    } else {
+      const eventDate = new Date(data.fecha);
+      const today = new Date();
+      today.setHours(0,0,0,0);
+      if (isNaN(eventDate.getTime())) {
+        errors.fecha = 'Invalid date.';
+      } else if (eventDate < today) {
+        errors.fecha = 'Date must be today or in the future.';
+      }
+    }
+    // Hora inicio: requerida, formato HH:mm
+    if (!data.horaInicio) {
+      errors.horaInicio = 'Start time is required.';
+    }
+    // Hora final: requerida, formato HH:mm, mayor que inicio
+    if (!data.horaFinal) {
+      errors.horaFinal = 'End time is required.';
+    } else if (data.horaInicio && data.horaFinal) {
+      if (data.horaFinal <= data.horaInicio) {
+        errors.horaFinal = 'End time must be after start time.';
+      }
+    }
+    // Imagen: opcional, si existe debe ser imagen válida
+    if (data.imagen && typeof data.imagen === 'string' && data.imagen.length > 0) {
+      const validExt = /\.(jpg|jpeg|png|gif|bmp|webp|svg)$/i;
+      if (!validExt.test(data.imagen)) {
+        errors.imagen = 'Image must be a valid image file.';
+      }
+    }
+    return errors;
+  };
 
   useEffect(() => {
     fetchEvents();
@@ -149,6 +228,7 @@ const handleOpenEventForm = (event = null) => {
       setImagePreview('');
       setImageError(false);
     }
+    setFormErrors({}); // Limpiar errores al abrir el modal
     setOpenEventForm(true);
   };
 
@@ -167,6 +247,7 @@ const handleOpenEventForm = (event = null) => {
     });
     setImagePreview('');
     setImageError(false);
+    setFormErrors({}); // Limpiar errores al cerrar el modal
     if (localImageUrl) {
       URL.revokeObjectURL(localImageUrl);
       setLocalImageUrl(null);
@@ -212,6 +293,12 @@ const handleOpenEventForm = (event = null) => {
 
 
   const handleSaveEvent = async () => {
+    const errors = validateEventForm(eventFormData);
+    setFormErrors(errors);
+    if (Object.keys(errors).length > 0) {
+      showSnackbar('Please fix the errors in the form.', 'error');
+      return;
+    }
     try {
       let newId = eventFormData._id;
       if (!isEditMode || !newId) {
@@ -291,24 +378,6 @@ const handleOpenEventForm = (event = null) => {
       </Box>
       <Box sx={{ display: 'flex', flexDirection: "row", alignItems: 'center', justifyContent: 'space-between'}}>
         <Box sx={{  display: 'flex', flexDirection: 'row', gap: 2,  }}>
-          <FormControl sx={{ maxWidth: 200, minWidth: 200}}>
-            <InputLabel size="small" sx={{ width: 250, backgroundColor: 'white' }} >Filter by status</InputLabel>
-            <Select
-              labelId="filter-label"
-              id="filter"
-              value={filter}
-              label="Filter by status"
-              onChange={handleFilterChange}
-              size="small"
-              sx={{ backgroundColor: 'white', borderRadius: 1, alignItems: 'center' }}
-            >
-              <MenuItem value="">All events</MenuItem>
-              <MenuItem value="pendiente">Pending</MenuItem>
-              <MenuItem value="activo">Active</MenuItem>
-              <MenuItem value="cancelado">Canceled</MenuItem>
-            </Select>
-          </FormControl>
-
           <Button 
             variant="contained" 
             startIcon={<AddIcon />}
@@ -321,6 +390,23 @@ const handleOpenEventForm = (event = null) => {
                 >
             Create New Event
           </Button>
+        <FormControl size="small" sx={{ maxWidth: 200, minWidth: 200}}>
+            <InputLabel size="small" sx={{ width: 150, backgroundColor: 'white' }} >Filter by status</InputLabel>
+            <Select
+              labelId="filter-label"
+              id="filter"
+              value={filter}
+              label="Filter by status"
+              onChange={handleFilterChange}
+              size="small"
+              sx={{ backgroundColor: 'white', borderRadius: 1, alignItems: 'center' }}
+            >
+              <MenuItem value="">All events</MenuItem>
+              <MenuItem value="pendiente">Pending</MenuItem>
+              <MenuItem value="activo">Active</MenuItem>
+              <MenuItem value="cancelado">Inactive</MenuItem>
+            </Select>
+          </FormControl>
         </Box>
 
         {/* Estadísticas rápidas */}
@@ -342,6 +428,16 @@ const handleOpenEventForm = (event = null) => {
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 Active
+              </Typography>
+            </CardContent>
+          </Card>
+          <Card sx={{ minWidth: 120 }}>
+            <CardContent sx={{ textAlign: 'center', py: 2 }}>
+              <Typography variant="h4" color="error.main" fontWeight="bold">
+                {events.filter(e => e.estado === 'cancelado').length}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Inactive
               </Typography>
             </CardContent>
           </Card>
@@ -427,7 +523,7 @@ const handleOpenEventForm = (event = null) => {
                             : event.estado === "inactivo"
                             ? "INACTIVE"
                             : event.estado === "cancelado"
-                            ? "CANCELED"
+                            ? "INACTIVE"
                             : "PENDING"
                         }
                         color={getStatusColor(event.estado)}
@@ -452,42 +548,20 @@ const handleOpenEventForm = (event = null) => {
                           </IconButton>
                         </Tooltip>
                         {event.estado === 'activo' ? (
-                          <Tooltip title="Cancel event">
+                          <Tooltip title="Inactivate event">
                             <IconButton
                               color="error"
-                              onClick={async () => {
-                                try {
-                                  await axios.put(`http://localhost:3000/adminBackend/events/${event._id}`, {
-                                    ...event,
-                                    estado: 'cancelado'
-                                  });
-                                  showSnackbar('Event canceled successfully', 'success');
-                                  fetchEvents();
-                                } catch {
-                                  showSnackbar('Failed to cancel event.', 'error');
-                                }
-                              }}
+                              onClick={() => handleOpenConfirmModal('inactivate', event)}
                               size="small"
                             >
-                              <DeleteIcon />
+                              <DeleteOutline />
                             </IconButton>
                           </Tooltip>
                         ) : (
                           <Tooltip title="Activate event">
                             <IconButton
                               sx={{ color: 'green' }}
-                              onClick={async () => {
-                                try {
-                                  await axios.put(`http://localhost:3000/adminBackend/events/${event._id}`, {
-                                    ...event,
-                                    estado: 'activo'
-                                  });
-                                  showSnackbar('Event activated successfully', 'success');
-                                  fetchEvents();
-                                } catch {
-                                  showSnackbar('Failed to activate event.', 'error');
-                                }
-                              }}
+                              onClick={() => handleOpenConfirmModal('activate', event)}
                               size="small"
                             >
                               <CheckCircle />
@@ -498,6 +572,55 @@ const handleOpenEventForm = (event = null) => {
                     </TableCell>
                   </TableRow>
                 ))}
+                {/* Modal de confirmación para activar/desactivar evento */}
+                <Modal
+                  open={confirmModal.open}
+                  onClose={handleCloseConfirmModal}
+                  aria-labelledby="modal-confirm-event"
+                  aria-describedby="modal-confirm-event-description"
+                >
+                  <Box
+                    sx={{
+                      position: 'absolute',
+                      top: '50%',
+                      left: '50%',
+                      transform: 'translate(-50%, -50%)',
+                      bgcolor: 'background.paper',
+                      boxShadow: 24,
+                      p: 4,
+                      borderRadius: 2,
+                      minWidth: 350,
+                    }}
+                  >
+                    <Typography
+                      id="modal-confirm-event"
+                      variant="h6"
+                      fontWeight="bold"
+                      color={confirmModal.type === 'activate' ? 'success.main' : 'error.main'}
+                      sx={{ mb: 2 }}
+                    >
+                      {confirmModal.type === 'activate' ? 'Activate Event' : 'Deactivate Event'}
+                    </Typography>
+                    <Typography id="modal-confirm-event-description" sx={{ mb: 3 }}>
+                      {confirmModal.type === 'activate'
+                        ? `Are you sure you want to activate the event "${confirmModal.event?.nombre}"?`
+                        : `Are you sure you want to deactivate the event "${confirmModal.event?.nombre}"?`}
+                    </Typography>
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
+                      <Button onClick={handleCloseConfirmModal} variant="outlined" color="inherit">
+                        Cancel
+                      </Button>
+                      <Button
+                        onClick={handleConfirmAction}
+                        variant="contained"
+                        color={confirmModal.type === 'activate' ? 'success' : 'error'}
+                        sx={{ fontWeight: 'bold' }}
+                      >
+                        {confirmModal.type === 'activate' ? 'Activate' : 'Deactivate'}
+                      </Button>
+                    </Box>
+                  </Box>
+                </Modal>
                 {filteredEvents.length === 0 && (
                   <TableRow>
                     <TableCell colSpan={5} align="center">
@@ -559,6 +682,8 @@ const handleOpenEventForm = (event = null) => {
                 onChange={handleEventChange} 
                 InputLabelProps={{ shrink: true }}
                 required
+                error={!!formErrors.nombre}
+                helperText={formErrors.nombre}
                 />
             </Grid>
           </Box>
@@ -575,6 +700,8 @@ const handleOpenEventForm = (event = null) => {
                 onChange={handleEventChange} 
                 InputLabelProps={{ shrink: true }}
                 required
+                error={!!formErrors.fecha}
+                helperText={formErrors.fecha}
               />
               <TextField 
                 fullWidth 
@@ -585,6 +712,8 @@ const handleOpenEventForm = (event = null) => {
                 onChange={handleEventChange} 
                 InputLabelProps={{ shrink: true }}
                 required
+                error={!!formErrors.horaInicio}
+                helperText={formErrors.horaInicio}
               />
               <TextField 
                 fullWidth 
@@ -595,6 +724,8 @@ const handleOpenEventForm = (event = null) => {
                 onChange={handleEventChange} 
                 InputLabelProps={{ shrink: true }}
                 required
+                error={!!formErrors.horaFinal}
+                helperText={formErrors.horaFinal}
               />
             </Box>
           </Box>
@@ -681,6 +812,8 @@ const handleOpenEventForm = (event = null) => {
               onChange={handleEventChange}
               InputLabelProps={{ shrink: true }}
               required
+              error={!!formErrors.descripcion}
+              helperText={formErrors.descripcion}
             />
           </Grid>
           </Box>

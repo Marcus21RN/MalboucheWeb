@@ -75,6 +75,10 @@ const MenuAdmin = () => {
     estado: "activo",
   });
 
+  // Loading states
+  const [loadingMenus, setLoadingMenus] = useState(false);
+  const [loadingProductos, setLoadingProductos] = useState(false);
+
   // Utility functions
   const getStatusColor = (status) => {
     switch (status) {
@@ -423,21 +427,27 @@ const MenuAdmin = () => {
     setPage(0);
   }, [searchTerm, filterEstado, selectedCategory, activeTab]);
 
-  const fetchProductos = async () => {
-    try {
-      const res = await axios.get("http://localhost:3000/adminBackend/productos");
-      setProductos(res.data);
-    } catch {
-      console.error("Error loading products");
-    }
-  };
-
   const fetchMenus = async () => {
+    setLoadingMenus(true);
     try {
       const res = await axios.get("http://localhost:3000/adminBackend/menus");
       setMenus(res.data);
     } catch {
       console.error("Error loading menus");
+    } finally {
+      setLoadingMenus(false);
+    }
+  };
+
+  const fetchProductos = async () => {
+    setLoadingProductos(true);
+    try {
+      const res = await axios.get("http://localhost:3000/adminBackend/productos");
+      setProductos(res.data);
+    } catch {
+      console.error("Error loading products");
+    } finally {
+      setLoadingProductos(false);
     }
   };
 
@@ -573,106 +583,118 @@ const MenuAdmin = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {paginatedMenus.map((menu) => (
-                      <TableRow 
-                        key={menu._id}
-                        hover
-                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                      >
-                        <TableCell>
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                            <Avatar 
-                              sx={{ 
-                                width: 50, 
-                                height: 50,
-                                backgroundColor: getCategoryColor(menu.tipoMenu),
-                              }}
-                            >
-                              {getCategoryIcon(menu.tipoMenu)}
-                            </Avatar>
-                            <Box>
-                              <Typography variant="h6" fontFamily="montserrat" fontWeight="bold">
-                                {menu.nombre}
-                              </Typography>
-                              <Typography variant="body2" color="text.secondary" fontFamily="montserrat" fontWeight={600}>
-                                {menu.descripcion?.length > 50 ? 
-                                  `${menu.descripcion.substring(0, 50)}...` : 
-                                  menu.descripcion || 'No description'}
-                              </Typography>
-                              <Typography variant="caption" color="text.secondary ">
-                                ID: {menu._id}
-                              </Typography>
-                            </Box>
-                          </Box>
-                        </TableCell>
-                        <TableCell>
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                            {getCategoryIcon(menu.tipoMenu)}
-                            <Typography variant="body1" fontWeight="medium">
-                              {menu.tipoMenu}
+                    {loadingMenus ? (
+                      <TableRow>
+                        <TableCell colSpan={6} align="center">
+                          <Box sx={{ py: 6 }}>
+                            <Typography variant="h6" color="text.secondary">
+                              Loading data
                             </Typography>
-                          </Box>
-                        </TableCell>
-                        <TableCell>
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                            <Badge badgeContent={Array.isArray(menu.productos) ? menu.productos.length : 0} color="primary">
-                              <Restaurant />
-                            </Badge>
-                            <Typography variant="body2" color="text.secondary">
-                              Products
-                            </Typography>
-                          </Box>
-                        </TableCell>
-                        <TableCell>
-                          <Chip
-                          
-                            label={menu.estado === "activo" ? "ACTIVE" : "INACTIVE"}
-                            color={getStatusColor(menu.estado)}
-                            size="small"
-                            sx={{ 
-                              fontWeight: 'bold',
-                              minWidth: 80
-                            }}
-                          />
-                        </TableCell>
-                        <TableCell>
-                          <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', justifyContent: 'center' }}>
-                            <Tooltip title="View menu details">
-                              <IconButton
-                                color="secondary"
-                                onClick={() => handleOpenMenuDetails(menu)}
-                                size="small"
-                              >
-                                <VisibilityIcon />
-                              </IconButton>
-                            </Tooltip>
-                            <Tooltip title="Edit menu">
-                              <IconButton
-                                color="primary"
-                                onClick={() => handleOpenMenuForm(menu)}
-                                size="small"
-                              >
-                                <EditOutlined />
-                              </IconButton>
-                            </Tooltip>
-                            <Tooltip title={menu.estado === 'activo' ? 'Deactivate menu' : 'Activate menu'}>
-                              <IconButton
-                                color={menu.estado === 'activo' ? 'error' : 'success'}
-                                onClick={() => handleToggleMenuStatus(menu._id)}
-                                size="small"
-                              >
-                                {menu.estado === 'activo' ? (
-                                  <DeleteOutline />
-                                ) : (
-                                  <CheckCircle sx={{ color: 'success.main' }} />
-                                )}
-                              </IconButton>
-                            </Tooltip>
                           </Box>
                         </TableCell>
                       </TableRow>
-                    ))}
-                    {filteredMenus.length === 0 && (
+                    ) : (
+                      paginatedMenus.map((menu) => (
+                        <TableRow 
+                          key={menu._id}
+                          hover
+                          sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                        >
+                          <TableCell>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                              <Avatar 
+                                sx={{ 
+                                  width: 50, 
+                                  height: 50,
+                                  backgroundColor: getCategoryColor(menu.tipoMenu),
+                                }}
+                              >
+                                {getCategoryIcon(menu.tipoMenu)}
+                              </Avatar>
+                              <Box>
+                                <Typography variant="h6" fontFamily="montserrat" fontWeight="bold">
+                                  {menu.nombre}
+                                </Typography>
+                                <Typography variant="body2" color="text.secondary" fontFamily="montserrat" fontWeight={600}>
+                                  {menu.descripcion?.length > 50 ? 
+                                    `${menu.descripcion.substring(0, 50)}...` : 
+                                    menu.descripcion || 'No description'}
+                                </Typography>
+                                <Typography variant="caption" color="text.secondary ">
+                                  ID: {menu._id}
+                                </Typography>
+                              </Box>
+                            </Box>
+                          </TableCell>
+                          <TableCell>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                              {getCategoryIcon(menu.tipoMenu)}
+                              <Typography variant="body1" fontWeight="medium">
+                                {menu.tipoMenu}
+                              </Typography>
+                            </Box>
+                          </TableCell>
+                          <TableCell>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                              <Badge badgeContent={Array.isArray(menu.productos) ? menu.productos.length : 0} color="primary">
+                                <Restaurant />
+                              </Badge>
+                              <Typography variant="body2" color="text.secondary">
+                                Products
+                              </Typography>
+                            </Box>
+                          </TableCell>
+                          <TableCell>
+                            <Chip
+                            
+                              label={menu.estado === "activo" ? "ACTIVE" : "INACTIVE"}
+                              color={getStatusColor(menu.estado)}
+                              size="small"
+                              sx={{ 
+                                fontWeight: 'bold',
+                                minWidth: 80
+                              }}
+                            />
+                          </TableCell>
+                          <TableCell>
+                            <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', justifyContent: 'center' }}>
+                              <Tooltip title="View menu details">
+                                <IconButton
+                                  color="secondary"
+                                  onClick={() => handleOpenMenuDetails(menu)}
+                                  size="small"
+                                >
+                                  <VisibilityIcon />
+                                </IconButton>
+                              </Tooltip>
+                              <Tooltip title="Edit menu">
+                                <IconButton
+                                  color="primary"
+                                  onClick={() => handleOpenMenuForm(menu)}
+                                  size="small"
+                                >
+                                  <EditOutlined />
+                                </IconButton>
+                              </Tooltip>
+                              <Tooltip title={menu.estado === 'activo' ? 'Deactivate menu' : 'Activate menu'}>
+                                <IconButton
+                                  color={menu.estado === 'activo' ? 'error' : 'success'}
+                                  onClick={() => handleToggleMenuStatus(menu._id)}
+                                  size="small"
+                                >
+                                  {menu.estado === 'activo' ? (
+                                    <DeleteOutline />
+                                  ) : (
+                                    <CheckCircle sx={{ color: 'success.main' }} />
+                                  )}
+                                </IconButton>
+                              </Tooltip>
+                            </Box>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                    {filteredMenus.length === 0 && !loadingMenus && (
                       <TableRow>
                         <TableCell colSpan={6} align="center">
                           <Box sx={{ py: 6 }}>
@@ -823,106 +845,120 @@ const MenuAdmin = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {paginatedProducts.map((producto) => (
-                      <TableRow 
-                        key={producto._id}
-                        hover
-                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                      >
-                        <TableCell>
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                            <Avatar 
-                              sx={{ 
-                                width: 40, 
-                                height: 40,
-                                backgroundColor: getCategoryColor(producto.categoria)
-                              }}
-                            >
-                              {getCategoryIcon(producto.categoria)}
-                            </Avatar>
-                            <Box>
-                              <Typography variant="h6" fontWeight="bold">
-                                {producto.nombre}
-                              </Typography>
-                              <Typography variant="body2" color="text.secondary">
-                                {producto.descripcion}
-                              </Typography>
-                              <Typography variant="caption" color="text.secondary" fontFamily="montserrat">
-                                ID: {producto._id}
-                              </Typography>
-                            </Box>
-                          </Box>
-                        </TableCell>
-                        <TableCell>
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                            {getCategoryIcon(producto.categoria)}
-                            <Typography variant="body1">
-                              {producto.categoria}
-                            </Typography>
-                          </Box>
-                        </TableCell>
-                        <TableCell>
-                          <Typography variant="h6" color="success.main" fontWeight="bold">
-                            ${producto.precio}
-                          </Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Chip 
-                            label={producto.estado === "activo" ? "ACTIVE" : "INACTIVE"} 
-                            color={getStatusColor(producto.estado)}
-                            size="small"
-                            sx={{ 
-                              fontWeight: 'bold',
-                              minWidth: 80
-                            }}
-                          />
-                        </TableCell>
-                        <TableCell>
-                          <Box sx={{ display: 'flex', gap: 1 }}>
-                            <Tooltip title="Edit product">
-                              <IconButton
-                                color="primary"
-                                onClick={() => handleOpenProductForm(producto)}
-                                size="small"
-                              >
-                                <EditOutlined />
-                              </IconButton>
-                            </Tooltip>
-                            <Tooltip title={producto.estado === 'activo' ? 'Deactivate product' : 'Activate product'}>
-                              <IconButton
-                                color={producto.estado === 'activo' ? 'error' : 'success'}
-                                onClick={() => handleToggleProductStatus(producto._id)}
-                                size="small"
-                              >
-                                {producto.estado === 'activo' ? (
-                                  <DeleteOutline />
-                                ) : (
-                                  <CheckCircle sx={{ color: 'success.main' }} />
-                                )}
-                              </IconButton>
-                            </Tooltip>
-                          </Box>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                    {filteredProducts.length === 0 && (
+                    {loadingProductos ? (
                       <TableRow>
                         <TableCell colSpan={6} align="center">
                           <Box sx={{ py: 6 }}>
-                            <Restaurant sx={{ fontSize: 60, color: 'grey.400', mb: 2 }} />
                             <Typography variant="h6" color="text.secondary">
-                              No products found
-                            </Typography>
-                            <Typography variant="body2" color="text.secondary">
-                              {selectedCategory 
-                                ? `No products of category "${selectedCategory}" found` 
-                                : filterEstado 
-                                  ? `No products with status "${filterEstado}" found` 
-                                  : 'No products available'}
+                              Loading data
                             </Typography>
                           </Box>
                         </TableCell>
                       </TableRow>
+                    ) : (
+                      <>
+                        {paginatedProducts.map((producto) => (
+                          <TableRow 
+                            key={producto._id}
+                            hover
+                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                          >
+                            <TableCell>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                                <Avatar 
+                                  sx={{ 
+                                    width: 40, 
+                                    height: 40,
+                                    backgroundColor: getCategoryColor(producto.categoria)
+                                  }}
+                                >
+                                  {getCategoryIcon(producto.categoria)}
+                                </Avatar>
+                                <Box>
+                                  <Typography variant="h6" fontWeight="bold">
+                                    {producto.nombre}
+                                  </Typography>
+                                  <Typography variant="body2" color="text.secondary">
+                                    {producto.descripcion}
+                                  </Typography>
+                                  <Typography variant="caption" color="text.secondary" fontFamily="montserrat">
+                                    ID: {producto._id}
+                                  </Typography>
+                                </Box>
+                              </Box>
+                            </TableCell>
+                            <TableCell>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                {getCategoryIcon(producto.categoria)}
+                                <Typography variant="body1">
+                                  {producto.categoria}
+                                </Typography>
+                              </Box>
+                            </TableCell>
+                            <TableCell>
+                              <Typography variant="h6" color="success.main" fontWeight="bold">
+                                ${producto.precio}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Chip 
+                                label={producto.estado === "activo" ? "ACTIVE" : "INACTIVE"} 
+                                color={getStatusColor(producto.estado)}
+                                size="small"
+                                sx={{ 
+                                  fontWeight: 'bold',
+                                  minWidth: 80
+                                }}
+                              />
+                            </TableCell>
+                            <TableCell>
+                              <Box sx={{ display: 'flex', gap: 1 }}>
+                                <Tooltip title="Edit product">
+                                  <IconButton
+                                    color="primary"
+                                    onClick={() => handleOpenProductForm(producto)}
+                                    size="small"
+                                  >
+                                    <EditOutlined />
+                                  </IconButton>
+                                </Tooltip>
+                                <Tooltip title={producto.estado === 'activo' ? 'Deactivate product' : 'Activate product'}>
+                                  <IconButton
+                                    color={producto.estado === 'activo' ? 'error' : 'success'}
+                                    onClick={() => handleToggleProductStatus(producto._id)}
+                                    size="small"
+                                  >
+                                    {producto.estado === 'activo' ? (
+                                      <DeleteOutline />
+                                    ) : (
+                                      <CheckCircle sx={{ color: 'success.main' }} />
+                                    )}
+                                  </IconButton>
+                                </Tooltip>
+                              </Box>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                        {filteredProducts.length === 0 && !loadingProductos && (
+                          <TableRow>
+                            <TableCell colSpan={6} align="center">
+                              <Box sx={{ py: 6 }}>
+                                <Restaurant sx={{ fontSize: 60, color: 'grey.400', mb: 2 }} />
+                                <Typography variant="h6" color="text.secondary">
+                                  No products found
+                                </Typography>
+                                <Typography variant="body2" color="text.secondary">
+                                  {selectedCategory 
+                                    ? `No products of category "${selectedCategory}" found` 
+                                    : filterEstado 
+                                      ? `No products with status "${filterEstado}" found` 
+                                      : 'No products available'}
+                                </Typography>
+                              </Box>
+                            </TableCell>
+                          </TableRow>
+                        )}
+                      </>
                     )}
                   </TableBody>
                 </Table>

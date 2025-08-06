@@ -177,15 +177,19 @@ export default function EmployesAdmin() {
         showSnackbar("Employee registered successfully.", "success");
 
         // --- AQUÍ SE ENVÍA EL CORREO DE BIENVENIDA ---
-        await axios.post("http://localhost:3000/adminBackend/email/bienvenida-empleado", {
-          toEmail: formData.correo,
-          nombre: formData.nombre,
-          primerApellido: formData.primerApellido,
-          // eslint-disable-next-line no-undef
-          password: passwordGenerada,
-          IDRol: formData.IDRol
-        });
-        // --- FIN ENVÍO CORREO ---
+        try {
+          const passwordGenerada = `${formData.nombre}${formData.primerApellido.charAt(0)}123`;
+          await axios.post("http://localhost:3000/adminBackend/email/bienvenida-empleado", {
+            toEmail: formData.correo,
+            nombre: formData.nombre,
+            primerApellido: formData.primerApellido,
+            password: passwordGenerada,
+            IDRol: formData.IDRol
+          });
+        } catch (correoError) {
+          // Si el correo falla, avisar pero no marcar como error total
+          showSnackbar("User created, but welcome email could not be sent.", "warning");
+        }
       }
       fetchEmpleados();
       resetForm();

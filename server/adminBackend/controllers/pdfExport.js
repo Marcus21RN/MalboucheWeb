@@ -25,11 +25,12 @@ export const exportSensorHistoryPDF = (req, res) => {
       const base64Data = req.body.chartImage.replace(/^data:image\/png;base64,/, '');
       const imgBuffer = Buffer.from(base64Data, 'base64');
       // Usar casi todo el ancho disponible y mayor altura
-      const imgMargin = 30;
+      // Tamaño más equilibrado para la gráfica
+      const imgMargin = 60;
       const imgWidth = doc.page.width - imgMargin * 2;
-      const imgHeight = imgWidth * 0.7; // Relación de aspecto más alta
+      const imgHeight = imgWidth * 0.45; // Relación de aspecto más natural
       doc.image(imgBuffer, imgMargin, y, { width: imgWidth, height: imgHeight });
-      y += imgHeight + 32; // Más espacio después de la imagen
+      y += imgHeight + 24; // Espacio después de la imagen
     } catch (e) {
       // Si hay error, solo continúa
     }

@@ -42,8 +42,11 @@ import { motion } from 'framer-motion';
 import axios from 'axios';
 
 const PromoAdmin = () => {
+
+  // Estado para el modal de confirmación
+  const [confirmDialog, setConfirmDialog] = useState({ open: false, type: '', promo: null });
+
   const [promos, setPromos] = useState([]);
-  const [filteredPromos, setFilteredPromos] = useState([]);
   const [filter, setFilter] = useState('');
   const [openPromoForm, setOpenPromoForm] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -64,6 +67,8 @@ const PromoAdmin = () => {
     imagen: ""
   });
 
+  const [formErrors, setFormErrors] = useState({});
+
   useEffect(() => {
     fetchPromos();
   },);
@@ -71,43 +76,15 @@ const PromoAdmin = () => {
   const fetchPromos = async () => {
     try {
       const res = await axios.get("http://localhost:3000/adminBackend/promos");
-      const now = new Date();
-      // Update status based on dates
-      const updatedPromos = await Promise.all(res.data.map(async (promo) => {
-        const start = new Date(promo.fechaInicio);
-        const end = new Date(promo.fechaFin);
-        let newEstado = promo.estado;
-        if (now > end && promo.estado !== 'inactivo') {
-          // Auto-deactivate if event is over
-          newEstado = 'inactivo';
-          // Optionally update backend
-          try {
-            await axios.put(`http://localhost:3000/adminBackend/promos/${promo._id}`, { ...promo, estado: 'inactivo' });
-          } catch (e) {/* ignore error on auto-update */}
-        } else if (now >= start && now <= end && promo.estado !== 'activo') {
-          // Auto-activate if event is ongoing
-          newEstado = 'activo';
-          try {
-            await axios.put(`http://localhost:3000/adminBackend/promos/${promo._id}`, { ...promo, estado: 'activo' });
-          } catch (e) {/* ignore error on auto-update */}
-        }
-        return { ...promo, estado: newEstado };
-      }));
-      setPromos(updatedPromos);
-      setFilteredPromos(updatedPromos);
+      setPromos(res.data);
     } catch (error) {
       setPromos([]);
-      setFilteredPromos([]);
       showSnackbar("Failed to load promotions.", "error");
     }
   };
 
   const handleFilterChange = (e) => {
-    const value = e.target.value;
-    setFilter(value);
-    setFilteredPromos(
-      value ? promos.filter((promo) => promo.estado === value) : promos
-    );
+    setFilter(e.target.value);
   };
 
   // Funciones para el modal
@@ -151,6 +128,7 @@ const PromoAdmin = () => {
       setLocalImageUrl(null);
     }
     setImageError(false);
+    setFormErrors({}); // Limpiar errores al abrir el modal
     setOpenPromoForm(true);
   };
 
@@ -168,6 +146,7 @@ const PromoAdmin = () => {
       estado: "activo",
       imagen: ""
     });
+    setFormErrors({}); // Limpiar errores al cerrar el modal
   };
 
   const handlePromoChange = (e) => {
@@ -205,7 +184,7 @@ const PromoAdmin = () => {
     const start = new Date(fechaInicio);
     const end = new Date(fechaFin);
     const maxFuture = new Date();
-    maxFuture.setMonth(today.getMonth() + 1);
+    maxFuture.setFullYear(today.getFullYear() + 1);
 
     if (!fechaInicio || !fechaFin) {
       return "Both start and end dates are required.";
@@ -220,12 +199,59 @@ const PromoAdmin = () => {
       return "End date cannot be before start date.";
     }
     if (start > maxFuture || end > maxFuture) {
-      return "Promotion dates cannot be more than 1 month in the future.";
+      return "Promotion dates cannot be more than 1 year in the future.";
     }
     return null; // No error
   };
 
+  const validatePromoForm = (data) => {
+    const errors = {};
+    // Nombre: requerido, mínimo 3 caracteres
+    if (!data.nombre || data.nombre.trim().length < 3) {
+      errors.nombre = 'Promotion name is required (min 3 characters).';
+    }
+    // Descripción: requerida, mínimo 10 caracteres
+    if (!data.descripcion || data.descripcion.trim().length < 10) {
+      errors.descripcion = 'Description is required (min 10 characters).';
+    }
+    // Fechas: validación ya existe, pero agregamos aquí para mostrar en el campo
+    if (!data.fechaInicio) {
+      errors.fechaInicio = 'Start date is required.';
+    } else {
+      const today = new Date();
+      today.setHours(0,0,0,0);
+      const start = new Date(data.fechaInicio);
+      if (start < today) {
+        errors.fechaInicio = 'Start date cannot be in the past.';
+      }
+    }
+    if (!data.fechaFin) {
+      errors.fechaFin = 'End date is required.';
+    }
+    if (data.fechaInicio && data.fechaFin) {
+      const start = new Date(data.fechaInicio);
+      const end = new Date(data.fechaFin);
+      if (end < start) {
+        errors.fechaFin = 'End date cannot be before start date.';
+      }
+    }
+    // Imagen: opcional, si existe debe ser imagen válida
+    if (data.imagen && typeof data.imagen === 'string' && data.imagen.length > 0) {
+      const validExt = /\.(jpg|jpeg|png|gif|bmp|webp|svg)$/i;
+      if (!validExt.test(data.imagen)) {
+        errors.imagen = 'Image must be a valid image file.';
+      }
+    }
+    return errors;
+  };
+
   const handleSavePromo = async () => {
+    const errors = validatePromoForm(promoFormData);
+    setFormErrors(errors);
+    if (Object.keys(errors).length > 0) {
+      showSnackbar('Please fix the errors in the form.', 'error');
+      return;
+    }
     const errorMsg = validatePromoDates(promoFormData.fechaInicio, promoFormData.fechaFin);
     if (errorMsg) {
       showSnackbar(errorMsg, 'error');
@@ -243,16 +269,6 @@ const PromoAdmin = () => {
       handleClosePromoForm();
     } catch (error) {
       showSnackbar("Failed to save promotion.", "error");
-    }
-  };
-
-  const handleDelete = async (id) => {
-    try {
-      await axios.delete(`http://localhost:3000/adminBackend/promos/${id}`);
-      showSnackbar("Promotion deleted successfully", "success");
-      fetchPromos();
-    } catch (error) {
-      showSnackbar("Failed to delete promotion.", "error");
     }
   };
 
@@ -286,48 +302,45 @@ const PromoAdmin = () => {
   };
 
   return (
-    <Box component={motion.div} 
-      sx={{ padding: 3 }}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-    >
-        <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-            <PromoIcon sx={{ mr: 2, color: '#660152', fontSize: 40 }} />
-            <Typography variant="h4" color="#660152" fontWeight="bold">
-            Promotion Management
-            </Typography>
+    <Box component={motion.div} sx={{ padding: 3 }} initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+      {/* Encabezado y filtros */}
+      <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+        <PromoIcon sx={{ mr: 2, color: '#660152', fontSize: 40 }} />
+        <Typography variant="h4" color="#660152" fontWeight="bold">
+          Promotion Management
+        </Typography>
+      </Box>
+      <Box sx={{ display: 'flex', flexDirection: "row", alignItems: 'center', justifyContent: 'space-between'}}>
+        <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
+          <Button 
+            variant="contained" 
+            startIcon={<AddIcon />}
+            onClick={() => handleOpenPromoForm()}
+            sx={{ 
+              backgroundColor: "#660152", 
+              '&:hover': { backgroundColor: "#520040" },
+              alignSelf: 'flex-start'
+            }}
+          >
+            Create Promotion
+          </Button>  
+          <FormControl size="small" sx={{ width: 250, backgroundColor: 'white' }}>
+            <InputLabel id="filter-label">Filter by status</InputLabel>
+            <Select
+              labelId="filter-label"
+              id="filter"
+              value={filter}
+              label="Filter by status"
+              onChange={handleFilterChange}
+              size="small"
+            >
+              <MenuItem value="">All promotions</MenuItem>
+              <MenuItem value="activo">Active</MenuItem>
+              <MenuItem value="inactivo">Inactive</MenuItem>
+            </Select>
+          </FormControl>
         </Box>
-        <Box sx={{ display: 'flex', flexDirection: "row", alignItems: 'center', justifyContent: 'space-between'}}>
-            <Box sx={{  display: 'flex', flexDirection: 'row', gap: 2,  }}>
-              <Button 
-                variant="contained" 
-                startIcon={<AddIcon />}
-                onClick={() => handleOpenPromoForm()}
-                sx={{ 
-                  backgroundColor: "#660152", 
-                  '&:hover': { backgroundColor: "#520040" },
-                  alignSelf: 'flex-start'
-                }}
-              >
-                Create Promotion
-              </Button>  
-              <FormControl size="small" sx={{ width: 250, backgroundColor: 'white' }}>
-                <InputLabel id="filter-label">Filter by status</InputLabel>
-                  <Select
-                    labelId="filter-label"
-                    id="filter"
-                    value={filter}
-                    label="Filter by status"
-                    onChange={handleFilterChange}
-                    size="small"
-                  >
-                    <MenuItem value="">All promotions</MenuItem>
-                    <MenuItem value="activo">Active</MenuItem>
-                    <MenuItem value="inactivo">Inactive</MenuItem>
-                  </Select>
-                </FormControl>
-
-            </Box>
+      </Box>
 
       {/* Estadísticas rápidas */}
       <Box sx={{ mb: 3, display: 'flex', gap: 2, justifyContent: "flex-end" }}>
@@ -372,9 +385,8 @@ const PromoAdmin = () => {
           </CardContent>
         </Card>
       </Box>
-    </Box>
-      
 
+      {/* Tabla de promociones */}
       <Card elevation={3}>
         <CardContent sx={{ p: 0 }}>
           <TableContainer component={Paper}>
@@ -388,133 +400,121 @@ const PromoAdmin = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {filteredPromos.map((promo) => (
-                  <TableRow 
-                    key={promo._id}
-                    hover
-                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                  >
-                    <TableCell>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                        <Avatar 
-                          src={promo.imagen} 
-                          sx={{ 
-                            width: 50, 
-                            height: 50,
-                            backgroundColor: '#660152'
-                          }}
-                        >
-                          {promo.imagen ? null : getPromoIcon(promo.nombre)}
-                        </Avatar>
-                        <Box>
-                          <Typography variant="h6" fontWeight="bold">
-                            {promo.nombre}
-                          </Typography>
-                          <Typography variant="body2" color="text.secondary">
-                            {promo.descripcion}
-                          </Typography>
-                          <Typography variant="caption" color="text.secondary" fontFamily="monospace">
-                            ID: {promo._id}
-                          </Typography>
-                        </Box>
-                      </Box>
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant="body1" fontWeight="medium">
-                        {new Date(promo.fechaInicio).toLocaleDateString('en-US', {
-                          day: '2-digit',
-                          month: 'short',
-                          year: 'numeric'
-                        })}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        to {new Date(promo.fechaFin).toLocaleDateString('en-US', {
-                          day: '2-digit',
-                          month: 'short', 
-                          year: 'numeric'
-                        })}
-                      </Typography>
-                      {isPromoActive(promo.fechaInicio, promo.fechaFin) && (
-                        <Chip 
-                          label="ONGOING" 
-                          size="small"
-                          color="success"
-                          variant="outlined"
-                          sx={{ mt: 0.5, fontSize: '0.7rem' }}
-                        />
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      <Chip 
-                        label={promo.estado === 'activo' ? 'ACTIVE' : promo.estado === 'inactivo' ? 'INACTIVE' : promo.estado.toUpperCase()} 
-                        color={getStatusColor(promo.estado)}
-                        size="small"
-                        sx={{ 
-                          fontWeight: 'bold',
-                          minWidth: 80,
-                          textTransform: 'uppercase'
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <Box sx={{ display: 'flex', gap: 1 }}>
-                        <Tooltip title="Edit promotion">
-                          <IconButton
-                            color="primary"
-                            onClick={() => handleOpenPromoForm(promo)}
-                            size="small"
+                {promos
+                  .filter(promo => !filter || promo.estado === filter)
+                  .map((promo) => (
+                    <TableRow 
+                      key={promo._id}
+                      hover
+                      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                    >
+                      <TableCell>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                          <Avatar 
+                            src={promo.imagen} 
+                            sx={{ 
+                              width: 50, 
+                              height: 50,
+                              backgroundColor: '#660152'
+                            }}
                           >
-                            <EditIcon />
-                          </IconButton>
-                        </Tooltip>
-                        {promo.estado === 'activo' ? (
-                          <Tooltip title="Deactivate promotion">
-                            <IconButton
-                              color="error"
-                              onClick={async () => {
-                                try {
-                                  await axios.put(`http://localhost:3000/adminBackend/promos/${promo._id}`, {
-                                    ...promo,
-                                    estado: 'inactivo'
-                                  });
-                                  showSnackbar("Promotion deactivated successfully", "success");
-                                  fetchPromos();
-                                } catch (error) {
-                                  showSnackbar("Failed to deactivate promotion.", "error");
-                                }
-                              }}
-                              size="small"
-                            >
-                              <DeleteIcon />
-                            </IconButton>
-                          </Tooltip>
-                        ) : (
-                          <Tooltip title="Activate promotion">
-                            <IconButton
-                              sx={{ color: 'green' }}
-                              onClick={async () => {
-                                try {
-                                  await axios.put(`http://localhost:3000/adminBackend/promos/${promo._id}`, {
-                                    ...promo,
-                                    estado: 'activo'
-                                  });
-                                  showSnackbar("Promotion activated successfully", "success");
-                                  fetchPromos();
-                                } catch (error) {
-                                  showSnackbar("Failed to activate promotion.", "error");
-                                }
-                              }}
-                              size="small"
-                            >
-                              <CheckCircleIcon />
-                            </IconButton>
-                          </Tooltip>
+                            {promo.imagen ? null : getPromoIcon(promo.nombre)}
+                          </Avatar>
+                          <Box>
+                            <Typography variant="h6" fontWeight="bold">
+                              {promo.nombre}
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                              {promo.descripcion}
+                            </Typography>
+                            <Typography variant="caption" color="text.secondary" fontFamily="monospace">
+                              ID: {promo._id}
+                            </Typography>
+                          </Box>
+                        </Box>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="body1" fontWeight="medium">
+                          {new Date(promo.fechaInicio).toLocaleDateString('en-US', {
+                            day: '2-digit',
+                            month: 'short',
+                            year: 'numeric'
+                          })}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          to {new Date(promo.fechaFin).toLocaleDateString('en-US', {
+                            day: '2-digit',
+                            month: 'short', 
+                            year: 'numeric'
+                          })}
+                        </Typography>
+                        {isPromoActive(promo.fechaInicio, promo.fechaFin) && (
+                          <Chip 
+                            label="ONGOING" 
+                            size="small"
+                            color="success"
+                            variant="outlined"
+                            sx={{ mt: 0.5, fontSize: '0.7rem' }}
+                          />
                         )}
-                      </Box>
-                    </TableCell>
-                  </TableRow>
-                ))}
-                {filteredPromos.length === 0 && (
+                      </TableCell>
+                      <TableCell>
+                        <Chip 
+                          label={promo.estado === 'activo' ? 'ACTIVE' : promo.estado === 'inactivo' ? 'INACTIVE' : promo.estado.toUpperCase()} 
+                          color={getStatusColor(promo.estado)}
+                          size="small"
+                          sx={{ 
+                            fontWeight: 'bold',
+                            minWidth: 80,
+                            textTransform: 'uppercase'
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Box sx={{ display: 'flex', gap: 1 }}>
+                          <Tooltip title="Edit promotion">
+                            <IconButton
+                              color="primary"
+                              onClick={() => handleOpenPromoForm(promo)}
+                              size="small"
+                            >
+                              <EditIcon />
+                            </IconButton>
+                          </Tooltip>
+                          {promo.estado === 'activo' ? (
+                            <Tooltip title="Deactivate promotion">
+                              <IconButton
+                                color="error"
+                                onClick={() => setConfirmDialog({
+                                  open: true,
+                                  type: 'deactivate',
+                                  promo: promo
+                                })}
+                                size="small"
+                              >
+                                <DeleteIcon />
+                              </IconButton>
+                            </Tooltip>
+                          ) : (
+                            <Tooltip title="Activate promotion">
+                              <IconButton
+                                sx={{ color: 'green' }}
+                                onClick={() => setConfirmDialog({
+                                  open: true,
+                                  type: 'activate',
+                                  promo: promo
+                                })}
+                                size="small"
+                              >
+                                <CheckCircleIcon />
+                              </IconButton>
+                            </Tooltip>
+                          )}
+                        </Box>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                {promos.filter(promo => !filter || promo.estado === filter).length === 0 && (
                   <TableRow>
                     <TableCell colSpan={4} align="center">
                       <Box sx={{ py: 6 }}>
@@ -552,7 +552,7 @@ const PromoAdmin = () => {
         }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
             <Typography variant="h6" color="#660152" fontWeight="bold">
-            {isEditMode ? "Edit Promotion" : "Create New Promotion"}
+              {isEditMode ? "Edit Promotion" : "Create New Promotion"}
             </Typography>
             <IconButton onClick={handleClosePromoForm}>
               <CloseIcon />
@@ -573,13 +573,15 @@ const PromoAdmin = () => {
                       value={promoFormData.nombre} 
                       onChange={handlePromoChange} 
                       required
+                      error={!!formErrors.nombre}
+                      helperText={formErrors.nombre}
                     />
                   </Grid>
                 </Box>
                 {/* Segunda fila: Fechas */}
-                  <Box sx={{display: 'flex', flexDirection: 'row', gap: 2, width: '100%'}}>
-                    <Box sx={{ display: 'flex', gap: 2, width: '100%' }}>
-                       <TextField 
+                <Box sx={{display: 'flex', flexDirection: 'row', gap: 2, width: '100%'}}>
+                  <Box sx={{ display: 'flex', gap: 2, width: '100%' }}>
+                    <TextField 
                       fullWidth 
                       name="fechaInicio" 
                       label="Start date" 
@@ -588,7 +590,8 @@ const PromoAdmin = () => {
                       onChange={handlePromoChange} 
                       InputLabelProps={{ shrink: true }}
                       required
-                      
+                      error={!!formErrors.fechaInicio}
+                      helperText={formErrors.fechaInicio}
                     />
                     <TextField 
                       fullWidth 
@@ -599,10 +602,11 @@ const PromoAdmin = () => {
                       onChange={handlePromoChange} 
                       InputLabelProps={{ shrink: true }}
                       required
+                      error={!!formErrors.fechaFin}
+                      helperText={formErrors.fechaFin}
                     />
-                    </Box>
                   </Box>
-                
+                </Box>
 
                 {/* Tercera fila: Estado e imagen */}
                 <Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', gap: 2 }}>
@@ -626,44 +630,44 @@ const PromoAdmin = () => {
                       startIcon={<ImageIcon />}
                       sx={{ border: '1px solid #c4c4c4', backgroundColor: '#f5f5f5', color: '#660152', '&:hover': { backgroundColor: '#e0e0e0' } }}
                     >
-                    {promoFormData.imagen ? 'Change image' : 'Select image'}
-                    <input
-                      type="file"
-                      accept="image/*"
-                      hidden
-                      onChange={async (e) => {
-                        const file = e.target.files[0];
-                        if (!file) return;
-                        // Preview local instantáneo
-                        const localUrl = URL.createObjectURL(file);
-                        setLocalImageUrl(localUrl);
-                        setImagePreview(localUrl);
-                        setImageError(false);
-                        // Subida a Cloudinary
-                        const formData = new FormData();
-                        formData.append('file', file);
-                        try {
-                          const res = await axios.post('http://localhost:3000/adminBackend/upload/image', formData, {
-                            headers: { 'Content-Type': 'multipart/form-data' }
-                          });
-                          setPromoFormData(prev => ({ ...prev, imagen: res.data.url }));
-                          setImagePreview(res.data.url);
-                          setLocalImageUrl(null);
+                      {promoFormData.imagen ? 'Change image' : 'Select image'}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        hidden
+                        onChange={async (e) => {
+                          const file = e.target.files[0];
+                          if (!file) return;
+                          // Preview local instantáneo
+                          const localUrl = URL.createObjectURL(file);
+                          setLocalImageUrl(localUrl);
+                          setImagePreview(localUrl);
                           setImageError(false);
-                          showSnackbar('Image uploaded successfully', 'success');
-                          // Release memory of local preview
-                          URL.revokeObjectURL(localUrl);
-                        } catch (err) {
-                          setImageError(true);
-                          setLocalImageUrl(null);
-                          showSnackbar('Error uploading image', 'error');
-                        }
-                      }}
-                    />
+                          // Subida a Cloudinary
+                          const formData = new FormData();
+                          formData.append('file', file);
+                          try {
+                            const res = await axios.post('http://localhost:3000/adminBackend/upload/image', formData, {
+                              headers: { 'Content-Type': 'multipart/form-data' }
+                            });
+                            setPromoFormData(prev => ({ ...prev, imagen: res.data.url }));
+                            setImagePreview(res.data.url);
+                            setLocalImageUrl(null);
+                            setImageError(false);
+                            showSnackbar('Image uploaded successfully', 'success');
+                            // Release memory of local preview
+                            URL.revokeObjectURL(localUrl);
+                          } catch (err) {
+                            setImageError(true);
+                            setLocalImageUrl(null);
+                            showSnackbar('Error uploading image', 'error');
+                          }
+                        }}
+                      />
                     </Button>
                   </Box>
                 </Box>
-                
+
                 {/* Cuarta fila: Descripción */}
                 <Box sx={{ width: '100%' }}>
                   <Grid item xs={12}>
@@ -676,6 +680,8 @@ const PromoAdmin = () => {
                       value={promoFormData.descripcion} 
                       onChange={handlePromoChange} 
                       required
+                      error={!!formErrors.descripcion}
+                      helperText={formErrors.descripcion}
                     />
                   </Grid>
                 </Box>
@@ -688,7 +694,7 @@ const PromoAdmin = () => {
               <Grid item xs={12} md={4}>
                 <Box sx={{ position: 'sticky', top: 0 }}>
                   <Typography variant="subtitle1" gutterBottom fontWeight="medium">
-                   Preview:
+                    Preview:
                   </Typography>
                   <Card elevation={3}>
                     <Box sx={{ position: 'relative', overflow: 'hidden' }}>
@@ -776,6 +782,7 @@ const PromoAdmin = () => {
         </Box>
       </Modal>
 
+      {/* Snackbar de mensajes */}
       <Snackbar 
         open={openSnackbar} 
         autoHideDuration={6000} 
@@ -790,6 +797,84 @@ const PromoAdmin = () => {
           {snackbarMessage}
         </Alert>
       </Snackbar>
+
+      {/* Modal de confirmación para activar/desactivar promoción */}
+      <Modal open={confirmDialog.open} onClose={() => setConfirmDialog({ open: false, type: '', promo: null })}>
+        <Box sx={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          bgcolor: "background.paper",
+          borderRadius: 2,
+          boxShadow: 24,
+          p: 4,
+          minWidth: 350,
+        }}>
+          <Typography
+            variant="h6"
+            fontWeight="bold"
+            sx={{
+              color: confirmDialog.type === 'activate' ? 'success.main' : 'error.main',
+              mb: 2
+            }}
+          >
+            {confirmDialog.type === 'activate' ? 'Activate Promotion' : 'Deactivate Promotion'}
+          </Typography>
+          <Typography variant="body1" sx={{ mb: 3 }}>
+            {confirmDialog.type === 'activate'
+              ? `Are you sure you want to activate the promotion "${confirmDialog.promo?.nombre}"?`
+              : `Are you sure you want to deactivate the promotion "${confirmDialog.promo?.nombre}"?`}
+          </Typography>
+          <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
+            <Button
+              variant="outlined"
+              onClick={() => setConfirmDialog({ open: false, type: '', promo: null })}
+              sx={{
+                color: 'grey.600',
+                borderColor: 'grey.400',
+                '&:hover': {
+                  borderColor: 'grey.600',
+                  backgroundColor: 'grey.50'
+                }
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="contained"
+              onClick={async () => {
+                if (!confirmDialog.promo) return;
+                try {
+                  await axios.put(`http://localhost:3000/adminBackend/promos/${confirmDialog.promo._id}`, {
+                    ...confirmDialog.promo,
+                    estado: confirmDialog.type === 'activate' ? 'activo' : 'inactivo'
+                  });
+                  setConfirmDialog({ open: false, type: '', promo: null });
+                  setSnackbarMessage(confirmDialog.type === 'activate' ? "Promotion activated successfully" : "Promotion deactivated successfully");
+                  setSnackbarSeverity("success");
+                  setOpenSnackbar(true);
+                  fetchPromos();
+                } catch (error) {
+                  setSnackbarMessage(confirmDialog.type === 'activate' ? "Failed to activate promotion." : "Failed to deactivate promotion.");
+                  setSnackbarSeverity("error");
+                  setOpenSnackbar(true);
+                }
+              }}
+              sx={{
+                fontWeight: 'bold',
+                backgroundColor: confirmDialog.type === 'activate' ? '#2e7d32' : '#d32f2f',
+                color: 'white',
+                '&:hover': {
+                  backgroundColor: confirmDialog.type === 'activate' ? '#1b5e20' : '#b71c1c',
+                },
+              }}
+            >
+              {confirmDialog.type === 'activate' ? 'Activate' : 'Deactivate'}
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
     </Box>
   );
 };

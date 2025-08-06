@@ -211,6 +211,17 @@ const ReservationAdmin = () => {
       </Box>
       <Box sx={{ display: 'flex', flexDirection: "row", alignItems: 'center', justifyContent: 'space-between'}}>
         <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2, flexWrap: 'wrap' }}>
+
+          {/* Filtro por nombre o folio */}
+          <TextField
+            label="Search by Name or Folio"
+            variant="outlined"
+            size="small"
+            value={filtroNombre}
+            onChange={(e) => setFiltroNombre(e.target.value)}
+            sx={{ width: 220, backgroundColor: 'white', borderRadius: 1 }}
+          />
+
           {/* Filtro por estado */}
           <FormControl sx={{ maxWidth: 180, minWidth: 180 }}>
             <InputLabel size="small" sx={{ width: 180, backgroundColor: 'white' }}>Filter by Status</InputLabel>
@@ -229,18 +240,6 @@ const ReservationAdmin = () => {
               <MenuItem value="finalizada">Finished</MenuItem>
             </Select>
           </FormControl>
-
-          {/* Filtro por nombre o folio */}
-          <TextField
-            label="Search by Name or Folio"
-            variant="outlined"
-            size="small"
-            value={filtroNombre}
-            onChange={(e) => setFiltroNombre(e.target.value)}
-            sx={{ width: 220, backgroundColor: 'white', borderRadius: 1 }}
-          />
-
-    
 
           {/* Filtro por día de la semana */}
           <FormControl sx={{ maxWidth: 180, minWidth: 180 }}>
@@ -674,8 +673,9 @@ const ReservationAdmin = () => {
       {/* Snackbar */}
       <Snackbar
         open={snackbarOpen}
-        autoHideDuration={5000}
+        autoHideDuration={6000}
         onClose={() => setSnackbarOpen(false)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       >
         <Alert 
           onClose={() => setSnackbarOpen(false)} 
