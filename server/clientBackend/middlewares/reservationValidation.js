@@ -2,7 +2,7 @@
 export const checkPeopleLimitPerDay = async (req, res, next) => {
   try {
     const { fecha, cantidadPersonas } = req.body;
-    if (!fecha || !cantidadPersonas) return next(); // Si falta info, dejar que otra validación lo rechace
+    if (!fecha || !cantidadPersonas) return next();
 
     // Buscar todas las reservaciones confirmadas para la fecha
     const start = new Date(fecha);
@@ -23,21 +23,21 @@ export const checkPeopleLimitPerDay = async (req, res, next) => {
       if (disponibles > 0) {
         return res.status(409).json({
           success: false,
-          message: `Solo hay ${disponibles} espacio(s) disponible(s) para reservar ese día.`
+          message: `Just ${disponibles} space(s) available to reserve that day.`
         });
       } else {
         return res.status(409).json({
           success: false,
-          message: 'No hay espacios disponibles para reservar ese día.'
+          message: 'No spaces available to reserve that day.'
         });
       }
     }
     next();
   } catch (error) {
-    console.error('Error al validar límite de personas por día:', error);
+    console.error('Error validating daily people limit:', error);
     res.status(500).json({
       success: false,
-      message: 'Error al validar disponibilidad de personas para la fecha.'
+      message: 'Error validating availability of people for the date.'
     });
   }
 };
@@ -55,7 +55,7 @@ export const validateReservationTime = (req, res, next) => {
     if (reservationDateTime < now) {
       return res.status(400).json({
         success: false,
-        message: 'No se pueden hacer reservaciones para fechas/horas pasadas'
+        message: 'Cannot create reservation in the past.'
       });
     }
     // Validar anticipación mínima (2 horas)
@@ -63,7 +63,7 @@ export const validateReservationTime = (req, res, next) => {
     if (reservationDateTime < minReservationTime) {
       return res.status(400).json({
         success: false,
-        message: 'Las reservaciones requieren al menos 2 horas de anticipación. Por favor selecciona un horario posterior.'
+        message: 'Reservations require at least 2 hours of notice. Please select a later time.'
       });
     }
     // Validar horario de atención (3:00 PM a 12:00 AM)
@@ -71,15 +71,15 @@ export const validateReservationTime = (req, res, next) => {
     if (hours < 15 || hours >= 24) {
       return res.status(400).json({
         success: false,
-        message: 'Nuestro horario de atención es de 3:00 PM a 12:00 AM. Por favor selecciona un horario dentro de este rango.'
+        message: 'Our business hours are from 3:00 PM to 12:00 AM. Please select a time within this range.'
       });
     }
     next();
   } catch (error) {
-    console.error('Error en validación de horario:', error);
+    console.error('Error validating time:', error);
     res.status(500).json({
       success: false,
-      message: 'Error al validar el horario de reservación'
+      message: 'Error validating reservation time'
     });
   }
 };

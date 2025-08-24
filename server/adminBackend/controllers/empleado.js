@@ -39,6 +39,7 @@ export const crearEmpleado = async (req, res) => {
     const nextId = count + 1;
 
     // Generar password por defecto: nombre + primera letra del primer apellido + 123
+    // Después hashearla para almacenarla en la base de datos.
     const passwordDefault = `${nombre}${primerApellido ? primerApellido.charAt(0) : ''}123`;
     const hashedPassword = await bcrypt.hash(passwordDefault, 5);
 
