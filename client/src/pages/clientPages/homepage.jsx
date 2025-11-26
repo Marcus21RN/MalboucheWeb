@@ -92,8 +92,8 @@ useEffect(() => {
 
 
   return (
-    <div className="bg-[#000000]">
-      <div className="min-h-screen bg-[#000000] ">
+    <div className="bg-[#202020]">
+      <div className="min-h-screen bg-[#202020] ">
       {/* === BANNER PRINCIPAL === */}
         <div className="relative w-full h-[570px] overflow-hidden ">
           {/* Imagen Parallax */}
@@ -101,22 +101,22 @@ useEffect(() => {
             <img
               src={barImage}
               alt="Bar Banner"
-              className="w-full h-full object-cover scale-150 opacity-70"
+              className="object-cover w-full h-full scale-150 opacity-70"
             />
           </Parallax>
 
           {/* Contenido encima del fondo */}
-          <div className="absolute inset-0 z-10 flex flex-col justify-center items-start pl-40 h-full px-4">
+          <div className="absolute inset-0 z-10 flex flex-col items-start justify-center h-full px-4 pl-40">
             <div className="mb-8">
-              <div className="w-16 h-1 bg-white mb-5"></div>
-              <h1 className="font-['oswald'] font-semibold text-6xl text-white drop-shadow-md">
+              <div className="w-16 h-1 mb-5 bg-white"></div>
+              <h1 className="font-['combo'] font-semibold text-6xl text-white drop-shadow-md">
                 <span className="block">UNFORGETTABLE NIGHTS</span>
                 <span className="block mt-4">AT MALBOUCHE BAR</span>
               </h1>
             </div>
             <button
               onClick={() => handleNavigation("/reservations")}
-              className="px-8 py-3  cursor-pointer text-white font-['montserrat'] border-1 border-[#fff] font-bold transition-colors duration-300 transform hover:scale-105 hover:bg-[#ffff] hover:text-[#35002a] shadow-lg"
+              className="px-8 py-3  cursor-pointer text-white font-['combo'] border-1 border-[#fff] font-bold transition-colors duration-300 transform hover:scale-105 hover:bg-[#ffff] hover:text-[#35002a] shadow-lg"
             >
               BOOK NOW
             </button>
@@ -124,8 +124,8 @@ useEffect(() => {
         </div>
        
         {/* === SECCIÓN SOBRE NOSOTROS === */}
-        <section className="px-6 mt-10 py-12 bg-[#000000]">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-6xl mx-auto items-center">
+        <section className="px-6 mt-10 py-12 bg-[#202020]">
+          <div className="grid items-center max-w-6xl grid-cols-1 gap-12 mx-auto md:grid-cols-2">
           
             {/* Imagen */}
             <div className="overflow-hidden rounded-md ">
@@ -137,9 +137,9 @@ useEffect(() => {
             </div>
 
             {/* Texto */}
-            <div className="text-[#fbf7f4] font-['montserrat']">
-              <span className=" font-normal text-[#b76ba3]">About Us</span>
-              <h2 className="text-3xl md:text-4xl font-bold mt-2 mb-6 text-center md:text-left font-['oswald'] text-[#fbf7f4]">
+            <div className="text-[#fbf7f4] font-['combo']">
+              <span className=" font-normal text-[#8c8c8c]">About Us</span>
+              <h2 className="text-3xl md:text-4xl font-bold mt-2 mb-6 text-center md:text-left font-['combo'] text-[#fbf7f4]">
                 WELCOME TO MALBOUCHE BAR
               </h2>
               <p className="mb-4 text-lg leading-relaxed  md:text-left, text-justify">
@@ -153,9 +153,9 @@ useEffect(() => {
         </section>
 
         {/* === GALERÍA DE IMÁGENES === */}
-      <section className="bg-[#000000] py-16 px-4">
-        <div className="max-w-8xl mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      <section className="bg-[#202020] py-16 px-4">
+        <div className="mx-auto max-w-8xl">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
             {imagenes.map((item, index) => (
               <div
                 key={index}
@@ -170,7 +170,7 @@ useEffect(() => {
                 <img
                   src={item.imagen}
                   alt={`Imagen ${index}`}
-                  className="w-full h-full object-cover rounded-sm transition duration-500 ease-in-out hover:scale-105 hover:brightness-110"
+                  className="object-cover w-full h-full transition duration-500 ease-in-out rounded-sm hover:scale-105 hover:brightness-110"
                 />
               </div>
             ))}
@@ -179,8 +179,8 @@ useEffect(() => {
       </section>
 
         {/* === SECCIÓN DE BOTON DE EVENTOS === */}
-        <section className="px-6  py-12 bg-[#000000] mb-10">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-6xl mx-auto items-center">
+        <section className="px-6  py-12 bg-[#202020] mb-10">
+          <div className="grid items-center max-w-6xl grid-cols-1 gap-12 mx-auto md:grid-cols-2">
 
             {/* Imagen */}
             <div className="overflow-hidden rounded-md ">
@@ -192,11 +192,11 @@ useEffect(() => {
             </div>
 
             {/* Texto */}
-            <div className="text-[#fbf7f4] font-['montserrat']">
-              <span className=" font-normal text-[#b76ba3]">New experiences</span>
-                <h2 className="text-3xl md:text-6xl font-bold mt-2 mb-6 text-center md:text-left font-['oswald'] text-[#fbf7f4]">
+            <div className="text-[#fbf7f4] font-['combo']">
+              <span className=" font-normal text-[#8c8c8c]">New experiences</span>
+                <h2 className="text-3xl md:text-6xl font-bold mt-2 mb-6 text-center md:text-left font-['combo'] text-[#fbf7f4]">
                   CHECK OUR EVENTS
-                  <span className="text-[#b76ba3]">.</span> 
+                  <span className="text-[#404040]">.</span> 
                 </h2>
              
               <p className="mb-6 text-lg leading-relaxed text-center md:text-left">
@@ -207,7 +207,7 @@ useEffect(() => {
 
               <button 
                 onClick={() => handleNavigation("/events")}
-                className="px-7 py-3 cursor-pointer text-white font-['montserrat'] border-1 border-[#fff] font-bold transition-colors duration-300 transform hover:scale-105 hover:bg-[#ffff] hover:text-[#35002a] shadow-lg"
+                className="px-7 py-3 cursor-pointer text-white font-['combo'] border-1 border-[#fff] font-bold transition-colors duration-300 transform hover:scale-105 hover:bg-[#ffff] hover:text-[#35002a] shadow-lg"
               >
                 GO TO EVENTS
               </button>
@@ -222,21 +222,21 @@ useEffect(() => {
             <img
               src={banner2}
               alt="Bar Banner"
-              className="w-full h-full object-cover scale-150"
+              className="object-cover w-full h-full scale-150"
             />
           </Parallax>
+          
 
           {/* Contenido encima del fondo */}
-          <div className="absolute inset-0 z-10 flex flex-col justify-center items-center text-center  h-full px-4">
+          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center h-full px-4 text-center">
             <div className="mb-8">
 
-                <h1 className="font-['oswald'] font-semibold text-5xl text-stone-100 drop-shadow-md">
-                  <span className="block mt-4">"</span>
-                  <span className="block">I HAD AN AMAZING TIME AT THIS BAR! THE ATMOSPHERE WAS GREAT,</span>
-                  <span className="block mt-4">THE DRINKS WERE TOP-NOTCH, AND THE FOOD WAS DELICIOUS.</span>  
+                <h1 className="font-['combo'] font-bold text-4xl text-stone-100 leading-relaxed drop-shadow-md">
+                  <span className="block">" I HAD AN AMAZING TIME AT THIS BAR! THE ATMOSPHERE WAS GREAT,</span>
+                  <span className="block mt-4">THE DRINKS WERE TOP-NOTCH, AND THE FOOD WAS DELICIOUS." </span>  
                   
                 </h1>
-                <h2 className="text-2xl text-white font-['oswald'] mt-4">- A Happy Customer</h2>
+                <h2 className="text-2xl text-white font-['combo'] mt-4">- A Happy Customer</h2>
 
             </div>
             
@@ -244,31 +244,31 @@ useEffect(() => {
         </div>
 
         {/* === SECCIÓN DE MENUS === */}
-        <section className="py-16 px-6 bg-[#000000] text-white font-['montserrat'] min-h-screen">
-          <h2 className="text-xl text-center font-light mb-4 text-[#b76ba3] tracking-widest">
+        <section className="py-16 px-6 bg-[#202020] text-white font-['combo'] min-h-screen">
+          <h2 className="text-xl text-center font-light mb-4 text-[#8c8c8c] tracking-widest">
             OUR MENU
           </h2>
-          <p className="text-center text-white mb-12 font-['oswald'] font-bold text-5xl md:text-6xl">
-            GREAT FOOD<span className="text-[#b76ba3]">.</span> AMAZING DRINKS<span className="text-[#b76ba3]">.</span>
+          <p className="text-center text-white mb-12 font-['combo'] font-bold text-5xl md:text-6xl">
+            GREAT FOOD<span className="text-[#404040]">.</span> AMAZING DRINKS<span className="text-[#404040]">.</span>
           </p>
 
           {menuData.length === 0 ? (
             <p className="text-center text-white">Loading menu...</p>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-6xl mx-auto">
+            <div className="grid max-w-6xl grid-cols-1 gap-12 mx-auto md:grid-cols-2">
               {menuData.map((cat, index) => (
                 <div
                   key={index}
-                  className=" text-white shadow-xl border border-[#b76ba3] rounded-sm overflow-hidden hover:shadow-2xl transition-shadow duration-300 group"
+                  className=" text-white shadow-xl border border-[#b2b2b2b2] rounded-sm overflow-hidden hover:shadow-2xl transition-shadow duration-300 group"
                 >
                   <div className="relative">
                     <img
                       src={cat.imagen}
                       alt={cat.categoria}
-                      className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="object-cover w-full h-64 transition-transform duration-300 group-hover:scale-105"
                       loading="lazy"
                     />
-                    <div className="absolute top-4 left-4 bg-[#b76ba3] bg-opacity-80 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest shadow">
+                    <div className="absolute top-4 left-4 bg-[#b2b2b2b2] bg-opacity-80 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest shadow">
                       {cat.categoria}
                     </div>
                   </div>
@@ -276,10 +276,10 @@ useEffect(() => {
                     {cat.items.map((item, i) => (
                       <div
                         key={i}
-                        className="mb-8 pb-4 border-b border-[#b76ba3]/40 last:border-b-0 last:mb-0 last:pb-0"
+                        className="mb-8 pb-4 border-b border-[#b2b2b2b2]/40 last:border-b-0 last:mb-0 last:pb-0"
                       >
-                        <div className="flex justify-between items-center mb-1">
-                          <span className="font-semibold text-lg font-['oswald'] tracking-wide">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="font-semibold text-lg font-['combo'] tracking-wide">
                             {item.nombre}
                           </span>
                           <span className="text-[#fff] font-bold text-lg ml-4">
@@ -294,10 +294,10 @@ useEffect(() => {
               ))}
             </div>
           )}
-          <div className="text-center mt-12">
+          <div className="mt-12 text-center">
             <button
               onClick={() => handleNavigation("/menu")}
-              className="px-8 py-4 cursor-pointer text-white font-['montserrat'] border-1 border-[#fff] font-bold transition-colors duration-300 transform hover:scale-105 hover:bg-[#ffff] hover:text-[#35002a] shadow-lg"
+              className="px-8 py-4 cursor-pointer text-white font-['combo'] border-1 border-[#fff] font-bold transition-colors duration-300 transform hover:scale-105 hover:bg-[#ffff] hover:text-[#35002a] shadow-lg"
             >
               SEE FULL MENU
             </button>
@@ -305,8 +305,8 @@ useEffect(() => {
         </section>
         {/* === SECCIÓN DE PROMOCIONES === */}
 {/* === SECCIÓN DE PROMOCIONES === */}
-        <section className="py-8 px-6 bg-gradient-to-b from-[#1e00188a] to-[#3e0132] text-white font-['oswald']">
-          <h2 className="text-5xl text-center font-bold mb-10 drop-shadow-md">
+        <section className="py-8 px-6 bg-gradient-to-b from-[#202020] to-[#4f4f4f] text-white font-['combo']">
+          <h2 className="mb-10 text-5xl font-bold text-center drop-shadow-md">
             DON'T MISS OUR PROMOS
           </h2>
           <div className="mb-8">
@@ -319,22 +319,23 @@ useEffect(() => {
                   key={promo._id}
                   className="inline-block align-top min-w-[300px] max-w-xs text-center py-8 px-4 transition-transform transform flex-shrink-0 justify-center items-center"
                 >
-                  <h3 className="text-4xl font-['oswald'] font-bold text-white hover:text-[#b76ba3] mb-4 uppercase whitespace-normal break-words">
+                  <h3 className="text-4xl font-['combo'] font-bold text-white mb-4 hover:text-[#404040] uppercase whitespace-normal break-words">
                     {promo.nombre}
                   </h3>
-                  <div className="justify-center items-center flex mb-4">
+                  <div className="flex items-center justify-center mb-4">
                     <button
                       onClick={() => abrirModal(promo)}
-                      className="text-[#b76ba3] flex items-center justify-center gap-2 px-4 py-2 hover:text-white transition font-bold font-['montserrat'] cursor-pointer"
+                      className="text- flex items-center justify-center gap-2 px-4 py-2 hover:text-white transition font-bold font-['combo'] cursor-pointer"
                     >
                       LEARN MORE
-                      <IoIosArrowForward className="text-xl justify-center" />
+                      <IoIosArrowForward className="justify-center text-xl" />
                     </button>
                   </div>
                 </div>
               ))}
             </div>
           </div>
+
           {/* Modal */}
           {modalAbierto && promocionSeleccionada && (
             <div
@@ -343,13 +344,13 @@ useEffect(() => {
               style={{ backdropFilter: "blur(2px)" }}
             >
               <div
-                className="relative bg-gradient-to-br from-[#27011f] via-[#2b0123] to-[#49023a] text-white font-['montserrat'] p-8 rounded-lg max-w-xl w-full shadow-2xl border-2 border-[#b76ba3] animate-fadeIn"
+                className="relative bg-gradient-to-br from-[#404040] via-[#666566] to-[#b2b2b2b2] text-white font-['montserrat'] p-8 rounded-lg max-w-xl w-full shadow-2xl border-2 border-[#b2b2b2b2] animate-fadeIn"
                 onClick={e => e.stopPropagation()}
                 style={{ animation: "fadeIn 0.3s" }}
               >
                 <button
                   onClick={cerrarModal}
-                  className="absolute top-1 right-1 text-white text-3xl hover:text-[#660152] transition-colors cursor-pointer"
+                  className="absolute top-1 right-1 text-white text-3xl hover:text-[#c80000b2] transition-colors cursor-pointer"
                   aria-label="Close"
                 >
                   <IoCloseSharp />
@@ -364,7 +365,7 @@ useEffect(() => {
                 </h3>
                 <p className="text-base mb-4 text-[#f5f5f5]">{promocionSeleccionada.descripcion}</p>
                 {promocionSeleccionada.fechaInicio && promocionSeleccionada.fechaFin && (
-                  <div className="flex justify-between items-center text-sm mt-4 bg-[#b76ba3]/20 rounded p-3 font-['montserrat']">
+                  <div className="flex justify-between items-center text-sm mt-4 bg-[#b2b2b2]/20 rounded p-3 font-['combo']">
                     <span>
                       <span className="font-semibold text-gray-900 ">Starts:</span>{" "}
                       {new Date(promocionSeleccionada.fechaInicio).toLocaleDateString()}
@@ -390,7 +391,7 @@ useEffect(() => {
       {/* BOTÓN DE VOLVER AL PRINCIPIO */}
       <button
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        className="fixed bottom-4 cursor-pointer right-4 bg-[#660152c9] text-white p-3 rounded-full shadow-lg hover:bg-white hover:text-[#b76ba3] transition"
+        className="fixed bottom-4 cursor-pointer right-4 bg-[#b2b2b2b2] text-white p-3 rounded-full shadow-lg hover:bg-white hover:text-[#b76ba3] transition"
       >
         <IoIosArrowUp size={24} />
       </button>

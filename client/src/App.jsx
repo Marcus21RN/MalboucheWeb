@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Outlet  } from 'react-router-dom';
 import { ParallaxProvider } from 'react-scroll-parallax';
-import { useVoiceflow } from './hooks/useVoiceflow';
+// import { useVoiceflow } from './hooks/useVoiceflow';
 
 // Componentes importados de LOGIN
 import LoginPage from './pages/loginPage.jsx';
@@ -10,7 +10,7 @@ import ProtectedRoute from '../utils/protectedRoute.jsx';
 // Componentes importados de CLIENTES
 import Navbar from "./pages/clientPages/components/navBar";
 import Footer from "./pages/clientPages/components/footer"
-import HomePage from './pages/clientPages/homePage.jsx'
+import HomePage from './pages/clientPages/homepage.jsx'
 import MenuPage from './pages/clientPages/menuPage'
 import EventsPage from './pages/clientPages/eventsPage';
 import ReservationsPage from './pages/clientPages/reservationPage';
@@ -34,7 +34,7 @@ import AdminLayout from "./layouts/AdminLayout";
 function ClientLayout(){
   return(
     <>
-  {useVoiceflow()}
+  {/* {useVoiceflow()} */}
     <Navbar />
     <Outlet />
     <Footer />
