@@ -165,7 +165,7 @@ export default function ReservationPage() {
   };
 
   return (
-    <div className="bg-[#000000] text-white min-h-screen">
+    <div className="bg-[#202020] text-white min-h-screen">
       {/* === BANNER PRINCIPAL === */}
       <div className="relative w-full h-[480px] overflow-hidden">
         <Parallax speed={-40}>
@@ -177,10 +177,9 @@ export default function ReservationPage() {
         </Parallax>
         <div className="absolute inset-0 z-10 flex flex-col justify-center items-center h-full px-4">
           <div className="mb-8">
-            <h1 className="font-['oswald'] font-semibold text-7xl tracking-wider text-white drop-shadow-lg">
-              <span className="block text-lg font-semibold font-[montserrat] text-[#660152]">MAKE YOUR</span>
-              RESERVATION
-              <span className="text-[#660152]">.</span>
+            <h1 className="font-['combo'] font-semibold text-7xl tracking-wider text-white drop-shadow-lg">
+              <span className="block text-lg font-semibold text-[#8c8c8c]">MAKE YOUR</span>
+              RESERVATION.
             </h1>
           </div>
         </div>
@@ -192,27 +191,26 @@ export default function ReservationPage() {
           {/* Sección del Formulario */}
           <div className="order-2 lg:order-1">
             <div className="mb-8">
-              <h1 className="text-xl font-['oswald'] font-bold text-start mb-2 text-[#660152]">
+              <h1 className="text-xl font-['combo'] font-bold text-start mb-2 text-[#8c8c8c]">
                 OUR
               </h1>
-              <h2 className="text-white text-5xl font-['oswald'] mb-2">
-                RESERVATION FORM <span className="text-[#660152] text-5xl">.</span>
+              <h2 className="text-white text-5xl font-['combo'] mb-2">
+                RESERVATION FORM <span className="text-[#8c8c8c] text-5xl">.</span>
               </h2>
-              <p className="text-lg font-['montserrat'] text-white">
+              <p className="text-lg font-['combo'] text-white">
                 Please fill out the form below to make a reservation at our bar. We look forward to welcoming you!
               </p>
             </div>
 
             {/* FORM */}
-            <form onSubmit={handleSubmit} className="bg-[#111418] shadow-2xl p-8 md:p-10 space-y-12">
-
+            <form onSubmit={handleSubmit} className="bg-[#202020] border-1 border-[#8c8c8c] shadow-2xl p-8 md:p-10 space-y-12">
 
               {/* Reservation Details */}
               <section>
-                <h2 className="text-2xl font-['oswald'] font-semibold text-white border-b-2 border-[#660152]/50 pb-2 mb-6 uppercase">
+                <h2 className="text-2xl font-['combo'] font-semibold text-white border-b-2 border-[#8c8c8c]/50 pb-2 mb-6 uppercase">
                   Details
                 </h2>
-                <div className="grid md:grid-cols-2 gap-8">
+                <div className="grid md:grid-cols-2 gap-8 font-['combo']">
                   <div className="relative w-full">
                     <input
                       id="cantidadPersonas"
@@ -231,9 +229,9 @@ export default function ReservationPage() {
                       max="20"
                       required
                       autoComplete="off"
-                      className="peer h-10 w-full border-b-2 border-[#555] bg-transparent text-white placeholder-transparent focus:outline-none focus:border-[#b76ba3]"
+                      className="peer h-10 w-full border-b-2 border-[#555] bg-transparent text-white placeholder-transparent focus:outline-none focus:border-[#8c8c8c]"
                     />
-                    <label htmlFor="cantidadPersonas" className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all cursor-text peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#b76ba3] peer-focus:text-sm">
+                    <label htmlFor="cantidadPersonas" className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all cursor-text peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#ffffff] peer-focus:text-sm">
                       Number of Guests
                     </label>
                   </div>
@@ -249,10 +247,10 @@ export default function ReservationPage() {
                       required
                       min={minDate}
                       max={maxDate}
-                      className="peer h-10 w-full border-b-2 border-[#555] bg-transparent text-white placeholder-transparent focus:outline-none focus:border-[#b76ba3] 
+                      className="peer h-10 w-full border-b-2 border-[#555] bg-transparent text-white placeholder-transparent focus:outline-none focus:border-[#8c8c8c] 
                [&::-webkit-calendar-picker-indicator]:invert [&::-webkit-calendar-picker-indicator]:brightness-100 [&::-webkit-calendar-picker-indicator]:hover:brightness-200"
                     />
-                    <label htmlFor="fecha" className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all cursor-text peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#b76ba3] peer-focus:text-sm">
+                    <label htmlFor="fecha" className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all cursor-text peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#ffffff] peer-focus:text-sm">
                       Date
                     </label>
                   </div>
@@ -268,10 +266,10 @@ export default function ReservationPage() {
                       required
                       min="15:00"
                       max="23:59"
-                      className="peer h-10 w-full border-b-2 border-[#555] bg-transparent text-white placeholder-transparent focus:outline-none focus:border-[#b76ba3]
+                      className="peer h-10 w-full border-b-2 border-[#555] bg-transparent text-white placeholder-transparent focus:outline-none focus:border-[#8c8c8c]
                        [&::-webkit-calendar-picker-indicator]:invert [&::-webkit-calendar-picker-indicator]:brightness-100 [&::-webkit-calendar-picker-indicator]:hover:brightness-200"
                     />
-                    <label htmlFor="horaInicio" className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all cursor-text peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#b76ba3] peer-focus:text-sm">
+                    <label htmlFor="horaInicio" className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all cursor-text peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#ffffff] peer-focus:text-sm">
                       Arrival Time
                     </label>
                   </div>
@@ -280,10 +278,10 @@ export default function ReservationPage() {
               
               {/* Personal Information */}
               <section>
-                <h2 className="text-2xl font-['oswald'] font-semibold text-white border-b-2 border-[#660152]/50 pb-2 mb-6 uppercase">
+                <h2 className="text-2xl font-['combo'] font-semibold text-white border-b-2 border-[#8c8c8c]/50 pb-2 mb-6 uppercase">
                   Personal Information
                 </h2>
-                <div className="grid md:grid-cols-3 gap-8">
+                <div className="grid md:grid-cols-3 gap-8 font-['combo'] ">
                   {[ 
                     { label: 'First Name', name: 'nombreCliente', placeholder: 'e.g. John' },
                     { label: 'First Last Name', name: 'primerApell', placeholder: 'e.g. Smith' },
@@ -298,9 +296,9 @@ export default function ReservationPage() {
                         onChange={handleChange}
                         placeholder=" "
                         required
-                        className="peer h-10 w-full border-b-2 border-[#555] bg-transparent text-white placeholder-transparent focus:outline-none focus:border-[#b76ba3]"
+                        className="peer h-10 w-full border-b-2 border-[#555] bg-transparent text-white placeholder-transparent focus:outline-none focus:border-[#8c8c8c]"
                       />
-                      <label htmlFor={name} className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all cursor-text peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#b76ba3] peer-focus:text-sm">
+                      <label htmlFor={name} className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all cursor-text peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#ffffff] peer-focus:text-sm">
                         {label}
                       </label>
                     </div>
@@ -317,9 +315,9 @@ export default function ReservationPage() {
                       onChange={handleChange}
                       placeholder=" "
                       required
-                      className="peer h-10 w-full border-b-2 border-[#555] bg-transparent text-white placeholder-transparent focus:outline-none focus:border-[#b76ba3]"
+                      className="peer h-10 w-full border-b-2 border-[#555] bg-transparent text-white placeholder-transparent focus:outline-none focus:border-[#8c8c8c]"
                     />
-                    <label htmlFor="correoCliente" className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all cursor-text peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#b76ba3] peer-focus:text-sm">
+                    <label htmlFor="correoCliente" className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all cursor-text peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#ffffff] peer-focus:text-sm">
                       Email Address
                     </label>
                   </div>
@@ -334,9 +332,9 @@ export default function ReservationPage() {
                       placeholder=" "
                       maxLength={10} 
                       required
-                      className="peer h-10 w-full border-b-2 border-[#555] bg-transparent text-white placeholder-transparent focus:outline-none focus:border-[#b76ba3]"
+                      className="peer h-10 w-full border-b-2 border-[#555] bg-transparent text-white placeholder-transparent focus:outline-none focus:border-[#8c8c8c]"
                     />
-                    <label htmlFor="numTel" className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all cursor-text peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#b76ba3] peer-focus:text-sm">
+                    <label htmlFor="numTel" className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all cursor-text peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#ffffff] peer-focus:text-sm">
                       Phone Number
                     </label>
                   </div>
@@ -347,7 +345,7 @@ export default function ReservationPage() {
               <div className="pt-6 text-center">
                 <button
                   type="submit"
-                  className="w-full bg-[#b76ba3] hover:bg-white text-white hover:text-[#000000] font-normal font-['oswald'] py-4 uppercase tracking-widest transition duration-300"
+                  className="w-full bg-[#8c8c8c] hover:bg-white text-white hover:text-[#000000] font-normal font-['combo'] py-4 uppercase tracking-widest transition duration-300"
                 >
                   SUBMIT
                 </button> 
@@ -365,9 +363,9 @@ export default function ReservationPage() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
               <div className="absolute bottom-6 left-6 text-white">
-                <FaClock className="text-4xl text-[#b76ba3] mb-2" />
-                <h3 className="text-2xl font-['oswald'] font-bold">Reserve Your Moment</h3>
-                <p className="font-['montserrat']">We'll keep your time</p>
+                <FaClock className="text-4xl text-[#ffffff] mb-2" />
+                <h3 className="text-2xl font-['combo'] font-bold">Reserve Your Moment</h3>
+                <p className="font-['combo']">We'll keep your time</p>
               </div>
             </div>
           </div>
@@ -377,7 +375,7 @@ export default function ReservationPage() {
       {/* Botón para volver arriba */}
       <button
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        className="fixed bottom-4 right-4 bg-[#660152c9] text-white p-3 rounded-full shadow-lg hover:bg-white hover:text-[#b76ba3] transition"
+        className="fixed bottom-4 right-4 bg-[#8c8c8c] text-white p-3 rounded-full shadow-lg hover:bg-white hover:text-[#b76ba3] transition"
       >
         <IoIosArrowUp size={24} />
       </button>

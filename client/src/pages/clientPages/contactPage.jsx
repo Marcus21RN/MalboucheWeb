@@ -125,7 +125,7 @@ export default function ContactPage() {
     }
   };
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-[#202020]">
       {/* === BANNER PRINCIPAL === */}
       <div className="relative w-full h-[480px] overflow-hidden">
         <Parallax speed={-40}>
@@ -137,10 +137,9 @@ export default function ContactPage() {
         </Parallax>
         <div className="absolute inset-0 z-8 flex flex-col justify-center items-center h-full px-4">
           <div className="mb-8">
-            <span className="block text-lg font-semibold font-['montserrat'] text-[#660152] text-center">You can</span>
-            <h1 className="font-['oswald'] font-semibold text-7xl text-white drop-shadow-md uppercase">
-              Contact us
-              <span className="text-[#660152]">.</span>
+            <span className="block text-lg font-semibold font-['combo'] text-[#8c8c8c] text-center">You can</span>
+            <h1 className="font-['combo'] font-semibold text-7xl text-white drop-shadow-md uppercase">
+              Contact us.
             </h1>
           </div>
         </div>
@@ -152,16 +151,16 @@ export default function ContactPage() {
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-10">
           {/* Formulario */}
         <div>
-          <h1 className="text-4xl font-bold text-white font-['oswald'] mb-8 uppercase tracking-wider">
-            <span className="text-[#660152] text-lg">please do<br /></span>
-            WRITE US <span className="text-[#660152]">.</span>
+          <h1 className="text-4xl font-bold text-white font-['combo'] mb-8 uppercase tracking-wider">
+            <span className="text-[#8c8c8c] text-lg">please do<br /></span>
+            WRITE US <span className="text-[#8c8c8c]">.</span>
           </h1>
-          <p className="text-gray-300 mb-8">
+          <p className="text-gray-300 mb-8 font-['combo']">
             We’d love to hear from you! Whether it’s to share your thoughts about our bar, or let us know how much you enjoy our products.
           </p>
           <div className="bg-[#111418] p-8 relative ">
-            <div className="absolute -top-4 -left-4 w-full h-full border-2 border-[#660152] z-[-1]"></div>
-            <h3 className="text-2xl font-bold text-white font-['oswald'] mb-8 uppercase tracking-wider border-b border-[#b76ba3] pb-4">
+            <div className="absolute -top-4 -left-4 w-full h-full border-2 border-[#8c8c8c] z-[-1]"></div>
+            <h3 className="text-2xl font-bold text-white font-['combo'] mb-8 uppercase tracking-wider border-b border-[#8c8c8c] pb-4">
               Send us a message
             </h3>
             <form className="space-y-6" onSubmit={handleSubmit}>
@@ -175,9 +174,9 @@ export default function ContactPage() {
                     value={formData.name}
                     onChange={handleChange}
                     required
-                    className="peer h-10 w-full border-b-2 border-[#555] bg-transparent text-white placeholder-transparent focus:outline-none focus:border-[#b76ba3]"
+                    className="peer h-10 w-full border-b-2 border-[#555] bg-transparent text-white placeholder-transparent focus:outline-none focus:border-[#8c8c8c]"
                   />
-                  <label htmlFor="name" className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#b76ba3] peer-focus:text-sm">
+                  <label htmlFor="name" className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#ffffff] peer-focus:text-sm">
                     Name
                   </label>
                 </div>
@@ -190,9 +189,9 @@ export default function ContactPage() {
                     value={formData.lastName}
                     onChange={handleChange}
                     required
-                    className="peer h-10 w-full border-b-2 border-[#555] bg-transparent text-white placeholder-transparent focus:outline-none focus:border-[#b76ba3]"
+                    className="peer h-10 w-full border-b-2 border-[#555] bg-transparent text-white placeholder-transparent focus:outline-none focus:border-[#ffffff]"
                   />
-                  <label htmlFor="lastName" className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#b76ba3] peer-focus:text-sm">
+                  <label htmlFor="lastName" className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#ffffff] peer-focus:text-sm">
                     Last Name
                   </label>
                 </div>
@@ -206,9 +205,9 @@ export default function ContactPage() {
                     placeholder="Email Address"
                     value={formData.email}
                     onChange={handleChange}
-                    className="peer h-10 w-full border-b-2 border-[#555] bg-transparent text-white placeholder-transparent focus:outline-none focus:border-[#b76ba3]"
+                    className="peer h-10 w-full border-b-2 border-[#555] bg-transparent text-white placeholder-transparent focus:outline-none focus:border-[#ffffff]"
                   />
-                  <label htmlFor="email" className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#b76ba3] peer-focus:text-sm">
+                  <label htmlFor="email" className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#ffffff] peer-focus:text-sm">
                     Email Address
                   </label>
                 </div>
@@ -223,9 +222,9 @@ export default function ContactPage() {
                     maxLength={10}
                     minLength={10}
                     required
-                    className="peer h-10 w-full border-b-2 border-[#555] bg-transparent text-white placeholder-transparent focus:outline-none focus:border-[#b76ba3]"
+                    className="peer h-10 w-full border-b-2 border-[#555] bg-transparent text-white placeholder-transparent focus:outline-none focus:border-[#ffffff]"
                   />
-                  <label htmlFor="phone" className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#b76ba3] peer-focus:text-sm">
+                  <label htmlFor="phone" className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#ffffff] peer-focus:text-sm">
                     Phone Number
                   </label>
                 </div>
@@ -238,9 +237,9 @@ export default function ContactPage() {
                   placeholder="Subject"
                   value={formData.subject}
                   onChange={handleChange}
-                  className="peer h-10 w-full border-b-2 border-[#555] bg-transparent text-white placeholder-transparent focus:outline-none focus:border-[#b76ba3]"
+                  className="peer h-10 w-full border-b-2 border-[#555] bg-transparent text-white placeholder-transparent focus:outline-none focus:border-[#ffffff]"
                 />
-                <label htmlFor="subject" className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#b76ba3] peer-focus:text-sm">
+                <label htmlFor="subject" className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#ffffff] peer-focus:text-sm">
                   Subject
                 </label>
               </div>
@@ -253,15 +252,15 @@ export default function ContactPage() {
                   placeholder=""
                   value={formData.message}
                   onChange={handleChange}                
-                  className="peer w-full border-b-2 border-[#555] bg-transparent text-white placeholder-gray-500 focus:outline-none focus:border-[#b76ba3] resize-none"
+                  className="peer w-full border-b-2 border-[#555] bg-transparent text-white placeholder-gray-500 focus:outline-none focus:border-[#ffffff] resize-none"
                 ></textarea>
-                <label htmlFor="message" className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#b76ba3] peer-focus:text-sm">
+                <label htmlFor="message" className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-[#ffffff] peer-focus:text-sm">
                   Give us your feedback...
                 </label>
               </div>
               <button
                 type="submit"
-                className="w-full bg-[#b76ba3] hover:bg-white text-white hover:text-[#000000] font-normal font-['oswald'] py-4 uppercase tracking-widest transition duration-300 "
+                className="w-full bg-[#146f207e] hover:bg-white text-white hover:text-[#000000] font-normal font-['combo'] py-4 uppercase tracking-widest transition duration-300 "
               >
                 Send Message
               </button>
@@ -276,7 +275,7 @@ export default function ContactPage() {
               <Alert
                 onClose={() => setSnackbar({ ...snackbar, open: false })}
                 severity={snackbar.severity}
-                sx={{ width: '100%', fontWeight: 500, fontFamily: 'montserrat' }}
+                sx={{ width: '100%', fontWeight: 500, fontFamily: 'combo' }}
               >
                 {snackbar.message}
               </Alert>
@@ -286,21 +285,21 @@ export default function ContactPage() {
         
         {/* Información de contacto */}
         <div >
-          <h1 className="text-4xl font-bold text-white font-['oswald'] mb-8 uppercase tracking-wider">
-            <span className="text-[#660152] text-lg">FIND OUR <br /></span> 
-            LOCATION <span className="text-[#660152]">.</span>
+          <h1 className="text-4xl font-bold text-white font-['combo'] mb-8 uppercase tracking-wider">
+            <span className="text-[#8c8c8c] text-lg">FIND OUR <br /></span> 
+            LOCATION <span className="text-[#8c8c8c]">.</span>
           </h1>
-          <p className="text-gray-300 mb-8">
+          <p className="text-gray-300 mb-8 font-['combo']">
             Come visit us at our bar. We’re excited to welcome you and share our passion for cocktails and good vibes.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20 max-w-6xl mx-auto px-4 justify-center  ">
            <div className="space-y-12">
               {/* Dirección */}
               <div className="flex items-start">
-                <FaMapMarkerAlt className="text-[#660152] text-3xl mt-1 mr-6 flex-shrink-0" /> 
+                <FaMapMarkerAlt className="text-[#ffffff] text-3xl mt-1 mr-6 flex-shrink-0" /> 
                 <div>
-                  <h3 className="text-xl font-bold text-white font-['oswald'] uppercase tracking-wider mb-4">ADDRESS</h3>
-                  <div className="text-gray-300 font-['montserrat'] space-y-2">
+                  <h3 className="text-xl font-bold text-white font-['combo'] uppercase tracking-wider mb-4">ADDRESS</h3>
+                  <div className="text-gray-300 font-['combo'] space-y-2">
                     <p>Carretera Libre Tijuana-Tecate Km 10 Fracc.<br /> El Refugio, Quintas Campestre,<br /> C.P. 22253 Redondo, B.C. </p>
                     
                   </div>
@@ -309,15 +308,15 @@ export default function ContactPage() {
 
               {/* Horarios */}
               <div className="flex items-start">
-              <FaClock className="text-[#660152] text-3xl mt-1 mr-6 flex-shrink-0" />
+              <FaClock className="text-[#ffffff] text-3xl mt-1 mr-6 flex-shrink-0" />
               <div className="flex-1">
-                <h3 className="text-xl font-bold text-white font-['oswald'] uppercase tracking-wider mb-4">OPENING HOURS</h3>
-                <div className="text-gray-300 font-['montserrat']">
+                <h3 className="text-xl font-bold text-white font-['combo'] uppercase tracking-wider mb-4">OPENING HOURS</h3>
+                <div className="text-gray-300 font-['combo']">
                   <div className="grid grid-cols-5 gap-2 mb-2">
                     <div className="col-span-2 font-medium">Monday</div>
-                    <div className="col-span-3 text-[#b76ba3] font-bold font-['oswald']">CLOSED</div>
+                    <div className="col-span-3 text-[#8c8c8c] font-bold font-['combo']">CLOSED</div>
                   </div>
-                  <div className="grid grid-cols-5 gap-2 mb-2">
+                  <div className="grid grid-cols-5 gap-2 mb-2 font-['combo'] ">
                     <div className="col-span-2 font-medium">Tue - Thu</div>
                     <div className="col-span-3">03:00 PM -<br /> 12:00 AM</div>
                   </div>
@@ -338,10 +337,10 @@ export default function ContactPage() {
             <div className="space-y-12">
               {/* Telefonon */}
               <div className="flex items-start">
-                <FaPhone className="text-[#660152] text-3xl mt-1 mr-6 flex-shrink-0" />
+                <FaPhone className="text-[#ffffff] text-3xl mt-1 mr-6 flex-shrink-0" />
                 <div>
-                  <h3 className="text-xl font-bold text-white font-['oswald'] uppercase tracking-wider mb-4">PHONE</h3>
-                  <div className="text-gray-300 font-['montserrat'] space-y-4">
+                  <h3 className="text-xl font-bold text-white font-['combo'] uppercase tracking-wider mb-4">PHONE</h3>
+                  <div className="text-gray-300 font-['combo'] space-y-4">
                     <p>
                       Phone: +52 999 888 7676
                     </p>
@@ -353,12 +352,12 @@ export default function ContactPage() {
               </div>
               {/* Correos */}
               <div className="flex items-start pt-17">
-                <FaEnvelope className="text-[#660152] text-3xl mt-1 mr-6 flex-shrink-0" />
+                <FaEnvelope className="text-[#ffffff] text-3xl mt-1 mr-6 flex-shrink-0" />
                 <div>
-                  <h3 className="text-xl font-bold text-white font-['oswald'] uppercase tracking-wider mb-4">EMAIL</h3>
-                  <div className="text-gray-300 font-['montserrat'] space-y-4">
+                  <h3 className="text-xl font-bold text-white font-['combo'] uppercase tracking-wider mb-4">EMAIL</h3>
+                  <div className="text-gray-300 font-['combo'] space-y-4">
                     <p>
-                      <a href="mailto:malbouche25@gmail.com" className="text-white hover:text-[#660152] transition">
+                      <a href="mailto:malbouche25@gmail.com" className="text-white hover:text-[#8c8c8c] transition">
                         malbouche25@gmail.com
                       </a>
                     </p>
@@ -393,7 +392,7 @@ export default function ContactPage() {
       </div>
       <button
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        className="fixed bottom-4 right-4 bg-[#660152c9] text-white p-3 rounded-full shadow-lg hover:bg-white hover:text-[#b76ba3] transition"
+        className="fixed bottom-4 right-4 bg-[#8c8c8c] text-white p-3 rounded-full shadow-lg hover:bg-white hover:text-[#b76ba3] transition"
       >
         <IoIosArrowUp size={24} />
       </button>

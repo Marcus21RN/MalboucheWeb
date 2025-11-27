@@ -61,7 +61,7 @@ export default function MenuPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#000000] text-white">
+    <div className="min-h-screen bg-[#202020] text-white">
       {/* === BANNER PRINCIPAL === */}
       <div className="relative w-full h-[500px] overflow-hidden">
         {/* Imagen Parallax */}
@@ -76,7 +76,7 @@ export default function MenuPage() {
         <div className="absolute inset-0 z-10 flex flex-col justify-center items-start pl-40 h-full px-4">
           <div className="mb-8">
             <div className="w-16 h-1 bg-white mb-5"></div>
-            <h1 className="font-['oswald'] font-semibold text-6xl text-white drop-shadow-md">
+            <h1 className="font-['combo'] font-semibold text-6xl text-white drop-shadow-md">
               <span className="block">TRY OUT OUR MENU</span>
             </h1>
           </div>
@@ -84,7 +84,7 @@ export default function MenuPage() {
       </div>
       <section
         ref={containerRef}
-        className=" text-white font-['oswald'] py-8 px-6 mr-45"
+        className=" text-white font-['combo'] py-8 px-6 mr-45"
       >
         <div className="flex flex-col items-end w-full space-y-4 ">
           <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-end gap-4 w-full sm:w-auto">
@@ -100,7 +100,7 @@ export default function MenuPage() {
                   transition={{ duration: 0.3 }}
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="w-full sm:w-auto px-3 py-1.5 rounded border border-gray-400 bg-black text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#b76ba3] shadow"
+                  className="w-full sm:w-auto px-3 py-1.5 rounded border border-gray-400 bg-[#202020] text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#8c8c8c] shadow"
                 >
                   <option value="Todos">All</option>
                   {Object.keys(menuData).map((tipoMenu, i) => (
@@ -131,7 +131,7 @@ export default function MenuPage() {
                     placeholder="Search Something..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full sm:w-auto px-3 py-1.5 rounded border border-gray-400 bg-black text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#b76ba3] shadow"
+                    className="w-full sm:w-auto px-3 py-1.5 rounded border border-gray-400 bg-[#202020] text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#8c8c8c] shadow"
                   />
                 )}
               </AnimatePresence>
@@ -142,7 +142,7 @@ export default function MenuPage() {
                   setShowSearch(!showSearch);
                   if (!showSearch) setShowFilter(false);
                 }}
-                className="text-[#b76ba3] hover:text-white transition z-20"
+                className="text-[#ffffff] hover:text-white transition z-20"
               >
                 <FaSearch size={25} />
               </button>
@@ -151,7 +151,7 @@ export default function MenuPage() {
             {/* Ícono filtro */}
             <button
               onClick={() => setShowFilter(!showFilter)}
-              className="text-[#b76ba3] hover:text-white transition z-20"
+              className="text-[#ffffff] hover:text-white transition z-20"
             >
               <FaFilter size={25} />
             </button>
@@ -199,7 +199,7 @@ export default function MenuPage() {
                     style={{ minHeight: "100%", minWidth: "100%" }}
                   />
                 </Parallax>
-                <h1 className="absolute inset-0 flex items-center justify-center text-5xl font-bold font-['Oswald'] text-white drop-shadow-lg">
+                <h1 className="absolute inset-0 flex items-center justify-center text-5xl font-bold font-['combo'] text-white drop-shadow-lg">
                   {tipoMenu.toUpperCase()}
                 </h1>
               </div>
@@ -215,28 +215,28 @@ export default function MenuPage() {
                 );
                 if (filteredProductos.length === 0) return null;
                 return (
-                  <div key={j} className="border border-[#b76ba3] rounded-sm p-6 bg-[#111418] shadow-md">
-                    <h2 className="text-4xl font-bold font-['Oswald'] mb-2 text-[#b34789] uppercase text-center">
+                  <div key={j} className="border border-[#b2b2b2b2] rounded-sm p-6 bg-[#202020] shadow-md">
+                    <h2 className="text-4xl font-bold font-['combo'] mb-2 text-[#8c8c8c] uppercase text-center">
                       {menu.nombre}
                     </h2>
                     {menu.descripcion && (
-                      <p className="text-lg font-['montserrat'] text-white text-center mb-4">
+                      <p className="text-lg font-['combo'] text-white text-center mb-4">
                         {menu.descripcion}
                       </p>
                     )}
                     {filteredProductos.map((producto, k) => (
-                      <div key={k} className="mb-6 border-b border-[#660152] pb-4">
+                      <div key={k} className="mb-6 border-b border-[#b2b2b2b2] pb-4">
                         <div className="flex justify-between items-baseline mb-1">
-                          <h3 className="text-xl font-['oswald'] font-bold text-white tracking-wider">
+                          <h3 className="text-xl font-['combo'] font-bold text-white tracking-wider">
                             {producto.IDProducto?.nombre || "Sin nombre"}
                           </h3>
-                          <span className="font-['montserrat'] font-bold text-[#b34789]">
+                          <span className="font-['combo'] font-bold text-[#ffffff]">
                             {producto.IDProducto && typeof producto.IDProducto.precio === "number"
                               ? `$${producto.IDProducto.precio.toFixed(2)} MXN`
                               : "Precio no disponible"}
                           </span>
                         </div>
-                        <p className="text-white font-['montserrat'] italic">{producto.IDProducto?.descripcion || ""}</p>
+                        <p className="text-white font-['combo'] italic">{producto.IDProducto?.descripcion || ""}</p>
                       </div>
                     ))}
                   </div>
@@ -249,7 +249,7 @@ export default function MenuPage() {
       </div>
       <button
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        className="fixed bottom-4 right-4 bg-[#660152c9] text-white p-3 rounded-full shadow-lg hover:bg-white hover:text-[#b76ba3] transition"
+        className="fixed bottom-4 right-4 bg-[#b2b2b2b2] text-white p-3 rounded-full shadow-lg hover:bg-white hover:text-[#b76ba3] transition"
       >
         <IoIosArrowUp size={24} />
       </button>

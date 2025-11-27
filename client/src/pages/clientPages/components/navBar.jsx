@@ -55,7 +55,7 @@ export default function Navbar() {
         <div className="flex items-center">
           <button
             onClick={() => handleNavigation("/")}
-            className="text-2xl font-bold text-white font-[oswald] tracking-widest hover:cursor-pointer"
+            className="text-2xl font-bold text-white font-[combo] tracking-widest hover:cursor-pointer"
           >
             
             MALBOUCHE
