@@ -36,7 +36,7 @@ import {
   Email as EmailIcon,
   Badge as BadgeIcon,
 } from "@mui/icons-material";
-import logo from "../../../assets/imagenes/logui.png";
+import logo from "../../../assets/imagenes/MalboucheLogo.png";
 
 const Sidebar = ({ collapsed, setCollapsed }) => {
   // Configurar interceptor para token solo una vez

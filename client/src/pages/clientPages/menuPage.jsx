@@ -6,6 +6,7 @@ import { FaSearch, FaFilter } from 'react-icons/fa';
 import { IoIosArrowUp } from "react-icons/io";
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
+import Malbouche from "../../assets/imagenes/Malbouche7.jpg";
 
 export default function MenuPage() {
   const [menuData, setMenuData] = useState([]);
@@ -13,6 +14,7 @@ export default function MenuPage() {
   const [selectedCategory, setSelectedCategory] = useState('Todos');
   const [showSearch, setShowSearch] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
+
   
   const bannerImages = {
   bebidas: 'https://animalgourmet.com/wp-content/uploads/2018/05/christin-hume-370431-unsplash-e1527803357279.jpg',
@@ -67,13 +69,13 @@ export default function MenuPage() {
         {/* Imagen Parallax */}
         <Parallax speed={-20}>
           <img
-            src={'https://media.istockphoto.com/id/1225058372/photo/close-up-of-barman-finishes-preparation-of-alcoholic-cocktail-pouring-drink-in-multicolored.jpg?s=2048x2048&w=is&k=20&c=SJ-V-XuAKAa4ZMhs6NQR7Y7FTcGUg8kHkozqScA-bO4='}
+            src={Malbouche}
             alt="Bar Banner"
             className="w-full h-full object-cover scale-150"
           />
         </Parallax>
         {/* Contenido encima del fondo */}
-        <div className="absolute inset-0 z-10 flex flex-col justify-center items-start pl-40 h-full px-4">
+        <div className="bg-[#20202078] absolute inset-0 z-10 flex flex-col justify-center items-start pl-40 h-full px-4">
           <div className="mb-8">
             <div className="w-16 h-1 bg-white mb-5"></div>
             <h1 className="font-['combo'] font-semibold text-6xl text-white drop-shadow-md">

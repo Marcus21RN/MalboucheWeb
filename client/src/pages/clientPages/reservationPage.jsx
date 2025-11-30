@@ -4,7 +4,8 @@ import axios from 'axios';
 import { Parallax } from 'react-scroll-parallax';
 import { FaClock } from "react-icons/fa";
 import { IoIosArrowUp } from "react-icons/io";
-import sureloj from "../../assets/imagenes/aboutUs.jpg";
+import sureloj from "../../assets/imagenes/Malbouche5.jpg";
+import MalboucheReserv from "../../assets/imagenes/MalboucheReserv.png";
 import { Snackbar, Alert } from '@mui/material';
 
 export default function ReservationPage() {
@@ -170,7 +171,7 @@ export default function ReservationPage() {
       <div className="relative w-full h-[480px] overflow-hidden">
         <Parallax speed={-40}>
           <img
-            src={'https://images.unsplash.com/photo-1709211078586-bf3ad96ccfdb?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'}
+            src={MalboucheReserv}
             alt="Bar Banner"
             className="w-full h-full object-cover scale-150"
           />

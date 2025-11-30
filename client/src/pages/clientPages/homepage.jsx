@@ -13,15 +13,15 @@ import { IoIosArrowUp } from "react-icons/io";
 import { IoCloseSharp } from "react-icons/io5";
 
 
-import barImage from "../../assets/imagenes/bar.jpg";
-import neon2 from "../../assets/imagenes/neon2.jpg";
-import banner2 from "../../assets/imagenes/banner2.jpg";
+import barImage from "../../assets/imagenes/MalboucheBar.png";
+import neon2 from "../../assets/imagenes/Malbouche4.jpg";
+import banner2 from "../../assets/imagenes/Malbouche8.1.png";
 
-import bar1 from "../../assets/imagenes/bar6.jpg";
-import bar2 from "../../assets/imagenes/bar2.jpg";
-import bar3 from "../../assets/imagenes/bar3.jpg";
-import bar4 from "../../assets/imagenes/bar4.jpg";
-import sureloj from "../../assets/imagenes/aboutUs.jpg";
+import bar1 from "../../assets/imagenes/Malbouche4.jpg";
+import bar2 from "../../assets/imagenes/Malbouche7.jpg";
+import bar3 from "../../assets/imagenes/Malbouche6.1.png";
+import bar4 from "../../assets/imagenes/Malbouche5.jpg";
+import sureloj from "../../assets/imagenes/Malbouche.jpeg";
 
 
 export default function HomePage() {

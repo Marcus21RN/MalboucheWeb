@@ -3,6 +3,7 @@ import { Snackbar, Alert } from '@mui/material';
 import { Parallax } from 'react-scroll-parallax';
 import { FaMapMarkerAlt, FaPhone, FaEnvelope, FaClock } from 'react-icons/fa';
 import { IoIosArrowUp } from "react-icons/io";
+import Malbouche from '../../assets/imagenes/Malbouche3.jpeg';
 
 
 export default function ContactPage() {
@@ -130,12 +131,12 @@ export default function ContactPage() {
       <div className="relative w-full h-[480px] overflow-hidden">
         <Parallax speed={-40}>
           <img
-            src={'https://images.unsplash.com/photo-1588458824535-b940dbbb505a?q=80&w=1331&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'}
+            src={Malbouche}
             alt="Bar Banner"
             className="w-full h-full object-cover scale-150"
           />
         </Parallax>
-        <div className="absolute inset-0 z-8 flex flex-col justify-center items-center h-full px-4">
+        <div className="bg-[#20202081] absolute inset-0 z-8 flex flex-col justify-center items-center h-full px-4">
           <div className="mb-8">
             <span className="block text-lg font-semibold font-['combo'] text-[#8c8c8c] text-center">You can</span>
             <h1 className="font-['combo'] font-semibold text-7xl text-white drop-shadow-md uppercase">

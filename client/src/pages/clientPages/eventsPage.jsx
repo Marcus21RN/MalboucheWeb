@@ -4,8 +4,10 @@ import { Parallax } from 'react-scroll-parallax';
 import { IoIosArrowUp } from "react-icons/io";
 import { IoCloseSharp } from "react-icons/io5";
 import { FaFilter, FaSearch } from "react-icons/fa";
+// eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
+import MalboucheE from "../../assets/imagenes/MalboucheEvent.png";
 
 export default function EventsPage() {
   const [eventos, setEventos] = useState([]);
@@ -98,12 +100,12 @@ export default function EventsPage() {
       <div className="relative w-full h-[500px] overflow-hidden">
         <Parallax speed={-40}>
           <img
-            src={'https://images.unsplash.com/photo-1565309438213-c2856c92bb52?q=80&w=1334&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'}
+            src={MalboucheE}
             alt="Bar Banner"
             className="w-full h-full object-cover scale-150"
           />
         </Parallax>
-        <div className="absolute inset-0 z-10 flex flex-col justify-center items-start pl-40 h-full px-4">
+        <div className="bg-[#20202081] absolute inset-0 z-10 flex flex-col justify-center items-start pl-40 h-full px-4">
           <div className="mb-8">
             <div className="w-16 h-1 bg-white mb-5"></div>
             <h1 className="font-['combo'] font-semibold text-6xl text-white drop-shadow-md">

@@ -1,6 +1,7 @@
 import React from "react";
+// eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
-import logo from "../../../assets/imagenes/logui.png"; 
+import logo from "../../../assets/imagenes/MalboucheLogo.png"; 
 import { FaFacebookF, FaInstagram, FaTwitter, FaTiktok } from "react-icons/fa";
 
 export default function Footer() {
@@ -16,13 +17,13 @@ export default function Footer() {
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 text-sm md:text-base justify-items-center">
           {/* Horarios */}
           <div className="text-center md:text-left">
-            <h2 className="text-lg font-bold tracking-wide font-['oswald'] mb-4 text-[#F9F4EF]">
-              OPENING HOURS<span className="text-[#b76ba3]">.</span>
+            <h2 className="text-lg font-bold tracking-wide font-['combo'] mb-4 text-[#F9F4EF]">
+              OPENING HOURS<span className="text-[#8c8c8c]">.</span>
             </h2>
-            <ul className="space-y-1 font-['montserrat']">
+            <ul className="space-y-1 font-['combo']">
               <li className="flex max-w-xs mx-auto md:mx-0">
                 <span>Mon ....................</span>
-                <span className="text-[#e16eab] font-bold font-['oswald']">  CLOSED</span>
+                <span className="text-[#d02525] font-extrabold font-['combo']">  CLOSED</span>
               </li>
               <li className="flex  max-w-xs mx-auto md:mx-0">
                 <span>Tue - Thu </span>
@@ -34,17 +35,17 @@ export default function Footer() {
               </li>
               <li className="flex  max-w-xs mx-auto md:mx-0">
                 <span>Sun</span>
-                <span> ...................... 12:00 PM - 12:00 AM</span>
+                <span> ..................... 12:00 PM - 12:00 AM</span>
               </li>
             </ul>
           </div>
 
           {/* Contacto */}
           <div className="text-center md:text-left">
-            <h2 className="text-lg font-bold tracking-wide font-['oswald'] mb-4 text-[#F9F4EF]">
-              CONTACT US<span className="text-[#b76ba3]">.</span>
+            <h2 className="text-lg font-bold tracking-wide font-['combo'] mb-4 text-[#F9F4EF]">
+              CONTACT US<span className="text-[#8c8c8c]">.</span>
             </h2>
-            <ul className="space-y-1 font-['montserrat']">
+            <ul className="space-y-1 font-['combo']">
               <li>Email: malbouche25@gmail.com</li>
               <li>Phone: +52 123 456 9789</li>
             </ul>
@@ -52,16 +53,16 @@ export default function Footer() {
 
           {/* Ubicación */}
           <div className="text-center md:text-left">
-            <h2 className="text-lg font-bold tracking-wide font-['oswald'] mb-4 text-[#F9F4EF]">
-              LOCATION<span className="text-[#b76ba3]">.</span>
+            <h2 className="text-lg font-bold tracking-wide font-['combo'] mb-4 text-[#F9F4EF]">
+              LOCATION<span className="text-[#8c8c8c]">.</span>
             </h2>
-            <p className="font-['montserrat']">Carretera Libre<br /> Tijuana-Tecate Km 10 Fracc.<br /> El Refugio, Quintas Campestre,<br /> C.P. 22253 Redondo, B.C.  </p>
+            <p className="font-['combo']">Carretera Libre<br /> Tijuana-Tecate Km 10 Fracc.<br /> El Refugio, Quintas Campestre,<br /> C.P. 22253 Redondo, B.C.  </p>
           </div>
 
           {/* Redes sociales */}
           <div className="text-center">
-            <h2 className="text-lg font-bold tracking-wide font-['oswald'] mb-4 text-[#F9F4EF]">
-              FOLLOW US<span className="text-[#b76ba3]">.</span>
+            <h2 className="text-lg font-bold tracking-wide font-['combo'] mb-4 text-[#F9F4EF]">
+              FOLLOW US<span className="text-[#8c8c8c]">.</span>
             </h2>
             <div className="flex justify-center gap-4">
               <motion.a whileHover={{ scale: 1.2 }} href="https://www.facebook.com" target="_blank" rel="noopener noreferrer">
@@ -81,12 +82,12 @@ export default function Footer() {
         </section>
 
         {/* Línea divisora */}
-        <div className="my-6 border-t border-[#660152]"></div>
+        <div className="my-6 border-t border-[#b2b2b2b2]"></div>
 
         {/* Derechos de autor y logo */}
         <div className="flex flex-col items-center space-y-4">
-          <div className="text-center text-sm md:text-base font-['montserrat'] text-[#c5a2bb]">
-            © 2025 Malbouche Bar. All rights reserved.
+          <div className="text-center text-sm md:text-base font-['combo'] text-[#8c8c8c]">
+            © 2025 Malbouche Piano-bar. All rights reserved.
           </div>
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}

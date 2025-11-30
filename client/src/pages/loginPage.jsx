@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
-import logo from "../assets/imagenes/logui.png";
+import logo from "../assets/imagenes/MalboucheLogo.png";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
