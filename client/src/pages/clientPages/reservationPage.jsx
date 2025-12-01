@@ -346,7 +346,7 @@ export default function ReservationPage() {
               <div className="pt-6 text-center">
                 <button
                   type="submit"
-                  className="w-full bg-[#8c8c8c] hover:bg-white text-white hover:text-[#000000] font-normal font-['combo'] py-4 uppercase tracking-widest transition duration-300"
+                  className="w-full bg-[#e8e8e8] hover:bg-white text-[#44441e] border-1 border-[#8c8c8c] hover:text-[#000000] font-bold font-['combo'] py-4 uppercase tracking-widest transition duration-300"
                 >
                   SUBMIT
                 </button> 

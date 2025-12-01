@@ -73,7 +73,7 @@ export default function Navbar() {
                   transition duration-200 px-2 py-1
                   drop-shadow-[0_1px_2px_#333131]
                   ${link.special 
-                    ? "px-4 py-2 mx-4 border-white font-[combo] border-2 text-white font-normal tracking-widest hover:bg-[#fff] hover:border-[#fff] hover:text-[#000000]" 
+                    ? "px-4 py-2 mx-4 border-white font-[combo] border-2 text-white font-bold tracking-widest hover:bg-[#fff] hover:border-[#fff] hover:text-[#44441e]" 
                     : "hover:text-[#ffff00] font-[combo] text-white font-semibold text-lg tracking-widest"
                   }
                 `}
@@ -81,7 +81,7 @@ export default function Navbar() {
                 {link.label}
               </button>
               {!link.special && (
-                <span className="absolute left-1/2 transform -translate-x-1/2 bottom-[-4px] w-0 h-[2px] bg-[#000000] group-hover:w-4/5 transition-all duration-300"></span>
+                <span className="absolute left-1/2 transform -translate-x-1/2 bottom-[-4px] w-0 h-[2px] bg-[#555528] group-hover:w-4/5 transition-all duration-300"></span>
               )}
             </li>
           ))}

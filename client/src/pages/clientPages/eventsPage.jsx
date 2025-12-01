@@ -234,7 +234,7 @@ export default function EventsPage() {
                       e.stopPropagation();
                       setEventoSeleccionado(evento);
                     }}
-                    className="px-6 py-3 bg-[#8c8c8c] tracking-widest font-['combo'] font-bold text-sm text-white hover:bg-white hover:text-[#550144] transition whitespace-nowrap cursor-pointer"
+                    className="px-6 py-3 bg-[#8c8c8c] tracking-widest font-['combo'] font-bold text-sm text-white hover:bg-white hover:text-[#44441e] transition whitespace-nowrap cursor-pointer"
                   >
                     MORE DETAILS
                   </button>
@@ -248,12 +248,12 @@ export default function EventsPage() {
       {/* MODAL DE DETALLES */}
       {eventoSeleccionado && (
         <div className="fixed inset-0 z-50 flex justify-center items-center bg-opacity-90 bg-rgba(0, 0, 0, 1) transition-all duration-300" style={{ backdropFilter: "blur(2px)" }}>
-          <div className="relative bg-gradient-to-br from-[#202020] via-[#4f4f4f] to-[#c6c6c69f] text-white font-['combo'] p-8 rounded-lg max-w-2xl w-full shadow-2xl border-2 border-[#8c8c8c8] animate-fadeIn">
+          <div className="relative bg-gradient-to-br from-[#202020] via-[#4f4f4f] to-[#c6c6c69f] text-white font-['combo'] p-8 rounded-lg max-w-2xl w-full shadow-2xl border-2 border-[#8c8c8c] animate-fadeIn">
             <button
               onClick={() => setEventoSeleccionado(null)}
-              className="absolute top-6 right-6 text-2xl text-[#8c8c8c8] hover:text-white transition"
+              className="absolute top-6 right-6 text-2xl text-[#8c8c8c] hover:text-white transition"
             >
-              <IoCloseSharp className="text-[#8c8c8c8] hover:text-red-600 transition cursor-pointer"/>
+              <IoCloseSharp className="text-[#ffffff] hover:text-red-600 transition cursor-pointer"/>
             </button>
             <div className="flex flex-col md:flex-row gap-8">
               <div className="md:w-1/3 mt-2">
@@ -298,7 +298,7 @@ export default function EventsPage() {
             {/* Botón */}
             <button 
               onClick={() => handleNavigation("/reservations")}
-              className="px-12 py-4 cursor-pointer text-white font-['combo'] border-1 border-[#fff] font-bold transition-colors duration-300 transform hover:scale-105 hover:bg-[#ffff] hover:text-[#35002a] shadow-lg"
+              className="px-12 py-4 cursor-pointer text-white font-['combo'] border-1 border-[#fff] font-bold transition-colors duration-300 transform hover:scale-105 hover:bg-[#ffff] hover:text-[#44441e] shadow-lg"
             >
               BOOK YOUR TABLE
             </button>
@@ -308,7 +308,7 @@ export default function EventsPage() {
       {/* BOTÓN DE VOLVER AL PRINCIPIO */}
       <button
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        className="fixed bottom-4 right-4 bg-[#8c8c8c]  text-white p-3 rounded-full shadow-lg hover:bg-white hover:text-[#b76ba3] transition"
+        className="fixed bottom-4 right-4 bg-[#8c8c8c]  text-white p-3 rounded-full shadow-lg hover:bg-white hover:text-[#44441e] transition"
       >
         <IoIosArrowUp size={24} />
       </button>

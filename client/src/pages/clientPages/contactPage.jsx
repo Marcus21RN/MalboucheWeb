@@ -261,7 +261,7 @@ export default function ContactPage() {
               </div>
               <button
                 type="submit"
-                className="w-full bg-[#146f207e] hover:bg-white text-white hover:text-[#000000] font-normal font-['combo'] py-4 uppercase tracking-widest transition duration-300 "
+                className="w-full bg-[#e8e8e8] hover:bg-white text-[#44441e] hover:text-[#000000] border-1 border-[#8c8c8c] font-bold font-['combo'] py-4 uppercase tracking-widest transition duration-300 "
               >
                 Send Message
               </button>
@@ -301,7 +301,7 @@ export default function ContactPage() {
                 <div>
                   <h3 className="text-xl font-bold text-white font-['combo'] uppercase tracking-wider mb-4">ADDRESS</h3>
                   <div className="text-gray-300 font-['combo'] space-y-2">
-                    <p>Carretera Libre Tijuana-Tecate Km 10 Fracc.<br /> El Refugio, Quintas Campestre,<br /> C.P. 22253 Redondo, B.C. </p>
+                    <p>Av. Revolución 1650,<br /> Zona Centro,<br /> C.P. 22000, Tijuana Baja California</p>
                     
                   </div>
                 </div>
@@ -313,22 +313,22 @@ export default function ContactPage() {
               <div className="flex-1">
                 <h3 className="text-xl font-bold text-white font-['combo'] uppercase tracking-wider mb-4">OPENING HOURS</h3>
                 <div className="text-gray-300 font-['combo']">
-                  <div className="grid grid-cols-5 gap-2 mb-2">
-                    <div className="col-span-2 font-medium">Monday</div>
-                    <div className="col-span-3 text-[#8c8c8c] font-bold font-['combo']">CLOSED</div>
-                  </div>
+
                   <div className="grid grid-cols-5 gap-2 mb-2 font-['combo'] ">
-                    <div className="col-span-2 font-medium">Tue - Thu</div>
-                    <div className="col-span-3">03:00 PM -<br /> 12:00 AM</div>
+                    <div className="col-span-2 font-medium">Sun - Thur</div>
+                    <div className="col-span-3">04:00 PM -<br /> 11:30 PM</div>
                   </div>
+
+                  <div className="grid grid-cols-5 gap-2 mb-2">
+                    <div className="col-span-2 font-medium">Tuesday</div>
+                    <div className="col-span-3 text-[#a00000] font-bold font-['combo']">CLOSED</div>
+                  </div>
+
                   <div className="grid grid-cols-5 gap-2 mb-2">
                     <div className="col-span-2 font-medium">Fri - Sat</div>
-                    <div className="col-span-3">12:00 PM -<br /> 03:00 AM</div>
+                    <div className="col-span-3">04:00 PM -<br /> 12:30 AM</div>
                   </div>
-                  <div className="grid grid-cols-5 gap-2">
-                    <div className="col-span-2 font-medium">Sunday</div>
-                    <div className="col-span-3">12:00 PM - <br />12:00 AM</div>
-                  </div>
+
                 </div>
               </div>
             </div>

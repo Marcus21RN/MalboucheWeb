@@ -15,11 +15,11 @@ import { IoCloseSharp } from "react-icons/io5";
 
 import barImage from "../../assets/imagenes/MalboucheBar.png";
 import neon2 from "../../assets/imagenes/Malbouche4.jpg";
-import banner2 from "../../assets/imagenes/Malbouche8.1.png";
+import banner2 from "../../assets/imagenes/Malbouche8.png";
 
 import bar1 from "../../assets/imagenes/Malbouche4.jpg";
 import bar2 from "../../assets/imagenes/Malbouche7.jpg";
-import bar3 from "../../assets/imagenes/Malbouche6.1.png";
+import bar3 from "../../assets/imagenes/Malbouche6.jpg";
 import bar4 from "../../assets/imagenes/Malbouche5.jpg";
 import sureloj from "../../assets/imagenes/Malbouche.jpeg";
 
@@ -116,7 +116,7 @@ useEffect(() => {
             </div>
             <button
               onClick={() => handleNavigation("/reservations")}
-              className="px-8 py-3  cursor-pointer text-white font-['combo'] border-1 border-[#fff] font-bold transition-colors duration-300 transform hover:scale-105 hover:bg-[#ffff] hover:text-[#35002a] shadow-lg"
+              className="px-8 py-3  cursor-pointer text-white font-['combo'] border-1 border-[#fff] font-bold transition-colors duration-300 transform hover:scale-105 hover:bg-[#ffff] hover:text-[#44441e] shadow-lg"
             >
               BOOK NOW
             </button>
@@ -207,7 +207,7 @@ useEffect(() => {
 
               <button 
                 onClick={() => handleNavigation("/events")}
-                className="px-7 py-3 cursor-pointer text-white font-['combo'] border-1 border-[#fff] font-bold transition-colors duration-300 transform hover:scale-105 hover:bg-[#ffff] hover:text-[#35002a] shadow-lg"
+                className="px-7 py-3 cursor-pointer text-white font-['combo'] border-1 border-[#fff] font-bold transition-colors duration-300 transform hover:scale-105 hover:bg-[#ffff] hover:text-[#44441e] shadow-lg"
               >
                 GO TO EVENTS
               </button>
@@ -297,12 +297,13 @@ useEffect(() => {
           <div className="mt-12 text-center">
             <button
               onClick={() => handleNavigation("/menu")}
-              className="px-8 py-4 cursor-pointer text-white font-['combo'] border-1 border-[#fff] font-bold transition-colors duration-300 transform hover:scale-105 hover:bg-[#ffff] hover:text-[#35002a] shadow-lg"
+              className="px-8 py-4 cursor-pointer text-white font-['combo'] border-1 border-[#fff] font-bold transition-colors duration-300 transform hover:scale-105 hover:bg-[#ffff] hover:text-[#44441e] shadow-lg"
             >
               SEE FULL MENU
             </button>
           </div>
         </section>
+
         {/* === SECCIÓN DE PROMOCIONES === */}
 {/* === SECCIÓN DE PROMOCIONES === */}
         <section className="py-8 px-6 bg-gradient-to-b from-[#202020] to-[#4f4f4f] text-white font-['combo']">
@@ -339,12 +340,12 @@ useEffect(() => {
           {/* Modal */}
           {modalAbierto && promocionSeleccionada && (
             <div
-              className="fixed inset-0 z-50 flex justify-center items-center bg-opacity-90 bg-rgba(0, 0, 0, 1) transition-all duration-300"
+              className="fixed inset-0 z-50 flex justify-center items-center bg-opacity-90  transition-all duration-300"
               onClick={cerrarModal}
               style={{ backdropFilter: "blur(2px)" }}
             >
               <div
-                className="relative bg-gradient-to-br from-[#404040] via-[#666566] to-[#b2b2b2b2] text-white font-['montserrat'] p-8 rounded-lg max-w-xl w-full shadow-2xl border-2 border-[#b2b2b2b2] animate-fadeIn"
+                className="relative bg-gradient-to-br from-[#404040] via-[#4f4f4f] to-[#c6c6c69f] text-white font-['combo'] p-8 rounded-lg max-w-xl w-full shadow-2xl border-2 border-[#8c8c8c] animate-fadeIn"
                 onClick={e => e.stopPropagation()}
                 style={{ animation: "fadeIn 0.3s" }}
               >
@@ -360,7 +361,7 @@ useEffect(() => {
                   alt={promocionSeleccionada.nombre}
                   className="w-full max-h-[400px] object-contain rounded-md mb-4"
                 />
-                <h3 className="text-3xl font-bold mb-2 text-[#fff] uppercase tracking-wide drop-shadow font-['oswald'] text-left">
+                <h3 className="text-3xl font-bold mb-2 text-[#fff] uppercase tracking-wide drop-shadow font-['combo'] text-left">
                   {promocionSeleccionada.nombre}
                 </h3>
                 <p className="text-base mb-4 text-[#f5f5f5]">{promocionSeleccionada.descripcion}</p>
@@ -391,7 +392,7 @@ useEffect(() => {
       {/* BOTÓN DE VOLVER AL PRINCIPIO */}
       <button
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        className="fixed bottom-4 cursor-pointer right-4 bg-[#b2b2b2b2] text-white p-3 rounded-full shadow-lg hover:bg-white hover:text-[#b76ba3] transition"
+        className="fixed bottom-4 cursor-pointer right-4 bg-[#b2b2b2b2] text-white p-3 rounded-full shadow-lg hover:bg-white hover:text-[#44441e] transition"
       >
         <IoIosArrowUp size={24} />
       </button>

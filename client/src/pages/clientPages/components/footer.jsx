@@ -21,21 +21,17 @@ export default function Footer() {
               OPENING HOURS<span className="text-[#8c8c8c]">.</span>
             </h2>
             <ul className="space-y-1 font-['combo']">
+              <li className="flex  max-w-xs mx-auto md:mx-0">
+                <span>Sun, Mon, Thu </span>
+                <span>: 04:00 PM - 11:30 PM</span>
+              </li>
               <li className="flex max-w-xs mx-auto md:mx-0">
-                <span>Mon ....................</span>
-                <span className="text-[#d02525] font-extrabold font-['combo']">  CLOSED</span>
+                <span>Tue: </span>
+                <span className="text-[#d02525] font-extrabold font-['combo']">    CLOSED</span>
               </li>
               <li className="flex  max-w-xs mx-auto md:mx-0">
-                <span>Tue - Thu </span>
-                <span> ......... 03:00 PM - 12:00 AM</span>
-              </li>
-              <li className="flex  max-w-xs mx-auto md:mx-0">
-                <span>Fri - Sat</span>
-                <span> .............. 12:00 PM - 03:00 AM</span>
-              </li>
-              <li className="flex  max-w-xs mx-auto md:mx-0">
-                <span>Sun</span>
-                <span> ..................... 12:00 PM - 12:00 AM</span>
+                <span>Fri, Sat</span>
+                <span>: 04:00 PM - 12:30 AM</span>
               </li>
             </ul>
           </div>
@@ -56,7 +52,7 @@ export default function Footer() {
             <h2 className="text-lg font-bold tracking-wide font-['combo'] mb-4 text-[#F9F4EF]">
               LOCATION<span className="text-[#8c8c8c]">.</span>
             </h2>
-            <p className="font-['combo']">Carretera Libre<br /> Tijuana-Tecate Km 10 Fracc.<br /> El Refugio, Quintas Campestre,<br /> C.P. 22253 Redondo, B.C.  </p>
+            <p className="font-['combo']">Av. Revolución 1650,<br /> Zona Centro,<br />C.P. 22000, Tijuana Baja California  </p>
           </div>
 
           {/* Redes sociales */}
@@ -66,16 +62,16 @@ export default function Footer() {
             </h2>
             <div className="flex justify-center gap-4">
               <motion.a whileHover={{ scale: 1.2 }} href="https://www.facebook.com" target="_blank" rel="noopener noreferrer">
-                <FaFacebookF className="text-2xl text-white hover:text-[#b76ba3] transition" />
+                <FaFacebookF className="text-2xl text-white hover:text-[#ffff00] transition" />
               </motion.a>
               <motion.a whileHover={{ scale: 1.2 }} href="https://www.instagram.com" target="_blank" rel="noopener noreferrer">
-                <FaInstagram className="text-2xl text-white hover:text-[#b76ba3] transition" />
+                <FaInstagram className="text-2xl text-white hover:text-[#ffff00] transition" />
               </motion.a>
               <motion.a whileHover={{ scale: 1.2 }} href="https://www.twitter.com" target="_blank" rel="noopener noreferrer">
-                <FaTwitter className="text-2xl text-white hover:text-[#b76ba3] transition" />
+                <FaTwitter className="text-2xl text-white hover:text-[#ffff00] transition" />
               </motion.a>
               <motion.a whileHover={{ scale: 1.2 }} href="https://www.tiktok.com" target="_blank" rel="noopener noreferrer">
-                <FaTiktok className="text-2xl text-white hover:text-[#b76ba3] transition" />
+                <FaTiktok className="text-2xl text-white hover:text-[#ffff00] transition" />
               </motion.a>
             </div>
           </div>
