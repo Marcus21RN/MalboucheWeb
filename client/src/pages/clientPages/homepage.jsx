@@ -1,4 +1,3 @@
-
 import Slider from "react-slick";
 import { Link } from 'react-router-dom'; // Importa Link
 import "slick-carousel/slick/slick.css";
@@ -17,7 +16,7 @@ import barImage from "../../assets/imagenes/MalboucheBar.png";
 import neon2 from "../../assets/imagenes/Malbouche4.jpg";
 import banner2 from "../../assets/imagenes/Malbouche8.png";
 
-import bar1 from "../../assets/imagenes/Malbouche4.jpg";
+import bar1 from "../../assets/imagenes/Malbouche9.png";
 import bar2 from "../../assets/imagenes/Malbouche7.jpg";
 import bar3 from "../../assets/imagenes/Malbouche6.jpg";
 import bar4 from "../../assets/imagenes/Malbouche5.jpg";
@@ -153,24 +152,20 @@ useEffect(() => {
         </section>
 
         {/* === GALERÍA DE IMÁGENES === */}
-      <section className="bg-[#202020] py-16 px-4">
-        <div className="mx-auto max-w-8xl">
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
+      <section className="bg-[#202020] py-8 px-2">
+        <div className="mx-auto max-w-7xl px-4">
+          {/* Grid responsiva: 1 col (xs), 2 (sm), 3 (md), 4 (lg) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {imagenes.map((item, index) => (
               <div
                 key={index}
-                className={`
-                  overflow-hidden rounded-md
-                  ${index === 0 ? 'md:col-span-2 md:row-span-1' : ''}
-                  ${index === 1 ? 'md:col-span-1 md:row-span-2' : ''}
-                  ${index === 2 ? 'md:col-span-1 md:row-span-1' : ''}
-                  ${index === 3 ? 'md:col-span-1 md:row-span-1' : ''}
-                `}
+                className="w-full overflow-hidden rounded-md bg-gray-800"
               >
                 <img
                   src={item.imagen}
                   alt={`Imagen ${index}`}
-                  className="object-cover w-full h-full transition duration-500 ease-in-out rounded-sm hover:scale-105 hover:brightness-110"
+                  // alturas responsivas para ajustar a la pantalla; object-cover asegura que la imagen llene el contenedor
+                  className="w-full h-56 sm:h-64 md:h-72 lg:h-80 xl:h-96 object-cover object-center transition duration-500 ease-in-out hover:scale-105 hover:brightness-110"
                 />
               </div>
             ))}

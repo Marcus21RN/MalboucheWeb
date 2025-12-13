@@ -377,7 +377,7 @@ export default function ContactPage() {
           <div className="relative h-full min-h-[600px]">
             <div className="absolute inset-0 bg-[#111418] p-1">
               <iframe 
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d107735.10596568575!2d-116.92605460815858!3d32.453373538751634!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80d93e743f2e3bd7%3A0xbf19e069ae61d678!2sUniversidad%20Tecnol%C3%B3gica%20de%20Tijuana!5e0!3m2!1ses!2smx!4v1753398454354!5m2!1ses!2smx" 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d210.24585363830292!2d-117.0383721160578!3d32.52791877677735!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80d949f661bf3c2b%3A0x6bc2ba184a04589!2sMALBOUCHE%20Piano%20Bar!5e0!3m2!1ses-419!2smx!4v1765339809539!5m2!1ses-419!2smx" 
                 width="100%" 
                 height="100%" 
                 style={{border:0}} 

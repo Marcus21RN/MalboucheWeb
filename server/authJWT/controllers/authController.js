@@ -1,3 +1,8 @@
+import bcrypt from 'bcryptjs';
+import { generarToken } from '../helpers/jwt.js';
+import Empleado from '../../models/empleado.js';
+import Rol from '../../models/rol.js';
+
 // Obtener información de usuario por correo
 export const getUserInfoByCorreo = async (req, res) => {
   const { correo } = req.query;
@@ -18,14 +23,9 @@ export const getUserInfoByCorreo = async (req, res) => {
     res.status(500).json({ error: 'Error interno', details: error });
   }
 };
-import bcrypt from 'bcryptjs';
-import { generarToken } from '../helpers/jwt.js';
-import Empleado from '../../models/empleado.js';
-import Rol from '../../models/rol.js';
 
 export const Login = async (req, res) => {
   const { correo, password } = req.body;
-
   try {
     const user = await Empleado.findOne({ correo });
     if (!user || user.estado !== 'activo') {

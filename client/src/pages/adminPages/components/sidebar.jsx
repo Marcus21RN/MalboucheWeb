@@ -120,8 +120,8 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
   const [passwordSuccess, setPasswordSuccess] = useState("");
 
   const menuItems = [
-    { text: "Dashboard", icon: <DashboardIcon />, path: "/admin/home" },
-    { text: "Menu", icon: <MenuIcon />, path: "/admin/menu" },
+    // { text: "Dashboard", icon: <DashboardIcon />, path: "/admin/home" },
+    { text: "Menu", icon: <MenuIcon />, path: "/admin/home" },
     { text: "Employees", icon: <EmployeesIcon />, path: "/admin/employes" },
     { text: "Events", icon: <EventsIcon />, path: "/admin/events" },
     { text: "Reservations", icon: <ReservationsIcon />, path: "/admin/reservations" },

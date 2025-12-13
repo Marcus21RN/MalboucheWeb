@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import logo from "../assets/imagenes/MalboucheLogo.png";
+import Malbouche from "../assets/imagenes/Malbouche5.jpg";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -62,7 +63,7 @@ export default function LoginPage() {
             className="h-full w-full bg-cover bg-center "
             style={{
               backgroundImage:
-                "url('https://cdn.prod.website-files.com/6768f29a6d5da42209173f20/6768f29b6d5da4220917754b_Rectangle%20(92).svg",
+                `url(${Malbouche})`,
             }}
           ></div>
         </div>
