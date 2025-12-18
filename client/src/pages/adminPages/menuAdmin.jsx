@@ -22,10 +22,10 @@ import axios from "axios";
 
 // Product categories for menu/product management UI
 const categoriasProductos = [
-  { value: "bebidas", label: "Drinks", icon: <LocalBar />, color: "#460166" },
-  { value: "cocteles", label: "Cocktails", icon: <WineBar />, color: "#660121" },
+  { value: "bebidas", label: "Drinks", icon: <LocalBar />, color: "#1A1A1A" },
+  { value: "cocteles", label: "Cocktails", icon: <WineBar />, color: "#333333" },
   { value: "alimentos", label: "Food", icon: <Restaurant />, color: "#016646" },
-  { value: "snacks", label: "Snacks", icon: <Fastfood />, color: "#f7b330" },
+  { value: "snacks", label: "Snacks", icon: <Fastfood />, color: "#F6D400" },
 ];
 
 const MenuAdmin = () => {
@@ -98,7 +98,7 @@ const MenuAdmin = () => {
 
   const getCategoryColor = (categoria) => {
     const cat = categoriasProductos.find(c => c.value === categoria);
-    return cat ? cat.color : "#660152";
+    return cat ? cat.color : "#1A1A1A";
   };
 
   // Get products by IDs for menus - with safety checks
@@ -459,8 +459,8 @@ const MenuAdmin = () => {
     >
       {/* Header - Main title for menu and product management */}
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-        <MenuIcon sx={{ mr: 2, color: '#660152', fontSize: 40 }} />
-        <Typography variant="h4" color="#660152" fontWeight="bold">
+        <MenuIcon sx={{ mr: 2, color: '#1A1A1A', fontSize: 40 }} />
+        <Typography fontFamily={"combo"} variant="h4" color="#1A1A1A" fontWeight="bold">
           Menu and Product Management
         </Typography>
       </Box>
@@ -479,8 +479,9 @@ const MenuAdmin = () => {
                   startIcon={<AddCircleOutline />}
                   onClick={() => handleOpenMenuForm()}
                   sx={{ 
-                    backgroundColor: "#660152", 
-                    '&:hover': { backgroundColor: "#520040" },
+                    color: "#333333",
+                    backgroundColor: "#F6D400", 
+                    '&:hover': { backgroundColor: "#C6B000" },
                     alignSelf: 'flex-start'
                   }}
                 >
@@ -574,12 +575,12 @@ const MenuAdmin = () => {
               <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }}>
                   <TableHead>
-                    <TableRow sx={{ backgroundColor: '#660152' }}>
-                      <TableCell sx={{ color: 'white', fontWeight: 'bold', fontFamily: 'montserrat', fontSize: '1rem' }}>Menu</TableCell>
-                      <TableCell sx={{ color: 'white', fontWeight: 'bold', fontFamily: 'montserrat', fontSize: '1rem' }}>Type</TableCell>
-                      <TableCell sx={{ color: 'white', fontWeight: 'bold', fontFamily: 'montserrat', fontSize: '1rem' }}>Products</TableCell>
-                      <TableCell sx={{ color: 'white', fontWeight: 'bold', fontFamily: 'montserrat', fontSize: '1rem' }}>Status</TableCell>
-                      <TableCell sx={{ color: 'white', fontWeight: 'bold', fontFamily: 'montserrat', fontSize: '1rem' }}>Actions</TableCell>
+                    <TableRow sx={{ backgroundColor: '#1A1A1A' }}>
+                      <TableCell sx={{ color: 'white', fontWeight: 'bold', fontFamily: 'combo', fontSize: '1rem' }}>Menu</TableCell>
+                      <TableCell sx={{ color: 'white', fontWeight: 'bold', fontFamily: 'combo', fontSize: '1rem' }}>Type</TableCell>
+                      <TableCell sx={{ color: 'white', fontWeight: 'bold', fontFamily: 'combo', fontSize: '1rem' }}>Products</TableCell>
+                      <TableCell sx={{ color: 'white', fontWeight: 'bold', fontFamily: 'combo', fontSize: '1rem' }}>Status</TableCell>
+                      <TableCell sx={{ color: 'white', fontWeight: 'bold', fontFamily: 'combo', fontSize: '1rem' }}>Actions</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -742,8 +743,9 @@ const MenuAdmin = () => {
                   startIcon={<AddCircleOutline />}
                   onClick={() => handleOpenProductForm()}
                   sx={{ 
-                    backgroundColor: "#660152", 
-                    '&:hover': { backgroundColor: "#520040" },
+                    color: "#333333",
+                    backgroundColor: "#F6D400", 
+                    '&:hover': { backgroundColor: "#C6B000" },
                     alignSelf: 'flex-start'
                   }}
                 >
@@ -836,7 +838,7 @@ const MenuAdmin = () => {
               <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }}>
                   <TableHead>
-                    <TableRow sx={{ backgroundColor: '#660152' }}>
+                    <TableRow sx={{ backgroundColor: '#1A1A1A' }}>
                       <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Product</TableCell>
                       <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Category</TableCell>
                       <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Price</TableCell>
@@ -1122,8 +1124,8 @@ const MenuAdmin = () => {
                     handleOpenMenuForm(selectedMenu);
                   }}
                   sx={{ 
-                    backgroundColor: "#660152", 
-                    '&:hover': { backgroundColor: "#520040" },
+                    backgroundColor: "#F6D400", 
+                    '&:hover': { backgroundColor: "#C6B000" },
                     flex: 1
                   }}
                 >
@@ -1152,7 +1154,7 @@ const MenuAdmin = () => {
         }}>
           {/* Encabezado */}
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-            <Typography variant="h6" color="#660152" fontWeight="bold">
+            <Typography variant="h6" color="#1A1A1A" fontWeight="bold">
               {isEditMode ? "Update Menu" : "Create New Menu"}
             </Typography>
             <IconButton onClick={handleCloseMenuForm}>
@@ -1379,7 +1381,7 @@ const MenuAdmin = () => {
             <Button 
               variant="outlined" 
               onClick={() => activeFormTab === 0 ? handleCloseMenuForm() : setActiveFormTab(0)}
-              sx={{ color: "#660152", borderColor: "#660152" }}
+              sx={{ color: "#1A1A1A", borderColor: "#1A1A1A" }}
             >
               {activeFormTab === 0 ? 'Cancel' : 'Back to Basic Info'}
             </Button>
@@ -1396,7 +1398,7 @@ const MenuAdmin = () => {
                   menuFormData.productos.length === 0
                 ))
               }
-              sx={{ backgroundColor: "#660152", '&:hover': { backgroundColor: "#520040" } }}
+              sx={{ backgroundColor: "#F6D400", color: "#333333", '&:hover': { backgroundColor: "#C6B000" } }}
             >
               {activeFormTab === 0 ? 'Next' : isEditMode ? 'Update Menu' : 'Save Menu'}
             </Button>
@@ -1428,7 +1430,7 @@ const MenuAdmin = () => {
               mb: 3,
             }}
           >
-            <Typography variant="h6" color="#660152" fontWeight="bold">
+            <Typography variant="h6" color="#1A1A1A" fontWeight="bold">
               {isEditMode ? "Edit Product" : "New Product"}
             </Typography>
             <IconButton onClick={handleCloseProductForm}>
@@ -1537,7 +1539,7 @@ const MenuAdmin = () => {
             <Button
               variant="outlined"
               onClick={handleCloseProductForm}
-              sx={{ color: "#660152", borderColor: "#660152" }}
+              sx={{ color: "#1A1A1A", borderColor: "#1A1A1A" }}
             >
               Cancel
             </Button>
@@ -1550,8 +1552,9 @@ const MenuAdmin = () => {
                 !productFormData.categoria
               }
               sx={{
-                backgroundColor: "#660152",
-                "&:hover": { backgroundColor: "#520040" },
+                backgroundColor: "#F6D400",
+                color: "#333333",
+                "&:hover": { backgroundColor: "#C6B000" },
               }}
             >
               {isEditMode ? "Update Product" : "Save Product"}
@@ -1607,13 +1610,13 @@ const MenuAdmin = () => {
               backgroundColor:
                 confirmDialog.type === 'activate' ? '#2e7d32' // green
                 : confirmDialog.type === 'deactivate' ? '#d32f2f' // red
-                : '#660152',
-              color: 'white',
+                : '#F6D400',
+              color: '#333333',
               '&:hover': {
                 backgroundColor:
                   confirmDialog.type === 'activate' ? '#1b5e20'
                   : confirmDialog.type === 'deactivate' ? '#b71c1c'
-                  : '#520040',
+                  : '#C6B000',
               },
             }}
           >

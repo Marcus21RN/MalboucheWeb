@@ -168,7 +168,7 @@ const SidebarU = ({ collapsed, setCollapsed }) => {
 
   return (
     <div
-      className={`bg-white text-[#660152] h-screen transition-all duration-300 ease-in-out ${
+      className={`bg-white text-[#1A1A1A] h-screen transition-all duration-300 ease-in-out ${
         collapsed ? "w-[80px]" : "w-[280px]"
       } fixed left-0 top-0 overflow-hidden z-50 flex flex-col`}
     >
@@ -181,9 +181,9 @@ const SidebarU = ({ collapsed, setCollapsed }) => {
             <Typography
               variant="h6"
               sx={{
-                fontFamily: 'Montserrat, sans-serif',
+                fontFamily: 'combo, sans-serif',
                 fontWeight: 'bold',
-                color: '#660152'
+                color: '#1A1A1A'
               }}
             >
               Admin Panel
@@ -209,35 +209,35 @@ const SidebarU = ({ collapsed, setCollapsed }) => {
                   selected={activeItem === item.path}
                   sx={{
                     backgroundColor:
-                      activeItem === item.path ? "#660152" : "inherit",
+                      activeItem === item.path ? "#1A1A1A" : "inherit",
                     borderRadius: "10px",
                     "&:hover": activeItem === item.path
                       ? {}
                       : {
-                          backgroundColor: "rgba(247, 210, 240, 0.3)",
+                          backgroundColor: "rgba(246, 212, 0, 0.12)",
                           borderRadius: "10px",
                           "& .MuiListItemIcon-root": {
-                            color: "#660152",
+                            color: "#1A1A1A",
                           },
                           "& .MuiTypography-root": {
-                            color: "#660152",
+                            color: "#1A1A1A",
                             fontWeight: "medium",
-                            fontFamily: 'Montserrat, sans-serif',
+                            fontFamily: 'combo, sans-serif',
                           },
                         },
                     "&.Mui-selected": {
-                      backgroundColor: "#660152",
+                      backgroundColor: "#F6D400",
                       "& .MuiListItemIcon-root": {
-                        color: "white",
+                        color: "black",
                       },
                       "& .MuiTypography-root": {
-                        color: "white",
+                        color: "black",
                         fontWeight: "medium",
-                        fontFamily: 'Montserrat, sans-serif',
+                        fontFamily: 'combo, sans-serif',
                       },
                     },
                     "&.Mui-selected:hover": {
-                      backgroundColor: "#660152",
+                      backgroundColor: "#F6D400",
                     },
                   }}
                 >
@@ -258,7 +258,7 @@ const SidebarU = ({ collapsed, setCollapsed }) => {
                             activeItem === item.path ? "white" : "#6b7280",
                           fontWeight:
                             activeItem === item.path ? "medium" : "normal",
-                          fontFamily: 'Montserrat, sans-serif',
+                          fontFamily: 'combo, sans-serif',
                         },
                       }}
                     />
@@ -280,12 +280,12 @@ const SidebarU = ({ collapsed, setCollapsed }) => {
               selected={activeItem === "/admin/profile"}
               sx={{
                 backgroundColor:
-                  activeItem === "/admin/profile" ? "rgba(102, 1, 82, 0.8)" : "rgba(247, 210, 240, 0.3)",
+                  activeItem === "/admin/profile" ? "rgba(26,26,26,0.8)" : "rgba(246, 212, 0, 0.06)",
                 "&:hover": {
                   backgroundColor:
                     activeItem === "/admin/profile"
-                      ? "rgba(102, 1, 82, 0.8)"
-                      : "rgba(247, 210, 240, 0.3)",
+                      ? "rgba(26,26,26,0.8)"
+                      : "rgba(246, 212, 0, 0.06)",
                 },
               }}
             >
@@ -300,10 +300,10 @@ const SidebarU = ({ collapsed, setCollapsed }) => {
                   sx={{
                     width: 32,
                     height: 32,
-                    backgroundColor: activeItem === "/admin/profile" ? "white" : "#660152",
-                    color: activeItem === "/admin/profile" ? "#660152" : "white",
+                    backgroundColor: activeItem === "/admin/profile" ? "white" : "#1A1A1A",
+                    color: activeItem === "/admin/profile" ? "#1A1A1A" : "white",
                     fontSize: "0.9rem",
-                    fontFamily: 'Montserrat, sans-serif',
+                    fontFamily: 'combo, sans-serif',
                     fontWeight: 'bold'
                   }}
                 >
@@ -315,21 +315,21 @@ const SidebarU = ({ collapsed, setCollapsed }) => {
                   <ListItemText
                     primary="Profile"
                     primaryTypographyProps={{
-                      sx: {
+                        sx: {
                         color:
-                          activeItem === "/admin/profile" ? "#660152" : "#6b7280",
+                          activeItem === "/admin/profile" ? "#1A1A1A" : "#6b7280",
                         fontWeight:
                           activeItem === "/admin/profile"
                             ? "medium"
                             : "normal",
-                        fontFamily: 'Montserrat, sans-serif',
+                        fontFamily: 'combo, sans-serif',
                       },
                     }}
                   />
                   <IconButton
                     size="small"
                     sx={{
-                      color: activeItem === "/admin/profile" ? "#660152" : "#6b7280",
+                      color: activeItem === "/admin/profile" ? "#1A1A1A" : "#6b7280",
                     }}
                   >
                     {profileExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
@@ -342,7 +342,7 @@ const SidebarU = ({ collapsed, setCollapsed }) => {
 
         {/* Información del usuario expandida */}
         <Collapse in={profileExpanded && !collapsed}>
-          <Box sx={{ px: 2, pb: 2, backgroundColor: 'rgba(102, 1, 82, 0.05)' }}>
+          <Box sx={{ px: 2, pb: 2, backgroundColor: 'rgba(246, 212, 0, 0.06)' }}>
             <Divider sx={{ mb: 2 }} />
             
             {/* Avatar y nombre principal */}
@@ -351,10 +351,10 @@ const SidebarU = ({ collapsed, setCollapsed }) => {
                 sx={{
                   width: 48,
                   height: 48,
-                  backgroundColor: "#660152",
+                  backgroundColor: "#1A1A1A",
                   color: "white",
                   fontSize: "1.1rem",
-                  fontFamily: 'Montserrat, sans-serif',
+                  fontFamily: 'combo, sans-serif',
                   fontWeight: 'bold',
                   mr: 2
                 }}
@@ -365,9 +365,9 @@ const SidebarU = ({ collapsed, setCollapsed }) => {
                 <Typography 
                   variant="subtitle1" 
                   sx={{ 
-                    fontFamily: 'Montserrat, sans-serif',
+                    fontFamily: 'combo, sans-serif',
                     fontWeight: 'bold',
-                    color: '#660152',
+                    color: '#1A1A1A',
                     lineHeight: 1.2
                   }}
                 >
@@ -376,7 +376,7 @@ const SidebarU = ({ collapsed, setCollapsed }) => {
                 <Typography 
                   variant="body2" 
                   sx={{ 
-                    fontFamily: 'Montserrat, sans-serif',
+                    fontFamily: 'combo, sans-serif',
                     color: '#6b7280',
                     fontSize: '0.75rem'
                   }}
@@ -394,7 +394,7 @@ const SidebarU = ({ collapsed, setCollapsed }) => {
                 <Typography 
                   variant="body2" 
                   sx={{ 
-                    fontFamily: 'Montserrat, sans-serif',
+                    fontFamily: 'combo, sans-serif',
                     color: '#6b7280',
                     fontSize: '0.75rem'
                   }}
@@ -409,7 +409,7 @@ const SidebarU = ({ collapsed, setCollapsed }) => {
                 <Typography 
                   variant="body2" 
                   sx={{ 
-                    fontFamily: 'Montserrat, sans-serif',
+                    fontFamily: 'combo, sans-serif',
                     color: '#6b7280',
                     fontSize: '0.75rem'
                   }}
@@ -425,9 +425,9 @@ const SidebarU = ({ collapsed, setCollapsed }) => {
                   label={getRoleLabel(userInfo.IDRol)}
                   size="small"
                   sx={{
-                    backgroundColor: "#660152",
+                    backgroundColor: "#1A1A1A",
                     color: "white",
-                    fontFamily: 'Montserrat, sans-serif',
+                    fontFamily: 'combo, sans-serif',
                     fontWeight: 'medium',
                     fontSize: '0.7rem',
                     "& .MuiChip-icon": {
@@ -441,7 +441,7 @@ const SidebarU = ({ collapsed, setCollapsed }) => {
                   size="small"
                   color={getStatusColor(userInfo.estado)}
                   sx={{
-                    fontFamily: 'Montserrat, sans-serif',
+                    fontFamily: 'combo, sans-serif',
                     fontWeight: 'bold',
                     fontSize: '0.7rem'
                   }}
@@ -455,7 +455,7 @@ const SidebarU = ({ collapsed, setCollapsed }) => {
                   
                   variant="outlined"
                   onClick={() => setOpenPasswordModal(true)}
-                  sx={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 'bold', cursor: 'pointer', borderColor: '#660152', color: '#660152', '&:hover': { backgroundColor: 'rgba(102, 1, 82, 0.1)' } }}
+                  sx={{ fontFamily: 'combo, sans-serif', fontWeight: 'bold', cursor: 'pointer', borderColor: '#1A1A1A', color: '#1A1A1A', '&:hover': { backgroundColor: 'rgba(246, 212, 0, 0.06)' } }}
                 />
               </Box>
             </Box>
@@ -468,7 +468,7 @@ const SidebarU = ({ collapsed, setCollapsed }) => {
               setPasswordSuccess("");
             }}>
               <Box sx={{ p: 3, minWidth: 350 }}>
-                <Typography variant="h6" fontWeight="bold" color="#660152" mb={2}>
+                <Typography variant="h6" fontWeight="bold" color="#1A1A1A" mb={2}>
                   Change Password
                 </Typography>
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -497,7 +497,7 @@ const SidebarU = ({ collapsed, setCollapsed }) => {
                         setPasswordError("");
                         setPasswordSuccess("");
                       }}
-                      style={{ padding: '8px 18px', borderRadius: 6, border: '1px solid #660152', background: 'white', color: '#660152', fontWeight: 'bold', cursor: 'pointer' }}
+                      style={{ padding: '8px 18px', borderRadius: 6, border: '1px solid #1A1A1A', background: 'white', color: '#1A1A1A', fontWeight: 'bold', cursor: 'pointer' }}
                       disabled={passwordLoading}
                     >
                       Cancel
@@ -537,7 +537,7 @@ const SidebarU = ({ collapsed, setCollapsed }) => {
                           setPasswordLoading(false);
                         }
                       }}
-                      style={{ padding: '8px 18px', borderRadius: 6, border: 'none', background: '#660152', color: 'white', fontWeight: 'bold', cursor: 'pointer' }}
+                      style={{ padding: '8px 18px', borderRadius: 6, border: 'none', background: '#F6D400', color: '#1A1A1A', fontWeight: 'bold', cursor: 'pointer' }}
                       disabled={passwordLoading}
                     >
                       Save

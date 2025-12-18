@@ -79,7 +79,7 @@ export default function LoginPage() {
               />
             </div>
             
-            <h2 className="text-3xl font-bold text-[#660152] mb-6 text-center">
+            <h2 className="text-3xl font-bold text-[#1A1A1A] mb-6 text-center">
               Log into your account
             </h2>
 
@@ -90,7 +90,7 @@ export default function LoginPage() {
                   id="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-3 border border-purple-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#660152] placeholder-gray-400"
+                  className="w-full px-4 py-3 border border-[#fce354] rounded-md focus:outline-none focus:ring-2 focus:ring-[#fce354] placeholder-gray-400"
                   placeholder="you@example.com"
                   required
                 />
@@ -102,7 +102,7 @@ export default function LoginPage() {
                   id="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 border border-purple-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#660152] placeholder-gray-400"
+                  className="w-full px-4 py-3 border border-[#fce354] rounded-md focus:outline-none focus:ring-2 focus:ring-[#fce354] placeholder-gray-400"
                   placeholder="••••••••"
                   required
                 />
@@ -115,7 +115,7 @@ export default function LoginPage() {
               <div>
                 <button
                   type="submit"
-                  className="w-full bg-[#660152] text-white py-3 rounded-lg hover:bg-[#660152] transition duration-300"
+                  className="w-full bg-[#F6D400] font-bold text-[#333333] py-3 rounded-lg hover:bg-[#C6B000] transition duration-300"
                 >
                   Log In
                 </button>

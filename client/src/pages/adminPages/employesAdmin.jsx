@@ -50,7 +50,7 @@ import {
   CheckCircle as CheckCircleIcon,
   Add as AddIcon,
   Close as CloseIcon,
-  Person as PersonIcon,
+  People as EmployeesIcon,
   AdminPanelSettings as AdminIcon,
   Work as WorkIcon,
   Save as SaveIcon,
@@ -311,7 +311,7 @@ export default function EmployesAdmin() {
       case 'EMPLE':
         return <WorkIcon />;
       default:
-        return <PersonIcon />;
+        return <EmployeesIcon/>;
     }
   };
 
@@ -323,16 +323,17 @@ export default function EmployesAdmin() {
 
   return (
     <Box component={motion.div} 
-      sx={{ padding:1}}
+      sx={{ padding:3}}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
     >
-      <Box sx={{ display: 'flex', alignItems: 'center', mb: 5 }}>
-        <PersonIcon sx={{ mr: 2, color: '#660152', fontSize: 50, backgroundColor: '#FFE6FA', borderRadius: '50%', padding: '8px' }} />
-        <Typography variant="h5" color="#660152" fontWeight="bold">
+      <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+        <EmployeesIcon sx={{ mr: 2, color: '#1A1A1A', fontSize: 40 }} />
+        <Typography fontFamily={"combo"} variant="h4" color="#1A1A1A" fontWeight="bold">
           Employees Management
         </Typography>
       </Box>
+
       <Box sx={{display: 'flex', flexDirection: "row", alignItems: 'center', justifyContent: 'space-between'  }}>
         <Box sx={{ mb: 3, display: 'flex', flexDirection: 'column', gap:2}}>
         <Button
@@ -341,8 +342,9 @@ export default function EmployesAdmin() {
           
           onClick={() => setOpenDialog(true)}
           sx={{ 
-            backgroundColor: "#660152", 
-            '&:hover': { backgroundColor: "#520040" },
+            color: "#333333",
+            backgroundColor: "#F6D400", 
+            '&:hover': { backgroundColor: "#C6B000" },
             alignSelf: 'flex-start'
           }}
         >
@@ -436,19 +438,19 @@ export default function EmployesAdmin() {
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }}>
               <TableHead>
-                <TableRow sx={{ backgroundColor: '#660152' }}>
-                  <TableCell sx={{ color: 'white', fontWeight: 'bold', cursor: 'pointer', fontFamily: 'montserrat' }} onClick={() => handleSort("_id")}>
+                <TableRow sx={{ backgroundColor: '#1A1A1A' }}>
+                  <TableCell sx={{ color: 'white', fontWeight: 'bold', cursor: 'pointer', fontFamily: 'combo' }} onClick={() => handleSort("_id")}>
                     ID {orderBy === "_id" && (order === "asc" ? "▲" : "▼")}
                   </TableCell>
-                  <TableCell sx={{ color: 'white', fontWeight: 'bold', cursor: 'pointer', fontFamily: 'montserrat' }} onClick={() => handleSort("nombre")}>
+                  <TableCell sx={{ color: 'white', fontWeight: 'bold', cursor: 'pointer', fontFamily: 'combo' }} onClick={() => handleSort("nombre")}>
                     Employee {orderBy === "nombre" && (order === "asc" ? "▲" : "▼")}
                   </TableCell>
-                  <TableCell sx={{ color: 'white', fontWeight: 'bold', cursor: 'pointer', fontFamily: 'montserrat' }} onClick={() => handleSort("correo")}>
+                  <TableCell sx={{ color: 'white', fontWeight: 'bold', cursor: 'pointer', fontFamily: 'combo' }} onClick={() => handleSort("correo")}>
                     Email {orderBy === "correo" && (order === "asc" ? "▲" : "▼")}
                   </TableCell>
-                  <TableCell sx={{ color: 'white', fontWeight: 'bold', fontFamily: 'montserrat',  }}>Role</TableCell>
-                  <TableCell sx={{ color: 'white', fontWeight: 'bold', fontFamily: 'montserrat',  }}>Status</TableCell>
-                  <TableCell sx={{ color: 'white', fontWeight: 'bold', fontFamily: 'montserrat', }}>Actions</TableCell>
+                  <TableCell sx={{ color: 'white', fontWeight: 'bold', fontFamily: 'combo', fontSize: '1rem' }}>Role</TableCell>
+                  <TableCell sx={{ color: 'white', fontWeight: 'bold', fontFamily: 'combo', fontSize: '1rem' }}>Status</TableCell>
+                  <TableCell sx={{ color: 'white', fontWeight: 'bold', fontFamily: 'combo', fontSize: '1rem' }}>Actions</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -572,7 +574,7 @@ export default function EmployesAdmin() {
                   <TableRow>
                     <TableCell colSpan={6} align="center">
                       <Box sx={{ py: 6 }}>
-                        <PersonIcon sx={{ fontSize: 60, color: 'grey.400', mb: 2 }} />
+                        <EmployeesIcon sx={{ fontSize: 60, color: 'grey.400', mb: 2 }} />
                         <Typography variant="h6" color="text.secondary">
                           There are no employees available
                         </Typography>
@@ -600,7 +602,7 @@ export default function EmployesAdmin() {
 
       {/* Dialog original para crear/editar */}
       <Dialog open={openDialog} onClose={resetForm} fullWidth maxWidth="md" sx={{height: '90vh'}}>
-        <DialogTitle sx={{ color: "#fff", fontWeight: "bold", fontFamily: "montserrat", backgroundColor: "#660152" }}>
+        <DialogTitle sx={{ color: "#fff", fontWeight: "bold", fontFamily: "combo", backgroundColor: "#1A1A1A" }}>
           {modoEdicion ? "Update Employee" : "New Employee"}
         </DialogTitle>
         <form onSubmit={handleSubmitWithConfirmation}>
@@ -673,8 +675,9 @@ export default function EmployesAdmin() {
               variant="contained" 
               startIcon={<SaveIcon />} 
               sx={{ 
-                backgroundColor: "#660152", 
-                '&:hover': { backgroundColor: "#520040" } 
+                backgroundColor: "#F6D400", 
+                color: "#333333",
+                '&:hover': { backgroundColor: "#C6B000" } 
               }}
             >
               {modoEdicion ? "Update" : "Save"}
@@ -688,7 +691,7 @@ export default function EmployesAdmin() {
         open={openStatusDialog}
         onClose={() => setOpenStatusDialog(false)}
       >
-        <DialogTitle sx={{ color: "#660152" }}>
+        <DialogTitle sx={{ color: "#1A1A1A" }}>
           {empleadoToStatus?.estado === "activo" ? "Deactivate employee" : "Activate employee"}
         </DialogTitle>
         <DialogContent>
@@ -712,7 +715,7 @@ export default function EmployesAdmin() {
             <DialogActions>
               <Button 
                 onClick={() => setOpenStatusDialog(false)}
-                sx={{ color: "#660152" }}
+                sx={{ color: "#1A1A1A" }}
               >
                 Cancel
               </Button>
@@ -720,8 +723,9 @@ export default function EmployesAdmin() {
                 type="submit"
                 variant="contained"
                 sx={{ 
-                  backgroundColor: "#660152",
-                  '&:hover': { backgroundColor: "#520040" }
+                  backgroundColor: "#F6D400",
+                  color: "#333333",
+                  '&:hover': { backgroundColor: "#C6B000" }
                 }}
                 startIcon={<DeleteIcon />}
               >
@@ -737,7 +741,7 @@ export default function EmployesAdmin() {
         open={openSaveDialog}
         onClose={() => setOpenSaveDialog(false)}
       >
-        <DialogTitle sx={{ color: "#660152" }}>
+        <DialogTitle sx={{ color: "#1A1A1A", fontFamily: "combo" }}>
           {modoEdicion ? "Confirm Update" : "Confirm Registration"}
         </DialogTitle>
         <DialogContent>
@@ -766,7 +770,7 @@ export default function EmployesAdmin() {
             <DialogActions>
               <Button 
                 onClick={() => setOpenSaveDialog(false)}
-                sx={{ color: "#660152" }}
+                sx={{ color: "#1A1A1A" }}
               >
                 Cancel
               </Button>
@@ -774,8 +778,9 @@ export default function EmployesAdmin() {
                 type="submit"
                 variant="contained"
                 sx={{ 
-                  backgroundColor: "#660152",
-                  '&:hover': { backgroundColor: "#520040" }
+                  backgroundColor: "#F6D400",
+                  color: "#333333",
+                  '&:hover': { backgroundColor: "#C6B000" }
                 }}
                 startIcon={<SaveIcon />}
               >

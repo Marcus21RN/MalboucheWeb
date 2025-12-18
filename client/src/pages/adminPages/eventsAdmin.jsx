@@ -371,8 +371,8 @@ const handleOpenEventForm = (event = null) => {
       animate={{ opacity: 1 }}
     >
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-        <EventIcon sx={{ mr: 2, color: '#660152', fontSize: 40 }} />
-        <Typography variant="h4" color="#660152" fontWeight="bold">
+        <EventIcon sx={{ mr: 2, color: '#1A1A1A', fontSize: 40 }} />
+        <Typography variant="h4" color="#1A1A1A" fontWeight="bold">
           Events Management
         </Typography>
       </Box>
@@ -383,8 +383,9 @@ const handleOpenEventForm = (event = null) => {
             startIcon={<AddIcon />}
             onClick={() => handleOpenEventForm()}
             sx={{ 
-              backgroundColor: "#660152", 
-              '&:hover': { backgroundColor: "#520040" },
+              color: "#333333",
+              backgroundColor: "#F6D400", 
+              '&:hover': { backgroundColor: "#C6B000" },
               alignSelf: 'flex-start'
             }}
                 >
@@ -460,7 +461,7 @@ const handleOpenEventForm = (event = null) => {
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }}>
               <TableHead>
-                <TableRow sx={{ backgroundColor: '#660152' }}>
+                <TableRow sx={{ backgroundColor: '#1A1A1A' }}>
                   <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Event</TableCell>
                   <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Date</TableCell>
                   <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Time</TableCell>
@@ -658,7 +659,7 @@ const handleOpenEventForm = (event = null) => {
     overflow: 'auto'
   }}>
     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-      <Typography variant="h6" color="#660152" fontWeight="bold">
+      <Typography variant="h6" color="#1A1A1A" fontWeight="bold">
         {isEditMode ? "Edit Event" : "Create New Event"}
       </Typography>
       <IconButton onClick={handleCloseEventForm}>
@@ -751,7 +752,7 @@ const handleOpenEventForm = (event = null) => {
               component="label"
               fullWidth
               startIcon={<ImageIcon />}
-              sx={{ border: '1px solid #c4c4c4', backgroundColor: '#f5f5f5', color: '#660152', '&:hover': { backgroundColor: '#e0e0e0' } }}
+              sx={{ border: '1px solid #c4c4c4', backgroundColor: '#f5f5f5', color: '#1A1A1A', '&:hover': { backgroundColor: '#e0e0e0' } }}
             >
               {imagePreview ? 'Change image' : 'Upload image'}
               <input
@@ -908,7 +909,7 @@ const handleOpenEventForm = (event = null) => {
         variant="contained"
         onClick={handleSaveEvent}
         disabled={!eventFormData.nombre || !eventFormData.descripcion || !eventFormData.fecha}
-        sx={{ backgroundColor: "#660152", '&:hover': { backgroundColor: "#520040" }, borderRadius: 2, px: 3, fontWeight: 'bold' }}
+        sx={{ color: "#333333", backgroundColor: "#F6D400", '&:hover': { backgroundColor: "#C6B000" }, borderRadius: 2, px: 3, fontWeight: 'bold' }}
       >
         {isEditMode ? 'Update Event' : 'Create Event'}
       </Button>

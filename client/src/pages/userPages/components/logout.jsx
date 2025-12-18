@@ -16,21 +16,21 @@ function LogoutButton() {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="bg-[#66011F] cursor-pointer font-['Montserrat'] text-white px-4 py-2 rounded hover:bg-[#55001A] transition-colors duration-200 flex items-center justify-center"
+        className="bg-[#F6D400] cursor-pointer font-['combo'] text-[#333333] px-4 py-2 rounded hover:bg-[#C6B000] transition-colors duration-200 flex items-center justify-center"
       >
         Log Out
         <ExitToAppIcon style={{ marginLeft: '8px' }} />
       </button>
       <Dialog open={open} onClose={() => setOpen(false)}>
-        <DialogTitle sx={{ color: "#660152" }}>Confirm Logout</DialogTitle>
+        <DialogTitle sx={{ color: "#1A1A1A", fontFamily: 'combo' }}>Confirm Logout</DialogTitle>
         <DialogContent>
           Are you sure you want to log out?
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpen(false)} sx={{ color: "#660152", borderColor: "#660152", '&:hover': { borderColor: "#660152" }, cursor: 'pointer' }} variant="outlined">
+          <Button onClick={() => setOpen(false)} sx={{ color: "#1A1A1A", borderColor: "#1A1A1A", '&:hover': { borderColor: "#1A1A1A" }, cursor: 'pointer' }} variant="outlined">
             Cancel
           </Button>
-          <Button onClick={handleLogout} sx={{ backgroundColor: "#66011F" }} variant="contained">
+          <Button onClick={handleLogout} sx={{ backgroundColor: "#F6D400", color: "#333333", '&:hover': { backgroundColor: "#C6B000" } }} variant="contained">
             Log Out
           </Button>
         </DialogActions>

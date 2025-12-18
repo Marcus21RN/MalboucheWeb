@@ -31,7 +31,7 @@ const AdminLayout = () => {
       >
         {/* Topbar */}
         <div className="w-full bg-white h-20 flex items-center justify-between px-6">
-          <h2 className="text-lg font-semibold text-[#660152] font-['Montserrat']">
+          <h2 className="text-lg font-semibold text-[#1A1A1A] font-['combo']">
             Welcome, {userName}
           </h2>
           {/* Aquí puedes poner avatar, logout, etc. */}

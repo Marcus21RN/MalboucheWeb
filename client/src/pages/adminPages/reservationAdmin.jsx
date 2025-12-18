@@ -15,7 +15,8 @@ import {
   Phone as PhoneIcon,
   Email as EmailIcon,
   AccessTime as TimeIcon,
-  CalendarToday as CalendarIcon
+  CalendarToday as CalendarIcon,
+  BookOnline as ReservationsIcon
 } from "@mui/icons-material";
 
 const ReservationAdmin = () => {
@@ -204,8 +205,9 @@ const ReservationAdmin = () => {
   return (
     <Box sx={{ padding: 3 }}>
       {/* Título y controles */}
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Typography variant="h4" color="#660152" fontWeight="bold">
+      <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+        <ReservationsIcon sx={{ mr: 2, color: '#1A1A1A', fontSize: 40 }} />
+        <Typography variant="h4" color="#1A1A1A" fontWeight="bold">
           Reservations Management
         </Typography>
       </Box>
@@ -313,14 +315,14 @@ const ReservationAdmin = () => {
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }}>
               <TableHead>
-                <TableRow sx={{ backgroundColor: '#660152'}}>
-                  <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Folio</TableCell>
-                  <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Client</TableCell>
-                  <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Contact</TableCell>
-                  <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Date & Time</TableCell>
-                  <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>People</TableCell>
-                  <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Status</TableCell>
-                  <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Actions</TableCell>
+                <TableRow sx={{ backgroundColor: '#1A1A1A'}}>
+                  <TableCell sx={{ color: 'white', fontWeight: 'bold', fontFamily: 'combo', fontSize: '0.92rem'  }}>Folio</TableCell>
+                  <TableCell sx={{ color: 'white', fontWeight: 'bold', fontFamily: 'combo', fontSize: '0.92rem'  }}>Client</TableCell>
+                  <TableCell sx={{ color: 'white', fontWeight: 'bold', fontFamily: 'combo', fontSize: '0.92rem'  }}>Contact</TableCell>
+                  <TableCell sx={{ color: 'white', fontWeight: 'bold', fontFamily: 'combo', fontSize: '0.92rem'  }}>Date & Time</TableCell>
+                  <TableCell sx={{ color: 'white', fontWeight: 'bold', fontFamily: 'combo', fontSize: '0.92rem'  }}>People</TableCell>
+                  <TableCell sx={{ color: 'white', fontWeight: 'bold', fontFamily: 'combo', fontSize: '0.92rem'  }}>Status</TableCell>
+                  <TableCell sx={{ color: 'white', fontWeight: 'bold', fontFamily: 'combo', fontSize: '0.92rem'  }}>Actions</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -340,7 +342,7 @@ const ReservationAdmin = () => {
                       sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                     >
                       <TableCell>
-                        <Typography variant="body1" fontFamily="montserrat" fontWeight="bold">
+                        <Typography variant="body1" fontFamily="combo" fontWeight="bold">
                           {res._id}
                         </Typography>
                         <Typography variant="caption" color="text.secondary">
@@ -481,7 +483,7 @@ const ReservationAdmin = () => {
               page={pagina}
               onPageChange={handleChangePagina}
               onRowsPerPageChange={handleChangeFilasPorPagina}
-              sx={{ color: "#660152" }}
+              sx={{ color: "#1A1A1A" }}
             />
           </TableContainer>
         </CardContent>
@@ -490,8 +492,8 @@ const ReservationAdmin = () => {
       {/* Diálogo de Ticket */}
       <Dialog open={!!ticketDialog} onClose={handleCerrarTicket} fullWidth maxWidth="sm">
         <DialogTitle sx={{ 
-          color: "#660152", 
-          fontFamily: "montserrat", 
+          color: "#1A1A1A", 
+          fontFamily: "combo", 
           fontWeight: 600, 
           background: "#f5f5f5",
           display: 'flex',
@@ -503,68 +505,68 @@ const ReservationAdmin = () => {
         </DialogTitle>
         <DialogContent>
           {ticketDialog && (
-            <Box sx={{ p: 2, background: '#faf7fb', borderRadius: 2 }}>
-              <Typography variant="h6" gutterBottom color="#660152" sx={{ fontWeight: 700, mb: 2 }}>
+            <Box sx={{ p: 2, background: "rgba(246, 212, 0, 0.12)", borderRadius: 2 }}>
+              <Typography variant="h6" gutterBottom color="#1A1A1A" sx={{ fontWeight: 700, mb: 2 }}>
                 Reservation Details
               </Typography>
-              <Divider sx={{ mb: 3, borderColor: "#660152", borderWidth: 1 }} />
+              <Divider sx={{ mb: 3, borderColor: "#1A1A1A", borderWidth: 1 }} />
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
                   <Box sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <ReceiptIcon sx={{ color: '#660152' }} />
+                    <ReceiptIcon sx={{ color: '#1A1A1A' }} />
                     <Box>
-                      <Typography variant="subtitle2" color="#660152" sx={{ fontWeight: 600 }}>Folio</Typography>
-                      <Typography variant="body1" sx={{ mb: 1 }}>{ticketDialog._id}</Typography>
+                      <Typography variant="subtitle2" color="#1A1A1A" sx={{ fontWeight: 600, fontFamily: 'combo' }}>Folio</Typography>
+                      <Typography variant="body1" sx={{ mb: 1, fontFamily: 'combo' }}>{ticketDialog._id}</Typography>
                     </Box>
                   </Box>
                   <Box sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <PersonIcon sx={{ color: '#660152' }} />
+                    <PersonIcon sx={{ color: '#1A1A1A' }} />
                     <Box>
-                      <Typography variant="subtitle2" color="#660152" sx={{ fontWeight: 600 }}>Client</Typography>
-                      <Typography variant="body1" sx={{ mb: 1 }}>{ticketDialog.nombreCliente} {ticketDialog.primerApell}</Typography>
+                      <Typography variant="subtitle2" color="#1A1A1A" sx={{ fontWeight: 600, fontFamily: 'combo' }}>Client</Typography>
+                      <Typography variant="body1" sx={{ mb: 1, fontFamily: 'combo' }}>{ticketDialog.nombreCliente} {ticketDialog.primerApell}</Typography>
                     </Box>
                   </Box>
                   <Box sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <CalendarIcon sx={{ color: '#660152' }} />
+                    <CalendarIcon sx={{ color: '#1A1A1A' }} />
                     <Box>
-                      <Typography variant="subtitle2" color="#660152" sx={{ fontWeight: 600 }}>Date</Typography>
-                      <Typography variant="body1" sx={{ mb: 1 }}>{ticketDialog.fecha ? new Date(ticketDialog.fecha).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : ''}</Typography>
+                      <Typography variant="subtitle2" color="#1A1A1A" sx={{ fontWeight: 600, fontFamily: 'combo' }}>Date</Typography>
+                      <Typography variant="body1" sx={{ mb: 1, fontFamily: 'combo' }}>{ticketDialog.fecha ? new Date(ticketDialog.fecha).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : ''}</Typography>
                     </Box>
                   </Box>
                   <Box sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <EmailIcon sx={{ color: '#660152' }} />
+                    <EmailIcon sx={{ color: '#1A1A1A' }} />
                     <Box>
-                      <Typography variant="subtitle2" color="#660152" sx={{ fontWeight: 600 }}>Email</Typography>
-                      <Typography variant="body1" sx={{ mb: 1 }}>{ticketDialog.correoCliente}</Typography>
+                      <Typography variant="subtitle2" color="#1A1A1A" sx={{ fontWeight: 600, fontFamily: 'combo' }}>Email</Typography>
+                      <Typography variant="body1" sx={{ mb: 1, fontFamily: 'combo' }}>{ticketDialog.correoCliente}</Typography>
                     </Box>
                   </Box>
                   <Box sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <PhoneIcon sx={{ color: '#660152' }} />
+                    <PhoneIcon sx={{ color: '#1A1A1A' }} />
                     <Box>
-                      <Typography variant="subtitle2" color="#660152" sx={{ fontWeight: 600 }}>Phone</Typography>
-                      <Typography variant="body1" sx={{ mb: 1 }}>{ticketDialog.numTel}</Typography>
+                      <Typography variant="subtitle2" color="#1A1A1A" sx={{ fontWeight: 600, fontFamily: 'combo' }}>Phone</Typography>
+                      <Typography variant="body1" sx={{ mb: 1, fontFamily: 'combo' }}>{ticketDialog.numTel}</Typography>
                     </Box>
                   </Box>
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <Box sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <TimeIcon sx={{ color: '#660152' }} />
+                    <TimeIcon sx={{ color: '#1A1A1A' }} />
                     <Box>
-                      <Typography variant="subtitle2" color="#660152" sx={{ fontWeight: 600 }}>Time</Typography>
-                      <Typography variant="body1" sx={{ mb: 1 }}>{ticketDialog.horaInicio}</Typography>
+                      <Typography variant="subtitle2" color="#1A1A1A" sx={{ fontWeight: 600, fontFamily: 'combo' }}>Time</Typography>
+                      <Typography variant="body1" sx={{ mb: 1, fontFamily: 'combo' }}>{ticketDialog.horaInicio}</Typography>
                     </Box>
                   </Box>
                   <Box sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <PersonIcon sx={{ color: '#660152' }} />
+                    <PersonIcon sx={{ color: '#1A1A1A' }} />
                     <Box>
-                      <Typography variant="subtitle2" color="#660152" sx={{ fontWeight: 600 }}>People</Typography>
-                      <Typography variant="body1" sx={{ mb: 1 }}>{ticketDialog.cantidadPersonas}</Typography>
+                      <Typography variant="subtitle2" color="#1A1A1A" sx={{ fontWeight: 600, fontFamily: 'combo' }}>People</Typography>
+                      <Typography variant="body1" sx={{ mb: 1, fontFamily: 'combo' }}>{ticketDialog.cantidadPersonas}</Typography>
                     </Box>
                   </Box>
                   <Box sx={{ mb: 2 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <EventIcon sx={{ color: '#660152', mr: 0.5 }} />
-                      <Typography variant="subtitle2" color="#660152" sx={{ fontWeight: 600 }}>Status</Typography>
+                      <EventIcon sx={{ color: '#1A1A1A', mr: 0.5 }} />
+                      <Typography variant="subtitle2" color="#1A1A1A" sx={{ fontWeight: 600, fontFamily: 'combo' }}>Status</Typography>
                     </Box>
                     <Chip 
                       label={ticketDialog.estado.toUpperCase()} 
@@ -580,10 +582,10 @@ const ReservationAdmin = () => {
                     />
                   </Box>
                   <Box sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <CalendarIcon sx={{ color: '#660152' }} />
+                    <CalendarIcon sx={{ color: '#1A1A1A' }} />
                     <Box>
-                      <Typography variant="subtitle2" color="#660152" sx={{ fontWeight: 600 }}>Creation Date</Typography>
-                      <Typography variant="body1" sx={{ mb: 1 }}>{ticketDialog.fechaReservacion ? new Date(ticketDialog.fechaReservacion).toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : ''}</Typography>
+                      <Typography variant="subtitle2" color="#1A1A1A" sx={{ fontWeight: 600, fontFamily: 'combo' }}>Creation Date</Typography>
+                      <Typography variant="body1" sx={{ mb: 1, fontFamily: 'combo' }}>{ticketDialog.fechaReservacion ? new Date(ticketDialog.fechaReservacion).toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : ''}</Typography>
                     </Box>
                   </Box>
                 </Grid>
@@ -619,8 +621,9 @@ const ReservationAdmin = () => {
             onClick={handleCerrarTicket}
             variant="contained"
             sx={{ 
-              backgroundColor: "#660152",
-              '&:hover': { backgroundColor: "#520040" }
+              color: '#333333',
+              backgroundColor: "#F6D400",
+              '&:hover': { backgroundColor: "#C6B000" }
             }}
           >
             Close
@@ -630,7 +633,7 @@ const ReservationAdmin = () => {
 
       {/* Diálogo de Cancelación */}
       <Dialog open={openDialog} onClose={handleCloseDialog} fullWidth maxWidth="sm">
-        <DialogTitle sx={{ color: "#660152" }}>Cancel Reservation</DialogTitle>
+        <DialogTitle sx={{ color: "#1A1A1A" }}>Cancel Reservation</DialogTitle>
         <DialogContent>
           <Typography gutterBottom>
             Are you sure you want to cancel the reservation <strong>{selected?._id}</strong>?
@@ -651,7 +654,7 @@ const ReservationAdmin = () => {
         <DialogActions>
           <Button 
             onClick={handleCloseDialog}
-            sx={{ color: "#660152" }}
+            sx={{ color: "#333333" }}
           >
             Cancel
           </Button>

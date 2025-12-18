@@ -305,8 +305,8 @@ const PromoAdmin = () => {
     <Box component={motion.div} sx={{ padding: 3 }} initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
       {/* Encabezado y filtros */}
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-        <PromoIcon sx={{ mr: 2, color: '#660152', fontSize: 40 }} />
-        <Typography variant="h4" color="#660152" fontWeight="bold">
+        <PromoIcon sx={{ mr: 2, color: '#1A1A1A', fontSize: 40 }} />
+        <Typography variant="h4" color="#1A1A1A" fontWeight="bold">
           Promotion Management
         </Typography>
       </Box>
@@ -317,8 +317,9 @@ const PromoAdmin = () => {
             startIcon={<AddIcon />}
             onClick={() => handleOpenPromoForm()}
             sx={{ 
-              backgroundColor: "#660152", 
-              '&:hover': { backgroundColor: "#520040" },
+              color: '#333333',
+              backgroundColor: "#F6D400", 
+              '&:hover': { backgroundColor: "#C6B000" },
               alignSelf: 'flex-start'
             }}
           >
@@ -392,11 +393,11 @@ const PromoAdmin = () => {
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }}>
               <TableHead>
-                <TableRow sx={{ backgroundColor: '#660152' }}>
-                  <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Promotion</TableCell>
-                  <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Validity</TableCell>
-                  <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Status</TableCell>
-                  <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Actions</TableCell>
+                <TableRow sx={{ backgroundColor: '#1A1A1A' }}>
+                  <TableCell sx={{ color: 'white', fontWeight: 'bold',fontFamily: 'combo', fontSize: '1rem' }}>Promotion</TableCell>
+                  <TableCell sx={{ color: 'white', fontWeight: 'bold',fontFamily: 'combo', fontSize: '1rem' }}>Validity</TableCell>
+                  <TableCell sx={{ color: 'white', fontWeight: 'bold',fontFamily: 'combo', fontSize: '1rem' }}>Status</TableCell>
+                  <TableCell sx={{ color: 'white', fontWeight: 'bold',fontFamily: 'combo', fontSize: '1rem' }}>Actions</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -421,27 +422,27 @@ const PromoAdmin = () => {
                             {promo.imagen ? null : getPromoIcon(promo.nombre)}
                           </Avatar>
                           <Box>
-                            <Typography variant="h6" fontWeight="bold">
+                            <Typography variant="h6" fontWeight="bold" fontFamily='combo'>
                               {promo.nombre}
                             </Typography>
-                            <Typography variant="body2" color="text.secondary">
+                            <Typography variant="body2" color="text.secondary" fontFamily='combo'>
                               {promo.descripcion}
                             </Typography>
-                            <Typography variant="caption" color="text.secondary" fontFamily="monospace">
+                            <Typography variant="caption" color="text.secondary" fontFamily="combo">
                               ID: {promo._id}
                             </Typography>
                           </Box>
                         </Box>
                       </TableCell>
                       <TableCell>
-                        <Typography variant="body1" fontWeight="medium">
+                        <Typography variant="body1" fontWeight="medium" fontFamily='combo'>
                           {new Date(promo.fechaInicio).toLocaleDateString('en-US', {
                             day: '2-digit',
                             month: 'short',
                             year: 'numeric'
                           })}
                         </Typography>
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography variant="body2" color="text.secondary" fontFamily='combo'>
                           to {new Date(promo.fechaFin).toLocaleDateString('en-US', {
                             day: '2-digit',
                             month: 'short', 
@@ -551,7 +552,7 @@ const PromoAdmin = () => {
           overflow: 'auto'
         }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-            <Typography variant="h6" color="#660152" fontWeight="bold">
+            <Typography variant="h6" color="#1A1A1A" fontWeight="bold" fontFamily='combo'>
               {isEditMode ? "Edit Promotion" : "Create New Promotion"}
             </Typography>
             <IconButton onClick={handleClosePromoForm}>
@@ -628,7 +629,7 @@ const PromoAdmin = () => {
                       component="label"
                       fullWidth
                       startIcon={<ImageIcon />}
-                      sx={{ border: '1px solid #c4c4c4', backgroundColor: '#f5f5f5', color: '#660152', '&:hover': { backgroundColor: '#e0e0e0' } }}
+                      sx={{ border: '1px solid #c4c4c4', backgroundColor: '#f5f5f5', color: '#1A1A1A', '&:hover': { backgroundColor: '#e0e0e0' } }}
                     >
                       {promoFormData.imagen ? 'Change image' : 'Select image'}
                       <input
@@ -674,7 +675,7 @@ const PromoAdmin = () => {
                     <TextField 
                       fullWidth 
                       name="descripcion" 
-                      label="Descripción" 
+                      label="Description" 
                       multiline 
                       rows={3} 
                       value={promoFormData.descripcion} 
@@ -774,7 +775,7 @@ const PromoAdmin = () => {
               variant="contained" 
               onClick={handleSavePromo}
               disabled={!promoFormData.nombre || !promoFormData.descripcion || !promoFormData.fechaInicio || !promoFormData.fechaFin}
-              sx={{ backgroundColor: "#660152", '&:hover': { backgroundColor: "#520040" } }}
+              sx={{ color: '#333333', backgroundColor: "#F6D400", '&:hover': { backgroundColor: "#C6B000" } }}
             >
               {isEditMode ? 'Update Promotion' : 'Create Promotion'}
             </Button>
