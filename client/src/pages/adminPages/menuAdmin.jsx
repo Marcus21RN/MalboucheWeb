@@ -15,7 +15,8 @@ import {
   AddCircleOutline, CheckCircle, EditOutlined, DeleteOutline,
   LocalBar, Restaurant, WineBar, Fastfood, Close,
   FilterAlt, People, Schedule, Email, Phone, Receipt,
-  MenuBook as MenuIcon, Visibility as VisibilityIcon
+  MenuBook as MenuIcon, Visibility as VisibilityIcon,
+  Cancel as CancelIcon
 } from "@mui/icons-material";
 import { motion } from 'framer-motion';
 import axios from "axios";
@@ -1154,7 +1155,7 @@ const MenuAdmin = () => {
         }}>
           {/* Encabezado */}
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-            <Typography variant="h6" color="#1A1A1A" fontWeight="bold">
+            <Typography variant="h6" color="#1A1A1A" fontWeight="bold" fontFamily='combo'>
               {isEditMode ? "Update Menu" : "Create New Menu"}
             </Typography>
             <IconButton onClick={handleCloseMenuForm}>
@@ -1380,6 +1381,7 @@ const MenuAdmin = () => {
           <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 4 }}>
             <Button 
               variant="outlined" 
+              startIcon={<CancelIcon/>}
               onClick={() => activeFormTab === 0 ? handleCloseMenuForm() : setActiveFormTab(0)}
               sx={{ color: "#1A1A1A", borderColor: "#1A1A1A" }}
             >
@@ -1539,10 +1541,12 @@ const MenuAdmin = () => {
             <Button
               variant="outlined"
               onClick={handleCloseProductForm}
-              sx={{ color: "#1A1A1A", borderColor: "#1A1A1A" }}
+              startIcon={<CancelIcon/>}
+              sx={{ color: "inherit", borderColor: 'grey.600' }}
             >
               Cancel
             </Button>
+
             <Button
               variant="contained"
               onClick={handleSaveProduct}
@@ -1591,9 +1595,9 @@ const MenuAdmin = () => {
           <Button 
             onClick={handleCloseConfirmDialog}
             variant="outlined"
+            startIcon={<CancelIcon/>}
             sx={{ 
               color: 'grey.600',
-              borderColor: 'grey.400',
               '&:hover': {
                 borderColor: 'grey.600',
                 backgroundColor: 'grey.50'

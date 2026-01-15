@@ -306,7 +306,7 @@ const PromoAdmin = () => {
       {/* Encabezado y filtros */}
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
         <PromoIcon sx={{ mr: 2, color: '#1A1A1A', fontSize: 40 }} />
-        <Typography variant="h4" color="#1A1A1A" fontWeight="bold">
+        <Typography variant="h4" color="#1A1A1A" fontWeight="bold" fontFamily='combo' >
           Promotion Management
         </Typography>
       </Box>
@@ -325,7 +325,7 @@ const PromoAdmin = () => {
           >
             Create Promotion
           </Button>  
-          <FormControl size="small" sx={{ width: 250, backgroundColor: 'white' }}>
+          <FormControl size="small" sx={{ width: 200, backgroundColor: 'white' }}>
             <InputLabel id="filter-label">Filter by status</InputLabel>
             <Select
               labelId="filter-label"
@@ -765,7 +765,7 @@ const PromoAdmin = () => {
 
           <Box sx={{ display: 'flex', justifyContent:'flex-end', gap: 1, mt: 4 }}>
             <Button 
-              startIcon={<CancelIcon color="error" />} color="inherit" sx={{ border: '1px solid #660152', backgroundColor: 'transparent', '&:hover': { backgroundColor: '#f5f5f5' } }} 
+              startIcon={<CancelIcon />} color="inherit" sx={{ border: '1px solid #660152', backgroundColor: 'transparent', '&:hover': { backgroundColor: '#f5f5f5' } }} 
               onClick={handleClosePromoForm}
             >
               Cancel

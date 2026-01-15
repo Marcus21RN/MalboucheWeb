@@ -353,10 +353,10 @@ export default function EmployesAdmin() {
 
         <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
           <TextField
-            label="Search by name, email or ID"
+            label="Search by name"
             variant="outlined"
             size="small"
-            sx={{ width: 250, backgroundColor: 'white' }}
+            sx={{ width: 200, backgroundColor: 'white' }}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -602,7 +602,7 @@ export default function EmployesAdmin() {
 
       {/* Dialog original para crear/editar */}
       <Dialog open={openDialog} onClose={resetForm} fullWidth maxWidth="md" sx={{height: '90vh'}}>
-        <DialogTitle sx={{ color: "#fff", fontWeight: "bold", fontFamily: "combo", backgroundColor: "#1A1A1A" }}>
+        <DialogTitle sx={{ color: "#1A1A1A", fontWeight: "bold", fontFamily: "combo" }}>
           {modoEdicion ? "Update Employee" : "New Employee"}
         </DialogTitle>
         <form onSubmit={handleSubmitWithConfirmation}>
@@ -647,7 +647,7 @@ export default function EmployesAdmin() {
                 fullWidth 
               />
               <Box sx={{ display: "flex", gap: 2 }}>
-<FormControl fullWidth>
+              <FormControl fullWidth>
                 <InputLabel>Status</InputLabel>
                 <Select name="estado" value={formData.estado} onChange={handleChange} label="Status">
                   <MenuItem value="activo">Active</MenuItem>
@@ -667,7 +667,13 @@ export default function EmployesAdmin() {
           </DialogContent>
           <DialogActions>
             
-            <Button onClick={resetForm} startIcon={<CancelIcon />} color="inherit">
+            <Button onClick={resetForm} 
+                    variant= 'outlined'             
+                    startIcon={<CancelIcon/>}
+                    sx={{ 
+                      color: "#1A1A1A", border: 1, borderColor: '#1A1A1A'
+                    }}
+            >
               Cancel
             </Button>
             <Button 

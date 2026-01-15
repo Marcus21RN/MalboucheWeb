@@ -372,7 +372,7 @@ const handleOpenEventForm = (event = null) => {
     >
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
         <EventIcon sx={{ mr: 2, color: '#1A1A1A', fontSize: 40 }} />
-        <Typography variant="h4" color="#1A1A1A" fontWeight="bold">
+        <Typography variant="h4" color="#1A1A1A" fontWeight="bold" fontFamily='combo' >
           Events Management
         </Typography>
       </Box>
@@ -659,7 +659,7 @@ const handleOpenEventForm = (event = null) => {
     overflow: 'auto'
   }}>
     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-      <Typography variant="h6" color="#1A1A1A" fontWeight="bold">
+      <Typography variant="h6" color="#1A1A1A" fontWeight="bold" fontFamily= 'combo'>
         {isEditMode ? "Edit Event" : "Create New Event"}
       </Typography>
       <IconButton onClick={handleCloseEventForm}>
@@ -898,18 +898,17 @@ const handleOpenEventForm = (event = null) => {
     <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mt: 4 }}>
       <Button
         variant="outlined"
-        color="error"
         onClick={handleCloseEventForm}
-        sx={{ borderRadius: 2, px: 3, fontWeight: 'bold', borderWidth: 2, borderColor: '#b71c1c' }}
+        sx={{ px: 3, color: '#1A1A1A', borderColor: '#1A1A1A' }}
         startIcon={<CancelIcon />}
       >
-        CANCEL
+        Cancel
       </Button>
       <Button
         variant="contained"
         onClick={handleSaveEvent}
         disabled={!eventFormData.nombre || !eventFormData.descripcion || !eventFormData.fecha}
-        sx={{ color: "#333333", backgroundColor: "#F6D400", '&:hover': { backgroundColor: "#C6B000" }, borderRadius: 2, px: 3, fontWeight: 'bold' }}
+        sx={{ color: "#333333", backgroundColor: "#F6D400", '&:hover': { backgroundColor: "#C6B000" }, px: 3 }}
       >
         {isEditMode ? 'Update Event' : 'Create Event'}
       </Button>

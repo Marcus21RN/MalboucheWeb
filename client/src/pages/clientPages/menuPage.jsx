@@ -17,7 +17,7 @@ export default function MenuPage() {
 
   
   const bannerImages = {
-  bebidas: 'https://animalgourmet.com/wp-content/uploads/2018/05/christin-hume-370431-unsplash-e1527803357279.jpg',
+  bebidas: 'https://www.shutterstock.com/image-photo/we-meet-oktoberfest-hand-bartender-600nw-1031564416.jpg',
   alimentos: 'https://cdn.businessinsider.es/sites/navi.axelspringer.es/public/media/image/2023/02/camarera-llevando-comida-mesa-2958558.jpg?tf=3840x',
   snacks: 'https://mistersnacks.com/wp-content/uploads/2019/01/Micro-Brews-and-their-Perfect-Snack-Match-scaled.jpeg',
   cocteles: 'https://images.unsplash.com/photo-1566417713940-fe7c737a9ef2?q=80&w=2029&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',

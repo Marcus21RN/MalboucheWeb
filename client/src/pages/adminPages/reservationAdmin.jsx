@@ -207,7 +207,7 @@ const ReservationAdmin = () => {
       {/* Título y controles */}
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
         <ReservationsIcon sx={{ mr: 2, color: '#1A1A1A', fontSize: 40 }} />
-        <Typography variant="h4" color="#1A1A1A" fontWeight="bold">
+        <Typography variant="h4" color="#1A1A1A" fontWeight="bold" fontFamily='combo' >
           Reservations Management
         </Typography>
       </Box>
